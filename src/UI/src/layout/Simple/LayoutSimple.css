@@ -1,0 +1,21 @@
+.site-layout-content {
+  min-height: 280px;
+  background: #fff;
+}
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header .logo {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgb(0, 21, 41) 100%
+  );
+  padding: 0 20px;
+  font-family: "Kaushan Script", cursive;
+  font-size: x-large;
+  color: #fff;
+  width: -webkit-fill-available;
+}

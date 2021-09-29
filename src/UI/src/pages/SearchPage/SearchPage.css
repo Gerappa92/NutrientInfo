@@ -1,0 +1,16 @@
+.search-page-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-bottom: 50px;
+}
+
+.food-search {
+  max-width: 300px;
+  margin: 20px;
+}
+.food-nutrients {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
