@@ -12,13 +12,13 @@ namespace WebAPI.Contracts
         public ErrorResponse(InfrastructureException exception)
         {
             Code = exception.Code();
-            Message = exception.Message;
+            Message = "Infrastructure Exception. Please contact support if it is necessary.";
         }
 
         public ErrorResponse(Exception exception)
         {
             Code = exception.GetType().Name;
-            Message = exception.Message;
+            Message = "Unknown Exception. Please contact support if it is necessary.";
         }
 
         public string ToJson() => JsonConvert.SerializeObject(this);

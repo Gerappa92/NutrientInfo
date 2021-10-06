@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,11 +12,14 @@ namespace WebAPI.Middlewares
     public class ApiExceptionMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger _logger;
+
         private readonly IDictionary<Type, Func<Exception, HttpContext, Task>> _exceptionHandlers;
 
-        public ApiExceptionMiddleware(RequestDelegate next)
+        public ApiExceptionMiddleware(RequestDelegate next, ILogger<ApiExceptionMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
 
             _exceptionHandlers = new Dictionary<Type, Func<Exception, HttpContext, Task>>
             {
@@ -32,6 +36,7 @@ namespace WebAPI.Middlewares
             catch (Exception e)
             {
                 await HandleException(e, context);
+                LogError(e, context);
             }
         }
 
@@ -50,8 +55,7 @@ namespace WebAPI.Middlewares
 
         private async Task HandleInfrastructureException(Exception exception, HttpContext context)
         {
-            var infrastructureException = exception as InfrastructureException;
-            var errorResponse = new ErrorResponse(infrastructureException);
+            var errorResponse = new ErrorResponse(exception as InfrastructureException);
             var errorResponseJson = errorResponse.ToJson();
 
             await SetResponse(context, errorResponseJson, StatusCodes.Status500InternalServerError);
@@ -60,7 +64,6 @@ namespace WebAPI.Middlewares
         private async Task HandleUnknowExceptionAsync(Exception e, HttpContext context)
         {
             var errorResponse = new ErrorResponse(e);
-            errorResponse.SetMessage("Unknown exception occured.");
             var errorResponseJson = errorResponse.ToJson();
 
             await SetResponse(context, errorResponseJson, StatusCodes.Status500InternalServerError);
@@ -72,6 +75,8 @@ namespace WebAPI.Middlewares
             context.Response.StatusCode = statusCode;
             await context.Response.WriteAsync(errorResponseJson);
         }
+
+        private void LogError(Exception e, HttpContext context) => _logger.LogError(e.GetBaseException(), e.GetBaseException().Message, context.Request);
     }
 
     public static class ApiExceptionMiddlewareExtensions

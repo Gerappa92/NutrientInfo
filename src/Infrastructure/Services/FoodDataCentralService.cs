@@ -46,7 +46,7 @@ namespace Infrastructure.Services
             }
             catch (Exception e)
             {
-                throw new FoodDataCentralApiRequestException("The exception occurred when data was requested");
+                throw new FoodDataCentralApiRequestException(e.Message);
             }            
         }
     }
