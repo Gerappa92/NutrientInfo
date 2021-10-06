@@ -11,7 +11,7 @@ namespace Infrastructure.Exceptions
         /// Unique exception code
         /// </summary>
         /// <returns></returns>
-        public string Code() => "Infrastructure_" + GetType().Name + "_Exception";
+        public string Code() => "Infrastructure_" + GetType().Name;
 
         public InfrastructureException(string message) : base(message)
         {

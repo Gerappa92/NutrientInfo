@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using MediatR;
 using Application.Common.Behaviours;
+using FluentValidation;
 
 namespace Application
 {
@@ -12,8 +13,10 @@ namespace Application
         {
             var callingAssembly = Assembly.GetCallingAssembly();
             var executingAssembly = Assembly.GetExecutingAssembly();
+
             services.AddAutoMapper(callingAssembly);
             services.AddMediatR(executingAssembly);
+            services.AddValidatorsFromAssembly(executingAssembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
             return services;

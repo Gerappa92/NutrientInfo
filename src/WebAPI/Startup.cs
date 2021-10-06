@@ -11,8 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using WebAPI.Middlewares;
 using static Application.DependencyInjection;
 using static Infrastructure.DependencyInjection;
+using FluentValidation.AspNetCore;
 
 namespace WebAPI
 {
@@ -29,7 +31,8 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation();
             services.AddApplication(Configuration);
             services.AddInfrastructure(Configuration);
             services.AddSingleton(p => Configuration);
@@ -56,6 +59,8 @@ namespace WebAPI
                 .AllowAnyHeader()
                 .AllowAnyMethod();
             });
+
+            app.UseApiException();
 
             app.UseHttpsRedirection();
 
