@@ -32,6 +32,18 @@ Runs containerized WebApi and UI.
 The API key is necessary to connect with The FoodCentral API.\
 You should add the key in property `FoodCentralData:ApiKey` in `./src/WebAPI/appsettings.json` configuration file.
 
+OR
+
+The ApiKey can be set using `dotnet user-secrets` commands.\
+To do it open the command line in `./src/WebAPI` folder and run the below scripts:
+
+```
+dotnet user-secrets init
+dotnet user-secrets set "set "FoodCentralData:ApiKey" "Your_Api_Key"
+```
+
+Where `Your_Api_Key` should be replaced by your FoodData Central API key.
+
 ### Docker
 
 If you would like to run docker you should also add configuration files which will be used by containers in `./compose-configuration` folder.\
