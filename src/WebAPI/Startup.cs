@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using static Application.DependencyInjection;
 using static Infrastructure.DependencyInjection;
+using static WebAPI.Configurations.Policies;
 
 namespace WebAPI
 {
@@ -34,6 +35,8 @@ namespace WebAPI
             services.AddInfrastructure(Configuration);
             services.AddSingleton(p => Configuration);
 
+            services.AddCors(options => AllowAll(options));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
@@ -48,16 +51,12 @@ namespace WebAPI
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
+                app.UseCors(ALLOW_ALL_CORS_POLICY);
             }
-
-            app.UseCors(b =>
+            else
             {
-                b.WithOrigins("http://localhost:3000")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-            });
-
-            app.UseHttpsRedirection();
+                app.UseHsts();
+            }
 
             app.UseRouting();
 
