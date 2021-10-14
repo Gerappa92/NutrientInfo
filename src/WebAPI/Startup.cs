@@ -15,6 +15,7 @@ using WebAPI.Middlewares;
 using static Application.DependencyInjection;
 using static Infrastructure.DependencyInjection;
 using FluentValidation.AspNetCore;
+using static WebAPI.Configurations.Policies;
 
 namespace WebAPI
 {
@@ -37,6 +38,8 @@ namespace WebAPI
             services.AddInfrastructure(Configuration);
             services.AddSingleton(p => Configuration);
 
+            services.AddCors(options => AllowAll(options));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
@@ -49,28 +52,25 @@ namespace WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
+                app.UseCors(ALLOW_ALL_CORS_POLICY);
             }
-
-            app.UseCors(b =>
+            else
             {
-                b.WithOrigins("http://localhost:3000")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-            });
+                app.UseHsts();
+            }
 
             app.UseApiException();
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
