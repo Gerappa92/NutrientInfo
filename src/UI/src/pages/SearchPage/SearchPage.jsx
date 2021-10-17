@@ -115,11 +115,11 @@ function SearchPage() {
   };
 
   return (
-    <div className="search-page-container">
+    <div className='search-page-container'>
       <div>
         <Search
-          className="food-search"
-          placeholder="Banana"
+          className='food-search'
+          placeholder='Banana'
           onSearch={onSearch}
           enterButton
           allowClear
@@ -131,17 +131,17 @@ function SearchPage() {
           onChange={onPageChange}
           onShowSizeChange={onShowSizeChange}
         />
-        <div className="food-nutrients">
+        <div className='food-nutrients'>
           {data.foods.map((f, i) => (
             <FoodNutrients
               index={i}
               description={f.description}
               brand={f.brandName}
+              source={f.source}
               nutrients={getBasicNutrients(f.nutrients)}
               vitamins={getVitamins(f.nutrients)}
               elseNutrients={getElseNutrients(f.nutrients)}
-              loading={tableLoading}
-            ></FoodNutrients>
+              loading={tableLoading}></FoodNutrients>
           ))}
         </div>
         {data.foods.length === 0 && (

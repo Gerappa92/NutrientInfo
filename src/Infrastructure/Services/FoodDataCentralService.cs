@@ -2,8 +2,8 @@
 using Application.Food;
 using AutoMapper;
 using Flurl.Http;
+using Infrastructure.Contracts.FoodDataCentral;
 using Infrastructure.Exceptions;
-using Infrastructure.Mappings;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
@@ -36,11 +36,11 @@ namespace Infrastructure.Services
 
         public async Task<SearchFoodDto> SearchFood(string searchTerm, int pageSize = 10, int pageNumber = 1)
         {
-            const string action = "foods/search";
-            var queryUrl = _baseUrl + action + "?" + GetQueryApiKey() + GetQuerySearchTerm(searchTerm) + GetQueryPageSize(pageSize) + GetQueryPageNumber(pageNumber);
+            string url = _baseUrl + "foods/search?" + GetQueryApiKey();
+            var searchQuery = new SearchQuery(searchTerm, pageSize, pageNumber);
             try
             {
-                SearchResult searchResult = await queryUrl.GetJsonAsync<SearchResult>();
+                SearchResult searchResult = await url.PostJsonAsync(searchQuery).ReceiveJson<SearchResult>();
                 var dto = _mapper.Map<SearchFoodDto>(searchResult);
                 return dto;
             }

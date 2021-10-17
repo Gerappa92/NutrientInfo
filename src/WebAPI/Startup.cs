@@ -53,6 +53,8 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors(ALLOW_ALL_CORS_POLICY);
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
             }
             else
             {

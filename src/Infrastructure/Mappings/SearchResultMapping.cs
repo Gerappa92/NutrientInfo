@@ -16,7 +16,8 @@ namespace Infrastructure.Mappings
             CreateMap<Food, FoodDto>()
                 .ForMember(dto => dto.BrandName, c => c.MapFrom(r => r.brandName))
                 .ForMember(dto => dto.Description, c => c.MapFrom(r => r.description))
-                .ForMember(dto => dto.Nutrients, c => c.MapFrom(r => r.foodNutrients));
+                .ForMember(dto => dto.Nutrients, c => c.MapFrom(r => r.foodNutrients))
+                .ForMember(dto => dto.Source, c => c.MapFrom(r => r.dataType));
             CreateMap<FoodNutrient, FoodNutrientDto>()
                 .ForMember(dto => dto.Number, c => c.MapFrom(r => r.nutrientNumber))
                 .ForMember(dto => dto.Name, c => c.MapFrom(r => r.nutrientName))

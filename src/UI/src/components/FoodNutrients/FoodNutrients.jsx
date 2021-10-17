@@ -16,10 +16,9 @@ function FoodNutrients(params) {
         key={params.index}
         tabList={tabList}
         style={{ width: "350px", margin: "10px" }}
-        onTabChange={(key) => setTab(key)}
-      >
+        onTabChange={(key) => setTab(key)}>
         <Title level={4}>{params.description}</Title>
-        <Text type="secondary">{params.brand}</Text>
+        <Text type='secondary'>{params.brand ?? params.source}</Text>
 
         <Divider />
 
@@ -28,10 +27,9 @@ function FoodNutrients(params) {
             key={params.index}
             dataSource={params.nutrients}
             columns={columns}
-            size="small"
+            size='small'
             pagination={{ hideOnSinglePage: true }}
-            loading={params.loading}
-          ></Table>
+            loading={params.loading}></Table>
         )}
 
         {tab === "vitamins" && (
@@ -39,10 +37,9 @@ function FoodNutrients(params) {
             key={params.index}
             dataSource={params.vitamins}
             columns={columns}
-            size="small"
+            size='small'
             pagination={{ hideOnSinglePage: true }}
-            loading={params.loading}
-          ></Table>
+            loading={params.loading}></Table>
         )}
 
         {tab === "else" && (
@@ -50,10 +47,9 @@ function FoodNutrients(params) {
             key={params.index}
             dataSource={params.elseNutrients}
             columns={columns}
-            size="small"
+            size='small'
             pagination={{ hideOnSinglePage: true }}
-            loading={params.loading}
-          ></Table>
+            loading={params.loading}></Table>
         )}
       </Card>
     </>
