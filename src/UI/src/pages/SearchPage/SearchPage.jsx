@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { Input, Pagination, Empty, Spin } from "antd";
 import { GenericList } from "../../components/GenericList/GenericList";
-import "./SearchPage.css";
 import { FoodNutrientsListItem } from "../../components/FoodNutrientsListItem/FoodNutrientsListItem";
 import axios from "axios";
+import styled from "styled-components";
 
 const { Search } = Input;
+const SearchPageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-bottom: 50px;
+`;
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -58,11 +64,12 @@ function SearchPage() {
   };
 
   return (
-    <div className="search-page-container">
+    <SearchPageContainer>
       <div>
         <Search
-          className="food-search"
-          placeholder="Banana"
+          className='food-search'
+          style={{ maxWidth: "300px", margin: "20px" }}
+          placeholder='Banana'
           onSearch={onSearch}
           enterButton
           allowClear
@@ -74,12 +81,11 @@ function SearchPage() {
           onChange={onPageChange}
           onShowSizeChange={onShowSizeChange}
         />
-        <Spin spinning={tableLoading} size="large">
+        <Spin spinning={tableLoading} size='large'>
           <GenericList
             items={data.foods}
-            resourceName="food"
-            itemComponent={FoodNutrientsListItem}
-          ></GenericList>
+            resourceName='food'
+            itemComponent={FoodNutrientsListItem}></GenericList>
 
           {data.foods.length === 0 && (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
@@ -93,7 +99,7 @@ function SearchPage() {
           onShowSizeChange={onShowSizeChange}
         />
       </div>
-    </div>
+    </SearchPageContainer>
   );
 }
 
