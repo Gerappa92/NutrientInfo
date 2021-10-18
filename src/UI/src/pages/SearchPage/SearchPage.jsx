@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Input, Pagination, Empty } from "antd";
+import { Input, Pagination, Empty, Spin } from "antd";
 import { GenericList } from "../../components/GenericList/GenericList";
 import "./SearchPage.css";
 import { FoodNutrientsListItem } from "../../components/FoodNutrientsListItem/FoodNutrientsListItem";
+import axios from "axios";
 
 const { Search } = Input;
 
@@ -11,40 +12,40 @@ const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 function SearchPage() {
   const defaultData = { foods: [], totalHits: 0 };
   const [data, setData] = useState(defaultData);
-  const [tableLoading, setTableLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [tableLoading, setTableLoading] = useState(false);
 
   useEffect(() => {
-    if (data.foodSearchCriteria) {
-      onSearch(data.foodSearchCriteria.query);
+    if (data.query) {
+      onSearch(data.query);
     }
-  }, [page, pageSize]);
+  }, [pageNumber, pageSize]);
 
-  const onSearch = (value) => {
-    if (!value) {
+  const onSearch = async (searchTerm) => {
+    if (!searchTerm) {
       noData();
       return;
     }
 
     setTableLoading(true);
-    fetch(
-      `${apiBaseUrl}food?searchTerm=${value}&pageSize=${pageSize}&pageNumber=${page}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-        if (data.foods.length === 0) {
-          noData();
-          return;
-        }
-        setTableLoading(false);
-        console.log(data);
-      });
+
+    var response = await axios.get(
+      `${apiBaseUrl}food?searchTerm=${searchTerm}&pageSize=${pageSize}&pageNumber=${pageNumber}`
+    );
+
+    if (response.data.foods.length === 0) {
+      noData();
+      return;
+    } else {
+      setData(response.data);
+    }
+
+    setTableLoading(false);
   };
 
   const onPageChange = (pageNumber) => {
-    setPage(pageNumber);
+    setPageNumber(pageNumber);
   };
 
   const onShowSizeChange = (current, pageSize) => {
@@ -67,22 +68,25 @@ function SearchPage() {
           allowClear
         />
         <Pagination
-          current={page}
+          current={pageNumber}
           total={data.totalHits}
           hideOnSinglePage={true}
           onChange={onPageChange}
           onShowSizeChange={onShowSizeChange}
         />
-        <GenericList
-          items={data.foods}
-          resourceName="food"
-          itemComponent={FoodNutrientsListItem}
-        ></GenericList>
-        {data.foods.length === 0 && (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        )}
+        <Spin spinning={tableLoading} size="large">
+          <GenericList
+            items={data.foods}
+            resourceName="food"
+            itemComponent={FoodNutrientsListItem}
+          ></GenericList>
+
+          {data.foods.length === 0 && (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          )}
+        </Spin>
         <Pagination
-          current={page}
+          current={pageNumber}
           total={data.totalHits}
           hideOnSinglePage={true}
           onChange={onPageChange}
