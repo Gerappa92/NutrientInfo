@@ -35,21 +35,21 @@ export const FoodNutrientsListItem = ({ food }) => {
   ];
 
   const bacisNutrientsNumbers = [
-    208, //Energy
-    203, //Protein
-    205, //Carbohydrates
-    269, //Sugar
-    291, //Fiber
-    307, //Sodium 2.54x Salt
+    "208", //Energy
+    "203", //Protein
+    "205", //Carbohydrates
+    "269", //Sugar
+    "291", //Fiber
+    "307", //Sodium 2.54x Salt
   ];
 
   const fatNumber = "204"; //Fat
 
   const fattyAcidsNumbers = [
-    605, //Fatty acids, total trans
-    606, //Fatty acids, total saturated
-    645, //Fatty acids, total monounsaturated
-    646, //Fatty acids, total polyunsaturated
+    "605", //Fatty acids, total trans
+    "606", //Fatty acids, total saturated
+    "645", //Fatty acids, total monounsaturated
+    "646", //Fatty acids, total polyunsaturated
   ];
 
   const getBasicNutrients = (nutrients) => {
