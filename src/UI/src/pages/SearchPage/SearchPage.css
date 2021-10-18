@@ -9,8 +9,3 @@
   max-width: 300px;
   margin: 20px;
 }
-.food-nutrients {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-}
