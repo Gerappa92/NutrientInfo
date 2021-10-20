@@ -10,7 +10,7 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAutoMapper(typeof(SearchResultProfile));
+            services.AddAutoMapper(typeof(FoodMapping));
             services.AddTransient<IFoodDataService, FoodDataCentralService>();
             return services;
         }
