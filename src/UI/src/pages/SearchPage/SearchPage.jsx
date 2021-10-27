@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { Input, Pagination, Empty, Spin } from "antd";
 import { GenericList } from "../../components/GenericList/GenericList";
-import "./SearchPage.css";
 import { FoodNutrientsListItem } from "../../components/FoodNutrientsListItem/FoodNutrientsListItem";
 import axios from "axios";
+import styled from "styled-components";
 
 const { Search } = Input;
+const SearchPageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-bottom: 50px;
+`;
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -57,7 +63,7 @@ function SearchPage() {
   };
 
   return (
-    <div className="search-page-container">
+    <SearchPageContainer>
       <div>
         <Search
           className="food-search"
@@ -92,7 +98,7 @@ function SearchPage() {
           onShowSizeChange={onShowSizeChange}
         />
       </div>
-    </div>
+    </SearchPageContainer>
   );
 }
 
