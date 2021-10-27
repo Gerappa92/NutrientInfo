@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using Application.Food;
+using Application.Food.Dto;
 using AutoMapper;
 using Flurl.Http;
 using Infrastructure.Contracts.FoodDataCentral;
@@ -17,10 +17,7 @@ namespace Infrastructure.Services
         private readonly string _baseUrl = "";
         private readonly string _apiKey = "";
 
-        private string GetQueryApiKey() => $"api_key={_apiKey}&";
-        private string GetQuerySearchTerm(string searchTerm) => $"query={searchTerm}&";
-        private string GetQueryPageSize(int pageSize) => $"pageSize={pageSize}&";
-        private string GetQueryPageNumber(int pageNumber) => $"pageNumber={pageNumber}&";
+        private string GetQueryApiKey() => $"api_key={_apiKey}";
 
         public FoodDataCentralService(IConfiguration configuration, IMapper mapper)
         {
@@ -48,6 +45,21 @@ namespace Infrastructure.Services
             {
                 throw new FoodDataCentralApiRequestException(e.Message);
             }            
+        }
+
+        public async Task<Domain.Entities.Food>  GetFood(string id)
+        {
+            string url = $"{_baseUrl}food/{id}?{GetQueryApiKey()}&format=abridged";
+            try
+            {
+                AbridgedFood searchResult = await url.GetJsonAsync<AbridgedFood>();
+                var dto = _mapper.Map<Domain.Entities.Food>(searchResult);
+                return dto;
+            }
+            catch (Exception e)
+            {
+                throw new FoodDataCentralApiRequestException(e.Message);
+            }
         }
     }
 }

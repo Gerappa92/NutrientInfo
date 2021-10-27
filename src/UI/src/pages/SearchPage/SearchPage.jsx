@@ -17,23 +17,22 @@ const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 function SearchPage() {
   const defaultData = { foods: [], totalHits: 0 };
+  const [query, setQuery] = useState();
   const [data, setData] = useState(defaultData);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [tableLoading, setTableLoading] = useState(false);
 
   useEffect(() => {
-    if (data.query) {
-      onSearch(data.query);
-    }
+    onSearch(query); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber, pageSize]);
 
   const onSearch = async (searchTerm) => {
+    setQuery(searchTerm);
     if (!searchTerm) {
       noData();
       return;
     }
-
     setTableLoading(true);
 
     var response = await axios.get(
@@ -67,9 +66,8 @@ function SearchPage() {
     <SearchPageContainer>
       <div>
         <Search
-          className='food-search'
-          style={{ maxWidth: "300px", margin: "20px" }}
-          placeholder='Banana'
+          className="food-search"
+          placeholder="e.g. banana, cucumber, milk"
           onSearch={onSearch}
           enterButton
           allowClear
@@ -81,11 +79,12 @@ function SearchPage() {
           onChange={onPageChange}
           onShowSizeChange={onShowSizeChange}
         />
-        <Spin spinning={tableLoading} size='large'>
+        <Spin spinning={tableLoading} size="large">
           <GenericList
             items={data.foods}
-            resourceName='food'
-            itemComponent={FoodNutrientsListItem}></GenericList>
+            resourceName="food"
+            itemComponent={FoodNutrientsListItem}
+          ></GenericList>
 
           {data.foods.length === 0 && (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />

@@ -1,5 +1,7 @@
 import { Table, Card, Typography, Divider } from "antd";
 import { useState } from "react";
+import { BarChartOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -34,7 +36,7 @@ export const FoodNutrientsListItem = ({ food }) => {
     },
   ];
 
-  const bacisNutrientsNumbers = [
+  const bacisNutrientsIds = [
     "208", //Energy
     "203", //Protein
     "205", //Carbohydrates
@@ -43,22 +45,24 @@ export const FoodNutrientsListItem = ({ food }) => {
     "307", //Sodium 2.54x Salt
   ];
 
-  const fatNumber = "204"; //Fat
+  const fatId = "204"; //Fat
 
-  const fattyAcidsNumbers = [
+  const fattyAcidsIds = [
     "605", //Fatty acids, total trans
     "606", //Fatty acids, total saturated
     "645", //Fatty acids, total monounsaturated
     "646", //Fatty acids, total polyunsaturated
   ];
 
+  const setValue = (food) => `${food.value} ${food.unitName.toLowerCase()}`;
+
   const getBasicNutrients = (nutrients) => {
     let basic = nutrients
-      .filter((n) => bacisNutrientsNumbers.includes(n.number))
+      .filter((n) => bacisNutrientsIds.includes(n.id))
       .map((n, i) => ({
         key: i,
         name: n.name,
-        value: n.value + n.unitName,
+        value: setValue(n),
       }));
     let fat = getFats(nutrients);
     if (fat) {
@@ -68,19 +72,19 @@ export const FoodNutrientsListItem = ({ food }) => {
   };
 
   const getFats = (nutrients) => {
-    let fat = nutrients.find((n) => n.number === fatNumber);
+    let fat = nutrients.find((n) => n.id === fatId);
     if (!fat) {
       return null;
     }
     let fattyAcids = nutrients
-      .filter((n) => fattyAcidsNumbers.includes(n.number))
+      .filter((n) => fattyAcidsIds.includes(n.id))
       .map((n) => ({
         name: n.name,
-        value: n.value + n.unitName,
+        value: setValue(n),
       }));
     return {
       name: fat.name,
-      value: fat.value + fat.unitName,
+      value: setValue(fat),
       children: fattyAcids,
       key: fat.name,
     };
@@ -92,7 +96,7 @@ export const FoodNutrientsListItem = ({ food }) => {
       .map((n, i) => ({
         key: i,
         name: n.name,
-        value: n.value + n.unitName,
+        value: setValue(n),
       }));
   };
 
@@ -101,14 +105,14 @@ export const FoodNutrientsListItem = ({ food }) => {
       .filter(
         (n) =>
           !n.name.includes("Vitamin") &&
-          !bacisNutrientsNumbers.includes(n.number) &&
-          !fattyAcidsNumbers.includes(n.number) &&
-          n.number !== fatNumber
+          !bacisNutrientsIds.includes(n.id) &&
+          !fattyAcidsIds.includes(n.id) &&
+          n.id !== fatId
       )
       .map((n, i) => ({
         key: i,
         name: n.name,
-        value: n.value + n.unitName,
+        value: setValue(n),
       }));
 
     return elseNutrients;
@@ -120,9 +124,14 @@ export const FoodNutrientsListItem = ({ food }) => {
         tabList={tabList}
         style={{ width: "350px", margin: "10px" }}
         onTabChange={(key) => setTab(key)}
+        actions={[
+          <Link to={`/food-details/${food.id}`}>
+            <BarChartOutlined key="food-details" />
+          </Link>,
+        ]}
       >
-        <Title level={4}>{food.description}</Title>
-        <Text type="secondary">{food.brandName ?? food.source}</Text>
+        <Title level={4}>{food.name}</Title>
+        <Text type="secondary">{food.brandName ?? food.dataSourceName}</Text>
 
         <Divider />
 
