@@ -69,6 +69,7 @@ function SearchPage() {
           className="food-search"
           placeholder="e.g. banana, cucumber, milk"
           onSearch={onSearch}
+          style={{ maxWidth: "300px", margin: "20px" }}
           enterButton
           allowClear
         />
