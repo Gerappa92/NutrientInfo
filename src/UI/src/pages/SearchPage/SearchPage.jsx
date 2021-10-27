@@ -11,23 +11,22 @@ const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 function SearchPage() {
   const defaultData = { foods: [], totalHits: 0 };
+  const [query, setQuery] = useState();
   const [data, setData] = useState(defaultData);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [tableLoading, setTableLoading] = useState(false);
 
   useEffect(() => {
-    if (data.query) {
-      onSearch(data.query);
-    }
+    onSearch(query); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber, pageSize]);
 
   const onSearch = async (searchTerm) => {
+    setQuery(searchTerm);
     if (!searchTerm) {
       noData();
       return;
     }
-
     setTableLoading(true);
 
     var response = await axios.get(

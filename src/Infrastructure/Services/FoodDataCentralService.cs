@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Food.Dto;
 using AutoMapper;
 using Flurl.Http;
 using Infrastructure.Contracts.FoodDataCentral;
@@ -30,14 +31,14 @@ namespace Infrastructure.Services
             }
         }
 
-        public async Task<Domain.Entities.Food[]> SearchFood(string searchTerm, int pageSize = 10, int pageNumber = 1)
+        public async Task<SearchFoodDto> SearchFood(string searchTerm, int pageSize = 10, int pageNumber = 1)
         {
             string url = _baseUrl + "foods/search?" + GetQueryApiKey();
             var searchQuery = new SearchQuery(searchTerm, pageSize, pageNumber);
             try
             {
                 SearchResult searchResult = await url.PostJsonAsync(searchQuery).ReceiveJson<SearchResult>();
-                var dto = _mapper.Map<Domain.Entities.Food[]>(searchResult.foods);
+                var dto = _mapper.Map<SearchFoodDto>(searchResult);
                 return dto;
             }
             catch (Exception e)

@@ -1,4 +1,5 @@
-﻿using Application.Food.Queries;
+﻿using Application.Food.Dto;
+using Application.Food.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace WebAPI.Controllers
     public class FoodController : ApiBaseController
     {
         [HttpGet]
-        public async Task<ActionResult<Domain.Entities.Food[]>> Search([FromQuery] SearchFoodQuery query)
+        public async Task<ActionResult<SearchFoodDto>> Search([FromQuery] SearchFoodQuery query)
         {
             return await Mediator.Send(query);
         }
