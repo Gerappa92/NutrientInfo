@@ -1,5 +1,7 @@
 import { Table, Card, Typography, Divider } from "antd";
 import { useState } from "react";
+import { BarChartOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -122,6 +124,11 @@ export const FoodNutrientsListItem = ({ food }) => {
         tabList={tabList}
         style={{ width: "350px", margin: "10px" }}
         onTabChange={(key) => setTab(key)}
+        actions={[
+          <Link to={`/food-details/${food.id}`}>
+            <BarChartOutlined key="food-details" />
+          </Link>,
+        ]}
       >
         <Title level={4}>{food.name}</Title>
         <Text type="secondary">{food.brandName ?? food.dataSourceName}</Text>

@@ -61,7 +61,7 @@ function SearchPage() {
       <div>
         <Search
           className="food-search"
-          placeholder="Banana"
+          placeholder="e.g. banana, cucumber, milk"
           onSearch={onSearch}
           enterButton
           allowClear
