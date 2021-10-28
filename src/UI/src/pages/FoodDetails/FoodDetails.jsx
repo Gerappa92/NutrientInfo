@@ -47,7 +47,7 @@ export const FoodDetails = () => {
     <>
       <PageHeader
         title={food.name}
-        subTitle={food.brandName && food.dataSourceName}
+        subTitle={food.brandName ?? food.dataSourceName}
         tags={<Tag color="green">Good</Tag>}
       >
         <Table
