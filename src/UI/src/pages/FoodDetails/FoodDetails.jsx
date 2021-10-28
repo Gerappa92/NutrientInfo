@@ -1,63 +1,38 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import { PageHeader, Tag, Table } from "antd";
+import { PageHeader, Tag, Table, Spin } from "antd";
+import { FoodNutrientsListItem } from "../../components/FoodNutrientsListItem/FoodNutrientsListItem";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 export const FoodDetails = () => {
   const { foodId } = useParams();
   const [food, foodSet] = useState({});
-
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Value by 100g",
-      dataIndex: "value",
-      key: "value",
-    },
-  ];
+  const [tab, setTab] = useState("basic");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async function fetchData() {
       let response = await axios.get(`${apiBaseUrl}food/${foodId}`);
       foodSet(response.data);
-      console.log(response);
+      setLoading(false);
     })();
   }, [foodId]);
 
-  const setValue = (food) => `${food.value} ${food.unitName.toLowerCase()}`;
-
-  const mapNutrients = (food) => {
-    return (
-      food.nutrients &&
-      food.nutrients.map((n, i) => ({
-        key: i,
-        name: n.name,
-        value: setValue(n),
-      }))
-    );
-  };
-
   return (
     <>
-      <PageHeader
-        title={food.name}
-        subTitle={food.brandName ?? food.dataSourceName}
-        tags={<Tag color="green">Good</Tag>}
-      >
-        <Table
-          dataSource={mapNutrients(food)}
-          columns={columns}
-          size="small"
-          pagination={{ hideOnSinglePage: true }}
-        ></Table>
-        <p>{foodId}</p>
-      </PageHeader>
+      <Spin spinning={loading} size="large">
+        {!loading && (
+          <PageHeader
+            title={food.name}
+            subTitle={food.brandName ?? food.dataSourceName}
+            tags={<Tag color="green">Good</Tag>}
+          >
+            <FoodNutrientsListItem food={food}></FoodNutrientsListItem>
+          </PageHeader>
+        )}
+      </Spin>
     </>
   );
 };
