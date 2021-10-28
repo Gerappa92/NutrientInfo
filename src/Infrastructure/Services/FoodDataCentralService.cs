@@ -31,10 +31,10 @@ namespace Infrastructure.Services
             }
         }
 
-        public async Task<SearchFoodDto> SearchFood(string searchTerm, int pageSize = 10, int pageNumber = 1)
+        public async Task<SearchFoodDto> SearchFood(string searchTerm, int pageSize = 10, int pageNumber = 1, string brandOwner = "")
         {
             string url = _baseUrl + "foods/search?" + GetQueryApiKey();
-            var searchQuery = new SearchQuery(searchTerm, pageSize, pageNumber);
+            var searchQuery = new SearchQuery(searchTerm, pageSize, pageNumber, brandOwner);
             try
             {
                 SearchResult searchResult = await url.PostJsonAsync(searchQuery).ReceiveJson<SearchResult>();

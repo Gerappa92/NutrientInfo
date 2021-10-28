@@ -18,6 +18,7 @@ const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 function SearchPage() {
   const defaultData = { foods: [], totalHits: 0 };
   const [query, setQuery] = useState();
+  const [brandName, setBrandName] = useState("");
   const [data, setData] = useState(defaultData);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -27,16 +28,15 @@ function SearchPage() {
     onSearch(query); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber, pageSize]);
 
-  const onSearch = async (searchTerm) => {
-    setQuery(searchTerm);
-    if (!searchTerm) {
+  const onSearch = async () => {
+    if (!query) {
       noData();
       return;
     }
     setTableLoading(true);
 
     var response = await axios.get(
-      `${apiBaseUrl}food?searchTerm=${searchTerm}&pageSize=${pageSize}&pageNumber=${pageNumber}`
+      `${apiBaseUrl}food?searchTerm=${query}&pageSize=${pageSize}&pageNumber=${pageNumber}&brandName=${brandName}`
     );
 
     if (response.data.foods.length === 0) {
@@ -65,14 +65,21 @@ function SearchPage() {
   return (
     <SearchPageContainer>
       <div>
-        <Search
-          className="food-search"
-          placeholder="e.g. banana, cucumber, milk"
-          onSearch={onSearch}
-          style={{ maxWidth: "300px", margin: "20px" }}
-          enterButton
-          allowClear
-        />
+        <Input.Group compact style={{ margin: "20px 0 20px" }}>
+          <Input
+            placeholder="e.g. banana, cucumber, milk"
+            onChange={(e) => setQuery(e.target.value)}
+            style={{ maxWidth: "200px", textAlign: "left" }}
+            onPressEnter={onSearch}
+          />
+          <Search
+            placeholder="bran name"
+            onSearch={onSearch}
+            onChange={(e) => setBrandName(e.target.value)}
+            style={{ maxWidth: "200px" }}
+            enterButton
+          />
+        </Input.Group>
         <Pagination
           current={pageNumber}
           total={data.totalHits}

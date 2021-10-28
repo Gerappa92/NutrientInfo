@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import { PageHeader, Tag, Table, Spin } from "antd";
+import { PageHeader, Tag, Spin } from "antd";
 import { FoodNutrientsListItem } from "../../components/FoodNutrientsListItem/FoodNutrientsListItem";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
@@ -9,7 +9,6 @@ const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 export const FoodDetails = () => {
   const { foodId } = useParams();
   const [food, foodSet] = useState({});
-  const [tab, setTab] = useState("basic");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

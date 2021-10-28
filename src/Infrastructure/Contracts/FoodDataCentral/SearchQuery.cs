@@ -4,14 +4,15 @@ namespace Infrastructure.Contracts.FoodDataCentral
 {
     public class SearchQuery
     {
-        public SearchQuery(string searchTerm, int pageSize, int pageNumber)
+        public SearchQuery(string searchTerm, int pageSize, int pageNumber, string brandOwner)
         {
             Query = searchTerm;
-            DataType = new string[] { };// { "Branded" };
+            DataType = new string[] { };
             PageSize = pageSize;
             PageNumber = pageNumber;
             SortBy = "";
             SortOrder = "";
+            BrandOwner = brandOwner ?? "";
         }
         [JsonProperty("query")]
         public string Query { get; set; }
