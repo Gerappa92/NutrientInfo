@@ -28,6 +28,7 @@ public class Food
     public string publicationDate { get; set; }
     public string scientificName { get; set; }
     public string brandName { get; set; }
+    public string brandOwner { get; set; }
     public string gtinUpc { get; set; }
     public string ingredients { get; set; }
     public string ndbNumber { get; set; }

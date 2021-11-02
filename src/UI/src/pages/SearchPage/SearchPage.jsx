@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Input, Pagination, Empty, Spin } from "antd";
+import { Input, Pagination, Empty, Spin, Checkbox } from "antd";
 import { GenericList } from "../../components/GenericList/GenericList";
 import { FoodNutrientsListItem } from "../../components/FoodNutrientsListItem/FoodNutrientsListItem";
 import axios from "axios";
@@ -13,12 +13,17 @@ const SearchPageContainer = styled.div`
   padding-bottom: 50px;
 `;
 
+const SearchArea = styled.div`
+  margin: 20px 0 20px;
+`;
+
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 function SearchPage() {
   const defaultData = { foods: [], totalHits: 0 };
-  const [query, setQuery] = useState();
-  const [brandName, setBrandName] = useState("");
+  const [query, setQuery] = useState("");
+  const [brandOwner, setBrandOwner] = useState("");
+  const [requireAllWords, setRequireAllWords] = useState(false);
   const [data, setData] = useState(defaultData);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -29,14 +34,14 @@ function SearchPage() {
   }, [pageNumber, pageSize]);
 
   const onSearch = async () => {
-    if (!query) {
+    if (!query && !brandOwner) {
       noData();
       return;
     }
     setTableLoading(true);
 
     var response = await axios.get(
-      `${apiBaseUrl}food?searchTerm=${query}&pageSize=${pageSize}&pageNumber=${pageNumber}&brandName=${brandName}`
+      `${apiBaseUrl}food?searchTerm=${query}&pageSize=${pageSize}&pageNumber=${pageNumber}&brandOwner=${brandOwner}&requireAllWords=${requireAllWords}`
     );
 
     if (response.data.foods.length === 0) {
@@ -65,21 +70,26 @@ function SearchPage() {
   return (
     <SearchPageContainer>
       <div>
-        <Input.Group compact style={{ margin: "20px 0 20px" }}>
-          <Input
-            placeholder="e.g. banana, cucumber, milk"
-            onChange={(e) => setQuery(e.target.value)}
-            style={{ maxWidth: "200px", textAlign: "left" }}
-            onPressEnter={onSearch}
-          />
-          <Search
-            placeholder="bran name"
-            onSearch={onSearch}
-            onChange={(e) => setBrandName(e.target.value)}
-            style={{ maxWidth: "200px" }}
-            enterButton
-          />
-        </Input.Group>
+        <SearchArea>
+          <Input.Group compact style={{ margin: "0 0 20px" }}>
+            <Input
+              placeholder="e.g. banana, cucumber, milk"
+              onChange={(e) => setQuery(e.target.value)}
+              style={{ maxWidth: "200px", textAlign: "left" }}
+              onPressEnter={onSearch}
+            />
+            <Search
+              placeholder="brand owner"
+              onSearch={onSearch}
+              onChange={(e) => setBrandOwner(e.target.value)}
+              style={{ maxWidth: "200px" }}
+              enterButton
+            />
+          </Input.Group>
+          <Checkbox onChange={(e) => setRequireAllWords(e.target.checked)}>
+            Require All Words
+          </Checkbox>
+        </SearchArea>
         <Pagination
           current={pageNumber}
           total={data.totalHits}

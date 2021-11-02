@@ -6,9 +6,6 @@ namespace Application.Food.Queries
     {
         public SearchFoodQueryValidator()
         {
-            RuleFor(x => x.SearchTerm)
-                .NotEmpty().WithMessage("SearchTerm is required.");
-
             RuleFor(x => x.PageNumber)
                 .GreaterThanOrEqualTo(1).WithMessage("PageNumber at least greater than or equal to 1.");
 

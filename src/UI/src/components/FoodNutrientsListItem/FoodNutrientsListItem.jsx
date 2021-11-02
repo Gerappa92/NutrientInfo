@@ -118,6 +118,14 @@ export const FoodNutrientsListItem = ({ food }) => {
     return elseNutrients;
   };
 
+  const getSecondaryText = () => {
+    let secondary = "";
+    if (food.brandOwner) secondary = food.brandOwner;
+    if (food.brandName) secondary += `- ${food.brandName}`;
+    if (!food.brandOwner && !food.brandName) return food.dataSourceName;
+    return secondary;
+  };
+
   return (
     <>
       <Card
@@ -131,7 +139,7 @@ export const FoodNutrientsListItem = ({ food }) => {
         ]}
       >
         <Title level={4}>{food.name}</Title>
-        <Text type="secondary">{food.brandName ?? food.dataSourceName}</Text>
+        <Text type="secondary">{getSecondaryText()}</Text>
 
         <Divider />
 

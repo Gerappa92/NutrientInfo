@@ -7,6 +7,7 @@
         public string dataType { get; set; }
         public string publicationDate { get; set; }
         public string brandOwner { get; set; }
+        public string brandName { get; set; }
         public string ndbNumber { get; set; }
         public AbridgedFoodNutrient[] foodNutrients { get; set; }
     }

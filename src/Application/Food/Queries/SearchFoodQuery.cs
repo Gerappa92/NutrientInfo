@@ -11,7 +11,8 @@ namespace Application.Food.Queries
         public string SearchTerm { get; set; }
         public int PageSize { get; set; } = 10;
         public int PageNumber { get; set; } = 1;
-        public string BrandName { get; set; } = "";
+        public string BrandOwner { get; set; } = "";
+        public bool RequireAllWords { get; set; }
     }
 
     public class SearchFoodQueryHandler : IRequestHandler<SearchFoodQuery, SearchFoodDto>
@@ -25,7 +26,7 @@ namespace Application.Food.Queries
 
         public async Task<SearchFoodDto> Handle(SearchFoodQuery request, CancellationToken cancellationToken)
         {
-            var dto = await _foodDataService.SearchFood(request.SearchTerm, request.PageSize, request.PageNumber, request.BrandName);
+            var dto = await _foodDataService.SearchFood(request.SearchTerm, request.PageSize, request.PageNumber, request.BrandOwner, request.RequireAllWords);
             return dto;
         }
     }

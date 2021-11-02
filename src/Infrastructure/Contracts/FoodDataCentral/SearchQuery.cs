@@ -4,15 +4,16 @@ namespace Infrastructure.Contracts.FoodDataCentral
 {
     public class SearchQuery
     {
-        public SearchQuery(string searchTerm, int pageSize, int pageNumber, string brandOwner)
+        public SearchQuery(string searchTerm, int pageSize, int pageNumber, string brandOwner, bool requireAllWords)
         {
-            Query = searchTerm;
+            Query = searchTerm ?? "";
             DataType = new string[] { };
             PageSize = pageSize;
             PageNumber = pageNumber;
             SortBy = "";
             SortOrder = "";
             BrandOwner = brandOwner ?? "";
+            RequireAllWords = requireAllWords;
         }
         [JsonProperty("query")]
         public string Query { get; set; }
@@ -28,6 +29,8 @@ namespace Infrastructure.Contracts.FoodDataCentral
         public string SortOrder { get; private set; }
         [JsonProperty("brandOwner")]
         public string BrandOwner { get; set; }
+        [JsonProperty("requireAllWords")]
+        public bool RequireAllWords { get; set; }
 
     }
 }
