@@ -8,7 +8,7 @@ export const NutrientsTable = ({ nutrients }) => {
       key: "name",
     },
     {
-      title: "Value by 100g",
+      title: "Amount per 100g",
       dataIndex: "value",
       key: "value",
     },
