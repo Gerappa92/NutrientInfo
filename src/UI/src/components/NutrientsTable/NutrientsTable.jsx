@@ -1,4 +1,11 @@
 import { Table } from "antd";
+import styled from "styled-components";
+
+const TableDiv = styled.div`
+  tbody {
+    font-size: smaller;
+  }
+`;
 
 export const NutrientsTable = ({ nutrients }) => {
   const columns = [
@@ -14,11 +21,13 @@ export const NutrientsTable = ({ nutrients }) => {
     },
   ];
   return (
-    <Table
-      dataSource={nutrients}
-      columns={columns}
-      size="small"
-      pagination={{ hideOnSinglePage: true }}
-    ></Table>
+    <TableDiv>
+      <Table
+        dataSource={nutrients}
+        columns={columns}
+        size="small"
+        pagination={{ hideOnSinglePage: true }}
+      ></Table>
+    </TableDiv>
   );
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input, Pagination, Empty, Spin, Checkbox } from "antd";
 import { GenericList } from "../../components/GenericList/GenericList";
-import { FoodNutrientsListItem } from "../../components/FoodNutrientsListItem/FoodNutrientsListItem";
+import { FoodNutrientsCardItem } from "../../components/FoodNutrientsCardItem/FoodNutrientsCardItem";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -101,7 +101,7 @@ function SearchPage() {
           <GenericList
             items={data.foods}
             resourceName="food"
-            itemComponent={FoodNutrientsListItem}
+            itemComponent={FoodNutrientsCardItem}
           ></GenericList>
 
           {data.foods.length === 0 && (

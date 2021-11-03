@@ -8,7 +8,7 @@ import { OtherNutrientsTable } from "../NutrientsTable/OtherNutrientsTable";
 
 const { Title, Text } = Typography;
 
-export const FoodNutrientsListItem = ({ food }) => {
+export const FoodNutrientsCardItem = ({ food }) => {
   const [tab, setTab] = useState("basic");
 
   const tabList = [
