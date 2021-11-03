@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Infrastructure.Mappings;
+using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,8 +11,9 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAutoMapper(typeof(FoodMapping));
+            services.AddAutoMapper(typeof(FoodMapping), typeof(AzureTablesMapping));
             services.AddTransient<IFoodDataService, FoodDataCentralService>();
+            services.AddTransient<IDailyValuesRepository, DailyValuesRepository>();
             return services;
         }
     }
