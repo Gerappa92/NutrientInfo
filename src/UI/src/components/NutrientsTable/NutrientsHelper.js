@@ -3,6 +3,12 @@ import { bacisNutrientsIds, fatId, fattyAcidsIds } from "./NutrientsIds";
 export const setNutrientValue = (nutrient) =>
   `${nutrient.value} ${nutrient.unitName.toLowerCase()}`;
 
+const setDailyValuePercentage = (percentage) => {
+  if (!percentage) return "-";
+  var round = Math.round(percentage * 100) / 100;
+  return `${round}%`;
+};
+
 export const getBasicNutrients = (nutrients) => {
   let basic = nutrients
     .filter((n) => bacisNutrientsIds.includes(n.id))
@@ -10,6 +16,7 @@ export const getBasicNutrients = (nutrients) => {
       key: i,
       name: n.name,
       value: setNutrientValue(n),
+      dailyValuePercentage: setDailyValuePercentage(n.dailyValuePercentage),
     }));
   let fat = getFats(nutrients);
   if (fat) {
@@ -28,12 +35,14 @@ export const getFats = (nutrients) => {
     .map((n) => ({
       name: n.name,
       value: setNutrientValue(n),
+      dailyValuePercentage: setDailyValuePercentage(n.dailyValuePercentage),
     }));
   return {
     name: fat.name,
     value: setNutrientValue(fat),
     children: fattyAcids,
     key: fat.name,
+    dailyValuePercentage: setDailyValuePercentage(fat.dailyValuePercentage),
   };
 };
 
@@ -50,6 +59,7 @@ export const getElseNutrients = (nutrients) => {
       key: i,
       name: n.name,
       value: setNutrientValue(n),
+      dailyValuePercentage: setDailyValuePercentage(n.dailyValuePercentage),
     }));
 
   return elseNutrients;
@@ -62,5 +72,6 @@ export const getVitamins = (nutrients) => {
       key: i,
       name: n.name,
       value: setNutrientValue(n),
+      dailyValuePercentage: setDailyValuePercentage(n.dailyValuePercentage),
     }));
 };
