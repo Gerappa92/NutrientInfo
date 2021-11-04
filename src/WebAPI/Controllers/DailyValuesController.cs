@@ -8,7 +8,7 @@ namespace WebAPI.Controllers
     public class DailyValuesController : ApiBaseController
     {
         [HttpGet]
-        public async Task<ActionResult<DailyValues[]>> Get()
+        public async Task<ActionResult<DailyValue[]>> Get()
         {
             return await Mediator.Send(new GetDailyValuesQuery());
         }

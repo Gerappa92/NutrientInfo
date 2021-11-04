@@ -2,6 +2,6 @@
 {
     public interface IDailyValuesRepository
     {
-        Domain.Entities.DailyValues[] GetDailyValues();
+        Domain.Entities.DailyValue[] GetDailyValues();
     }
 }

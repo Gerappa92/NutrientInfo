@@ -7,7 +7,7 @@ namespace Infrastructure.Mappings
     {
         public AzureTablesMapping()
         {
-            CreateMap<DailyValues, Domain.Entities.DailyValues>();
+            CreateMap<DailyValues, Domain.Entities.DailyValue>();
         }
     }
 }

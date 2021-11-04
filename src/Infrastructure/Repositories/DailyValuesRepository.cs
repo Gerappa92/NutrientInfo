@@ -21,10 +21,10 @@ namespace Infrastructure.Repositories
             
         }
 
-        public Domain.Entities.DailyValues[] GetDailyValues()
+        public Domain.Entities.DailyValue[] GetDailyValues()
         {
             var dailyValues = _tableClient.Query<DailyValues>().ToArray();
-            var dailyValuesEntities = _mapper.Map<Domain.Entities.DailyValues[]>(dailyValues);
+            var dailyValuesEntities = _mapper.Map<Domain.Entities.DailyValue[]>(dailyValues);
             return dailyValuesEntities;
         }
     }
