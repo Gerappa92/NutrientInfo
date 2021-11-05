@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import axios from "axios";
 import { PageHeader, Tag, Spin } from "antd";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
+import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -21,14 +22,14 @@ export const FoodDetails = () => {
 
   return (
     <>
-      <Spin spinning={loading} size="large">
+      <Spin spinning={loading} size='large'>
         {!loading && (
           <PageHeader
             title={food.name}
             subTitle={food.brandName ?? food.dataSourceName}
-            tags={<Tag color="green">Good</Tag>}
-          >
+            tags={<Tag color='green'>Good</Tag>}>
             <NutrientsTreeTable nutrients={food.nutrients} />
+            <NutrientPieChart />
           </PageHeader>
         )}
       </Spin>
