@@ -17,7 +17,7 @@ namespace Application.Food.Dto
         {
             { 0, NutritionalItemStatus.Neutral },
             { 0.5f ,NutritionalItemStatus.Good },
-            { 1f ,NutritionalItemStatus.Warning },
+            { 1 ,NutritionalItemStatus.Warning },
             { float.MaxValue,NutritionalItemStatus.Bad }
         };
 
