@@ -4,7 +4,7 @@ import {
   getBasicNutrients,
   getVitamins,
   getElseNutrients,
-} from "./NutrientsHelper";
+} from "../../helpers/NutrientsHelper";
 
 const TableDiv = styled.div`
   tbody {
