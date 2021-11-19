@@ -21,8 +21,8 @@ export const NutrientsTreeTable = ({ nutrients }) => {
     },
     {
       title: "Amount per 100g",
-      dataIndex: "value",
-      key: "value",
+      dataIndex: "valueWithUnit",
+      key: "valueWithUnit",
     },
     {
       title: "DV%",
