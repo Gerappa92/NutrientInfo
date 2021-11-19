@@ -1,22 +1,29 @@
-import { PieChart, Pie, Cell, Tooltip, LabelList } from "recharts";
+import { getBasicNutrients } from "../../helpers/NutrientsHelper";
+import { PieChart, Pie, Cell, Tooltip, LabelList, Legend } from "recharts";
 
-export const NutrientPieChart = (data) => {
-  data = [
-    { name: "A", value: 100 },
-    { name: "B", value: 100 },
-    { name: "C", value: 100 },
+export const NutrientPieChart = ({ nutrients }) => {
+  let data = getBasicNutrients(nutrients);
+
+  const COLORS = [
+    "#191716",
+    "#DAEFB3",
+    "#3D348B",
+    "#DB2B39",
+    "#3DA5D9",
+    "#EE964B",
+    "#EA638C",
+    "#5C8001",
+    "#EFEFEF",
   ];
-
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
   return (
     <>
       <PieChart width={400} height={400}>
-        <Pie data={data} fill='#8884d8' label>
+        <Pie data={data} label>
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
-          <LabelList dataKey='name' />
         </Pie>
+        <Legend dataKey="name" />
         <Tooltip />
       </PieChart>
     </>

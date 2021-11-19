@@ -22,14 +22,15 @@ export const FoodDetails = () => {
 
   return (
     <>
-      <Spin spinning={loading} size='large'>
+      <Spin spinning={loading} size="large">
         {!loading && (
           <PageHeader
             title={food.name}
             subTitle={food.brandName ?? food.dataSourceName}
-            tags={<Tag color='green'>Good</Tag>}>
+            tags={<Tag color="green">Good</Tag>}
+          >
             <NutrientsTreeTable nutrients={food.nutrients} />
-            <NutrientPieChart />
+            <NutrientPieChart nutrients={food.nutrients} />
           </PageHeader>
         )}
       </Spin>
