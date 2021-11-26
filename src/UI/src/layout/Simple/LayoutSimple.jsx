@@ -3,8 +3,15 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import SearchPage from "../../pages/SearchPage/SearchPage";
 import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
 import "./LayoutSimple.css";
+import styled from "styled-components";
 
 const { Header, Content, Footer } = Layout;
+
+const PageContainer = styled.div`
+  min-height: 80vh;
+  background: #fff;
+  padding: "0 10px";
+`;
 
 function LayoutSimple(params) {
   return (
@@ -15,17 +22,17 @@ function LayoutSimple(params) {
             <div className="logo">Nutrient Info</div>
           </Link>
         </Header>
-        <Content style={{ padding: "0 10px" }}>
-          <Switch>
-            <Route path="/food-details/:foodId">
-              <FoodDetails></FoodDetails>
-            </Route>
-            <Route path="/">
-              <div className="site-layout-content">
+        <Content>
+          <PageContainer>
+            <Switch>
+              <Route path="/food-details/:foodId">
+                <FoodDetails></FoodDetails>
+              </Route>
+              <Route path="/">
                 <SearchPage></SearchPage>
-              </div>
-            </Route>
-          </Switch>
+              </Route>
+            </Switch>
+          </PageContainer>
         </Content>
       </Router>
       <Footer>

@@ -1,5 +1,5 @@
 import { NutrientsTable } from "./NutrientsTable";
-import { getBasicNutrients } from "./NutrientsHelper";
+import { getBasicNutrients } from "../../helpers/NutrientsHelper";
 
 export const BasicNutrientsTable = ({ nutrients }) => {
   return <NutrientsTable nutrients={getBasicNutrients(nutrients)} />;

@@ -4,7 +4,7 @@ import {
   getBasicNutrients,
   getVitamins,
   getElseNutrients,
-} from "./NutrientsHelper";
+} from "../../helpers/NutrientsHelper";
 
 const TableDiv = styled.div`
   tbody {
@@ -21,8 +21,8 @@ export const NutrientsTreeTable = ({ nutrients }) => {
     },
     {
       title: "Amount per 100g",
-      dataIndex: "value",
-      key: "value",
+      dataIndex: "valueWithUnit",
+      key: "valueWithUnit",
     },
     {
       title: "DV%",
