@@ -4,6 +4,19 @@ import axios from "axios";
 import { PageHeader, Tag, Spin } from "antd";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
+import styled from "styled-components";
+import "./FoodDetails.css";
+
+const FoodDetailsContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  padding-bottom: 50px;
+`;
+
+const FoodDetailsItems = styled.div`
+  width: calc(100% / var(--col-divisor));
+`;
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -21,19 +34,25 @@ export const FoodDetails = () => {
   }, [foodId]);
 
   return (
-    <>
-      <Spin spinning={loading} size="large">
-        {!loading && (
-          <PageHeader
-            title={food.name}
-            subTitle={food.brandName ?? food.dataSourceName}
-            tags={<Tag color="green">Good</Tag>}
-          >
-            <NutrientsTreeTable nutrients={food.nutrients} />
-            <NutrientPieChart nutrients={food.nutrients} />
-          </PageHeader>
-        )}
-      </Spin>
-    </>
+    <Spin style={{ marginTop: "10vh" }} spinning={loading} size="large">
+      {!loading && (
+        <PageHeader
+          title={food.name}
+          subTitle={food.brandName ?? food.dataSourceName}
+          tags={<Tag color="green">Good</Tag>}
+        >
+          <FoodDetailsContainer>
+            <FoodDetailsItems>
+              <NutrientsTreeTable nutrients={food.nutrients} />
+            </FoodDetailsItems>
+            <FoodDetailsItems
+              style={{ height: "calc(100vh / var(--chart-divisor))" }}
+            >
+              <NutrientPieChart nutrients={food.nutrients} />
+            </FoodDetailsItems>
+          </FoodDetailsContainer>
+        </PageHeader>
+      )}
+    </Spin>
   );
 };
