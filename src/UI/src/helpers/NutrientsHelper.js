@@ -14,6 +14,7 @@ export const getBasicNutrients = (nutrients) => {
     .filter((n) => bacisNutrientsIds.includes(n.id))
     .map((n, i) => ({
       key: i,
+      id: n.id,
       name: n.name,
       value: n.value,
       unitName: n.unitName,
@@ -35,6 +36,7 @@ export const getFats = (nutrients) => {
   let fattyAcids = nutrients
     .filter((n) => fattyAcidsIds.includes(n.id))
     .map((n) => ({
+      id: n.id,
       name: n.name,
       value: n.value,
       unitName: n.unitName,
@@ -42,6 +44,7 @@ export const getFats = (nutrients) => {
       dailyValuePercentage: setDailyValuePercentage(n.dailyValuePercentage),
     }));
   return {
+    id: fat.id,
     name: fat.name,
     value: fat.value,
     unitName: fat.unitName,
@@ -63,6 +66,7 @@ export const getElseNutrients = (nutrients) => {
     )
     .map((n, i) => ({
       key: i,
+      id: n.id,
       name: n.name,
       value: n.value,
       unitName: n.unitName,
@@ -78,6 +82,7 @@ export const getVitamins = (nutrients) => {
     .filter((n) => n.name.includes("Vitamin"))
     .map((n, i) => ({
       key: i,
+      id: n.id,
       name: n.name,
       value: n.value,
       unitName: n.unitName,
