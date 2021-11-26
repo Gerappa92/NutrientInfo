@@ -35,7 +35,8 @@ export const getFats = (nutrients) => {
   }
   let fattyAcids = nutrients
     .filter((n) => fattyAcidsIds.includes(n.id))
-    .map((n) => ({
+    .map((n, i) => ({
+      key: i,
       id: n.id,
       name: n.name,
       value: n.value,

@@ -38,14 +38,14 @@ export const NutrientPieChart = ({ nutrients }) => {
   };
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="100%" debounce={1}>
       <PieChart>
-        <Pie data={filteredData} label>
+        <Legend iconType="circle" dataKey="name" />
+        <Pie data={filteredData} dataKey="value" label>
           {filteredData.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={getColor(entry.id)} />
           ))}
         </Pie>
-        <Legend dataKey="name" />
         <Tooltip />
       </PieChart>
     </ResponsiveContainer>
