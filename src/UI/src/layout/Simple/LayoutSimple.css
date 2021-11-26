@@ -1,7 +1,3 @@
-.site-layout-content {
-  min-height: 80vh;
-  background: #fff;
-}
 .header {
   display: flex;
   justify-content: center;
