@@ -33,21 +33,39 @@ export const FoodDetails = () => {
     })();
   }, [foodId]);
 
+  const getTag = (tag) => {
+    const color = getTagColor(tag.mark);
+    return (
+      <Tag key={tag.name} color={color}>
+        {tag.name}
+      </Tag>
+    );
+  };
+
+  const getTagColor = (mark) => {
+    switch (mark) {
+      case "positive":
+        return "green";
+      case "negative":
+        return "red";
+      default:
+        break;
+    }
+  };
+
   return (
-    <Spin style={{ marginTop: "10vh" }} spinning={loading} size="large">
+    <Spin style={{ marginTop: "10vh" }} spinning={loading} size='large'>
       {!loading && (
         <PageHeader
           title={food.name}
           subTitle={food.brandName ?? food.dataSourceName}
-          tags={<Tag color="green">Good</Tag>}
-        >
+          tags={food.foodTags.map((tag) => getTag(tag))}>
           <FoodDetailsContainer>
             <FoodDetailsItems>
               <NutrientsTreeTable nutrients={food.nutrients} />
             </FoodDetailsItems>
             <FoodDetailsItems
-              style={{ height: "calc(100vh / var(--chart-divisor))" }}
-            >
+              style={{ height: "calc(100vh / var(--chart-divisor))" }}>
               <NutrientPieChart nutrients={food.nutrients} />
             </FoodDetailsItems>
           </FoodDetailsContainer>

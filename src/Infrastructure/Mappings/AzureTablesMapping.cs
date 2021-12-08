@@ -8,6 +8,7 @@ namespace Infrastructure.Mappings
         public AzureTablesMapping()
         {
             CreateMap<DailyValues, Domain.Entities.DailyValue>();
+            CreateMap<FoodTag, Domain.Entities.FoodTag>();
         }
     }
 }

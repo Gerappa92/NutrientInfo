@@ -1,29 +1,28 @@
 ﻿using Application.Common.Interfaces;
 using AutoMapper;
-using Azure.Data.Tables;
 using Infrastructure.Contracts.AzureTables;
-using Microsoft.Extensions.Configuration;
+using Infrastructure.Repositories.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Infrastructure.Repositories
 {
     public class DailyValuesRepository : IDailyValuesRepository
     {
-        private readonly TableClient _tableClient;
+        private IAzureTableRepository<DailyValues> _tableRepository;
         private const string _tableName = "DailyValues";
         private readonly IMapper _mapper;
 
-        public DailyValuesRepository(IConfiguration configuration, IMapper mapper)
+        public DailyValuesRepository(IAzureTableRepository<DailyValues> tableRepository, IMapper mapper)
         {
             _mapper = mapper;
-            var cs = configuration.GetConnectionString("AzureStorageAccount");
-            _tableClient = new TableClient(cs, _tableName);
-            
+            _tableRepository = tableRepository;
+            _tableRepository.CreateTableClient(_tableName);
         }
 
-        public Domain.Entities.DailyValue[] GetDailyValues()
+        public IEnumerable<Domain.Entities.DailyValue> GetDailyValues()
         {
-            var dailyValues = _tableClient.Query<DailyValues>().ToArray();
+            var dailyValues = _tableRepository.GetAll();
             var dailyValuesEntities = _mapper.Map<Domain.Entities.DailyValue[]>(dailyValues);
             return dailyValuesEntities;
         }

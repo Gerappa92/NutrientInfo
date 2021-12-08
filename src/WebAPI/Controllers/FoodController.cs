@@ -14,7 +14,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{foodId}")]
-        public async Task<ActionResult<FoodDetailsDto>> Get(string foodId)
+        public async Task<ActionResult<Domain.Entities.Food>> Get(string foodId)
         {
             GetFoodQuery query = new GetFoodQuery() { Id = foodId };
             return await Mediator.Send(query);

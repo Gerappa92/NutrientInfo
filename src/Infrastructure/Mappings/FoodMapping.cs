@@ -19,7 +19,7 @@ namespace Infrastructure.Mappings
                 .ForMember(dto => dto.Name, c => c.MapFrom(r => r.description))
                 .ForMember(dto => dto.Nutrients, c => c.MapFrom(r => r.foodNutrients))
                 .ForMember(dto => dto.DataSourceName, c => c.MapFrom(r => r.dataType));
-            CreateMap<FoodNutrient, Domain.Entities.NutritionalItem>()
+            CreateMap<FoodNutrient, Domain.Entities.NutrientItem>()
                 .ForMember(dto => dto.Id, c => c.MapFrom(r => r.nutrientNumber))
                 .ForMember(dto => dto.Name, c => c.MapFrom(r => r.nutrientName))
                 .ForMember(dto => dto.Value, c => c.MapFrom(r => r.value))
@@ -31,7 +31,7 @@ namespace Infrastructure.Mappings
                 .ForMember(dto => dto.Name, c => c.MapFrom(r => r.description))
                 .ForMember(dto => dto.Nutrients, c => c.MapFrom(r => r.foodNutrients))
                 .ForMember(dto => dto.DataSourceName, c => c.MapFrom(r => r.dataType));
-            CreateMap<AbridgedFoodNutrient, Domain.Entities.NutritionalItem>()
+            CreateMap<AbridgedFoodNutrient, Domain.Entities.NutrientItem>()
                 .ForMember(dto => dto.Id, c => c.MapFrom(r => r.number))
                 .ForMember(dto => dto.Name, c => c.MapFrom(r => r.name))
                 .ForMember(dto => dto.Value, c => c.MapFrom(r => r.amount))

@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.IntegrationTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.IntegrationTests", "test\Infrastructure.IntegrationTests\Infrastructure.IntegrationTests.csproj", "{8019DCB3-86EC-4DC7-8E25-A23398C8CC74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "test\Application.UnitTests\Application.UnitTests.csproj", "{9E8023AE-DFAD-4E5E-9CAD-978C615BD159}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.UnitTests", "test\Domain.UnitTests\Domain.UnitTests.csproj", "{225A2F64-027E-4EA9-A8CD-63F2AAB66493}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +51,10 @@ Global
 		{8019DCB3-86EC-4DC7-8E25-A23398C8CC74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8019DCB3-86EC-4DC7-8E25-A23398C8CC74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8019DCB3-86EC-4DC7-8E25-A23398C8CC74}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E8023AE-DFAD-4E5E-9CAD-978C615BD159}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E8023AE-DFAD-4E5E-9CAD-978C615BD159}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E8023AE-DFAD-4E5E-9CAD-978C615BD159}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E8023AE-DFAD-4E5E-9CAD-978C615BD159}.Release|Any CPU.Build.0 = Release|Any CPU
+		{225A2F64-027E-4EA9-A8CD-63F2AAB66493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{225A2F64-027E-4EA9-A8CD-63F2AAB66493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{225A2F64-027E-4EA9-A8CD-63F2AAB66493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{225A2F64-027E-4EA9-A8CD-63F2AAB66493}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,7 +66,7 @@ Global
 		{9B11F960-4404-4E0D-A674-FC7C6E7DAF32} = {563536FB-1ADA-4193-B6CA-970AA42957F7}
 		{3D1BFE75-7EE6-4B11-A053-7D375040EC31} = {2CFF63E8-5078-4652-9B15-5B73D4837EEE}
 		{8019DCB3-86EC-4DC7-8E25-A23398C8CC74} = {2CFF63E8-5078-4652-9B15-5B73D4837EEE}
-		{9E8023AE-DFAD-4E5E-9CAD-978C615BD159} = {2CFF63E8-5078-4652-9B15-5B73D4837EEE}
+		{225A2F64-027E-4EA9-A8CD-63F2AAB66493} = {2CFF63E8-5078-4652-9B15-5B73D4837EEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E8CB24DB-8152-4D09-87B1-47C0EE203D6E}

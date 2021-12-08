@@ -28,6 +28,13 @@ export const NutrientsTreeTable = ({ nutrients }) => {
       title: "DV%",
       dataIndex: "dailyValuePercentage",
       key: "dailyValuePercentage",
+      render: (text, row) => {
+        if (row.status === "Bad") {
+          return <p style={{ color: "red" }}>{text}</p>;
+        } else if (row.status === "Good") {
+          return <p style={{ color: "green" }}>{text}</p>;
+        } else return text;
+      },
     },
   ];
 
@@ -42,9 +49,8 @@ export const NutrientsTreeTable = ({ nutrients }) => {
         defaultExpandedRowKeys={[1]}
         dataSource={data}
         columns={columns}
-        size="small"
-        pagination={{ hideOnSinglePage: true }}
-      ></Table>
+        size='small'
+        pagination={{ hideOnSinglePage: true }}></Table>
     </TableDiv>
   );
 };
