@@ -1,7 +1,9 @@
-﻿namespace Application.Common.Interfaces
+﻿using System.Collections.Generic;
+
+namespace Application.Common.Interfaces
 {
     public interface IDailyValuesRepository
     {
-        Domain.Entities.DailyValue[] GetDailyValues();
+        IEnumerable<Domain.Entities.DailyValue> GetDailyValues();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using MediatR;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace Application.DailyValues.Queries
 
     }
 
-    public class GetDailyValuesQueryHandler : IRequestHandler<GetDailyValuesQuery, Domain.Entities.DailyValue[]>
+    public class GetDailyValuesQueryHandler : IRequestHandler<GetDailyValuesQuery, IEnumerable<Domain.Entities.DailyValue>>
     {
         private readonly IDailyValuesRepository _dailyValuesRepository;
 
@@ -19,7 +20,7 @@ namespace Application.DailyValues.Queries
             _dailyValuesRepository = dailyValuesRepository;
         }
 
-        public Task<Domain.Entities.DailyValue[]> Handle(GetDailyValuesQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<Domain.Entities.DailyValue>> Handle(GetDailyValuesQuery request, CancellationToken cancellationToken)
         {
             return Task.FromResult(_dailyValuesRepository.GetDailyValues());
         }
