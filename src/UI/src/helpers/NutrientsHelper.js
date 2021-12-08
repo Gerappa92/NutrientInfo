@@ -20,6 +20,7 @@ export const getBasicNutrients = (nutrients) => {
       unitName: n.unitName,
       valueWithUnit: setNutrientValue(n),
       dailyValuePercentage: setDailyValuePercentage(n.dailyValuePercentage),
+      status: n.status,
     }));
   let fat = getFats(nutrients);
   if (fat) {
@@ -43,6 +44,7 @@ export const getFats = (nutrients) => {
       unitName: n.unitName,
       valueWithUnit: setNutrientValue(n),
       dailyValuePercentage: setDailyValuePercentage(n.dailyValuePercentage),
+      status: n.status,
     }));
   return {
     id: fat.id,
@@ -53,6 +55,7 @@ export const getFats = (nutrients) => {
     children: fattyAcids,
     key: fat.name,
     dailyValuePercentage: setDailyValuePercentage(fat.dailyValuePercentage),
+    status: fat.status,
   };
 };
 
@@ -73,6 +76,7 @@ export const getElseNutrients = (nutrients) => {
       unitName: n.unitName,
       valueWithUnit: setNutrientValue(n),
       dailyValuePercentage: setDailyValuePercentage(n.dailyValuePercentage),
+      status: n.status,
     }));
 
   return elseNutrients;
@@ -89,5 +93,6 @@ export const getVitamins = (nutrients) => {
       unitName: n.unitName,
       valueWithUnit: setNutrientValue(n),
       dailyValuePercentage: setDailyValuePercentage(n.dailyValuePercentage),
+      status: n.status,
     }));
 };
