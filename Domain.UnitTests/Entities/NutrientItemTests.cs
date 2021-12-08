@@ -29,7 +29,7 @@ namespace Domain.UnitTests.Entities
 
             _nutritionalItem.CalcDailyValuePercentage(recomendedValue);
 
-            _nutritionalItem.DailyValuePercentage.Should().Be(0.1f);
+            _nutritionalItem.DailyValuePercentage.Should().Be(10);
         }
 
         [Test]
@@ -50,9 +50,9 @@ namespace Domain.UnitTests.Entities
         }
 
         [TestCase(0, NutrientItemStatus.Neutral)]
-        [TestCase(0.5f, NutrientItemStatus.Good)]
-        [TestCase(1, NutrientItemStatus.Warning)]
-        [TestCase(1 + 1, NutrientItemStatus.Bad)]
+        [TestCase(50, NutrientItemStatus.Good)]
+        [TestCase(100, NutrientItemStatus.Warning)]
+        [TestCase(100 + 1, NutrientItemStatus.Bad)]
         public void Shoul_SetAppropriateStatus(float value, NutrientItemStatus status)
         {
             var nutritionalItem = new Domain.Entities.NutrientItem()
@@ -60,7 +60,7 @@ namespace Domain.UnitTests.Entities
                 Id = "1",
                 Name = "Protein",
                 UnitName = "g",
-                Value = value * 100
+                Value = value
             };
             float recomendedValue = 100;
 

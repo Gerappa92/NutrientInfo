@@ -8,28 +8,32 @@ namespace Domain.Entities
         public string Id { get; set; }
         public string Name { get; set; }
         public float Value { get; set; }
-        public string UnitName { get; set; }
+        public string UnitName { get; set; } = string.Empty;
         public float DailyValuePercentage { get; private set; }
         public string Status { get; private set; } = "Neutral";
 
         public NutrientItem()
         {
+            UnitName = UnitName.ToLower();
             CalcDailyValuePercentage(0);
         }
 
         private Dictionary<float, NutrientItemStatus> Statuses = new Dictionary<float, NutrientItemStatus>()
         {
             { 0, NutrientItemStatus.Neutral },
-            { 0.5f ,NutrientItemStatus.Good },
-            { 1 ,NutrientItemStatus.Warning },
+            { 50f ,NutrientItemStatus.Good },
+            { 100 ,NutrientItemStatus.Warning },
             { float.MaxValue,NutrientItemStatus.Bad }
         };
 
         public void CalcDailyValuePercentage(float recommendedValue)
-        { 
-            DailyValuePercentage = recommendedValue > 0 ? Value / recommendedValue : 0;
+        {
+            DailyValuePercentage = recommendedValue <= 0 ? 0 : CalcPercentage(Value, recommendedValue);
             SetStatus();
         }
+
+        private float CalcPercentage(float devidend, float divisor) => (devidend / divisor) * 100;
+
         private void SetStatus()
         {
             var statuses = Statuses.Where(s => DailyValuePercentage <= s.Key);
