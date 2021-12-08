@@ -38,8 +38,8 @@ namespace Application.Food.Queries
                 }
             }
 
-            var tags = _foodTagsRepository.Filter(food.Nutrients);
-            food.AddFoodTags(tags);
+            var tags = _foodTagsRepository.GetAll();
+            food.SetFoodTags(tags);
 
             return food;
         }

@@ -13,9 +13,31 @@ namespace Domain.Entities
         public string DataSourceName { get; set; }
         public List<FoodTag> FoodTags { get; private set; } = new List<FoodTag>();
 
-        public void AddFoodTags(IEnumerable<FoodTag> foodTags)
+        public void SetFoodTags(IEnumerable<FoodTag> tags)
         {
-            FoodTags = foodTags.ToList();
+            if (Nutrients.Count() == 0 || tags.Count() == 0)
+            {
+                return;
+            }
+
+            var filteredTags = new List<Domain.Entities.FoodTag>();
+
+            foreach (var tag in tags)
+            {
+                var nutrient = Nutrients.FirstOrDefault(n => n.Id == tag.NutrientId);
+                if (nutrient is null)
+                {
+                    continue;
+                }
+
+                if (tag.MinDailyValuePercentage <= nutrient.DailyValuePercentage
+                    && tag.MaxDailyValuePercentage >= nutrient.DailyValuePercentage)
+                {
+                    filteredTags.Add(tag);
+                }
+            }
+
+            FoodTags = filteredTags.ToList();
         }
     }
 }
