@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Domain.Entities
 {
@@ -10,5 +11,11 @@ namespace Domain.Entities
         public string BrandName { get; set; }
         public List<NutrientItem> Nutrients { get; set; } = new List<NutrientItem>();
         public string DataSourceName { get; set; }
+        public List<FoodTag> FoodTags { get; private set; } = new List<FoodTag>();
+
+        public void FilterFoodTags(IEnumerable<FoodTag> foodTags)
+        {
+            FoodTags = foodTags.ToList();
+        }
     }
 }
