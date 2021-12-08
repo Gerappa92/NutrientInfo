@@ -13,7 +13,7 @@ namespace Domain.Entities
         public string DataSourceName { get; set; }
         public List<FoodTag> FoodTags { get; private set; } = new List<FoodTag>();
 
-        public void FilterFoodTags(IEnumerable<FoodTag> foodTags)
+        public void AddFoodTags(IEnumerable<FoodTag> foodTags)
         {
             FoodTags = foodTags.ToList();
         }

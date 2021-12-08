@@ -10,7 +10,7 @@ namespace Infrastructure.Repositories
     public class FoodTagsRepository : IFoodTagsRepository
     {
         private IAzureTableRepository<FoodTag> _tableRepository;
-        private const string _tableName = "DailyValues";
+        private const string _tableName = "FoodTags";
         private readonly IMapper _mapper;
 
         public FoodTagsRepository(IAzureTableRepository<FoodTag> tableRepository, IMapper mapper)

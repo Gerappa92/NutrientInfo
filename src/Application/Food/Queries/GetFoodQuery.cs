@@ -15,11 +15,13 @@ namespace Application.Food.Queries
     {
         private readonly IFoodDataService _foodDataService;
         private readonly IDailyValuesRepository _dailyValuesRepository;
+        private readonly IFoodTagsRepository _foodTagsRepository;
 
-        public GetFoodQueryHandler(IFoodDataService foodDataService, IDailyValuesRepository dailyValuesRepository)
+        public GetFoodQueryHandler(IFoodDataService foodDataService, IDailyValuesRepository dailyValuesRepository, IFoodTagsRepository foodTagsRepository)
         {
             _foodDataService = foodDataService;
             _dailyValuesRepository = dailyValuesRepository;
+            _foodTagsRepository = foodTagsRepository;
         }
 
         public async Task<Domain.Entities.Food> Handle(GetFoodQuery request, CancellationToken cancellationToken)
@@ -35,6 +37,9 @@ namespace Application.Food.Queries
                     nutrient.CalcDailyValuePercentage(dailyValue.Value);
                 }
             }
+
+            var tags = _foodTagsRepository.Filter(food.Nutrients);
+            food.AddFoodTags(tags);
 
             return food;
         }

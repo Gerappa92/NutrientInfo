@@ -15,6 +15,7 @@ namespace Infrastructure
             services.AddAutoMapper(typeof(FoodMapping), typeof(AzureTablesMapping));
             services.AddTransient<IFoodDataService, FoodDataCentralService>();
             services.AddTransient<IDailyValuesRepository, DailyValuesRepository>();
+            services.AddTransient<IFoodTagsRepository, FoodTagsRepository>();
             services.AddTransient(typeof(IAzureTableRepository<>),typeof(AzureTableRepository<>));
             return services;
         }
