@@ -8,7 +8,7 @@ namespace Domain.Entities
         public string Name { get; set; }
         public string BrandOwner { get; set; }
         public string BrandName { get; set; }
-        public List<NutritionalItem> Nutrients { get; set; } = new List<NutritionalItem>();
+        public List<NutrientItem> Nutrients { get; set; } = new List<NutrientItem>();
         public string DataSourceName { get; set; }
     }
 }
