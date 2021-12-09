@@ -4,6 +4,7 @@ import axios from "axios";
 import { PageHeader, Tag, Spin } from "antd";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
+import { FoodTags } from "../../components/FoodTags/FoodTags";
 import styled from "styled-components";
 import "./FoodDetails.css";
 
@@ -33,33 +34,13 @@ export const FoodDetails = () => {
     })();
   }, [foodId]);
 
-  const getTag = (tag) => {
-    const color = getTagColor(tag.mark);
-    return (
-      <Tag key={tag.name} color={color}>
-        {tag.name}
-      </Tag>
-    );
-  };
-
-  const getTagColor = (mark) => {
-    switch (mark) {
-      case "positive":
-        return "green";
-      case "negative":
-        return "red";
-      default:
-        break;
-    }
-  };
-
   return (
     <Spin style={{ marginTop: "10vh" }} spinning={loading} size='large'>
       {!loading && (
         <PageHeader
           title={food.name}
-          subTitle={food.brandName ?? food.dataSourceName}
-          tags={food.foodTags.map((tag) => getTag(tag))}>
+          subTitle={food.brandName ?? food.dataSourceName}>
+          <FoodTags tags={food.foodTags}></FoodTags>
           <FoodDetailsContainer>
             <FoodDetailsItems>
               <NutrientsTreeTable nutrients={food.nutrients} />
