@@ -2,6 +2,7 @@ import { Layout, Divider, Menu } from "antd";
 import {
   DesktopOutlined,
   InfoCircleOutlined,
+  CloseOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -19,44 +20,45 @@ const PageContainer = styled.div`
   padding: "0 10px";
 `;
 
-function LayoutSimple(params) {
+function LayoutSimple() {
   const [collapsed, setCollapsed] = useState(true);
 
-  const toggle = () => setCollapsed(!collapsed);
+  const onCollapse = (collapsed) => setCollapsed(collapsed);
 
   return (
-    <Layout>
+    <Layout hasSider={true}>
       <Sider
-        trigger={null}
+        breakpoint="lg"
         collapsedWidth={0}
-        collapsible
-        collapsed={collapsed}>
-        <Menu theme='dark' defaultSelectedKeys={["1"]} mode='inline'>
-          <Menu.Item key='1' icon={<DesktopOutlined />}>
+        width={180}
+        onCollapse={onCollapse}
+        collapsed={collapsed}
+        trigger={collapsed ? <MenuOutlined /> : <CloseOutlined />}
+      >
+        <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+          <Menu.Item key="1" icon={<DesktopOutlined />}>
             Home
           </Menu.Item>
-          <Menu.Item key='2' icon={<InfoCircleOutlined />}>
+          <Menu.Item key="2" icon={<InfoCircleOutlined />}>
             About
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout className='layout'>
+      {/* todo: desktop width */}
+      <Layout style={{ minWidth: "100vw" }}>
         <Router>
-          <Header className='header'>
-            <div className='menu'>
-              <MenuOutlined onClick={toggle} />
-            </div>
-            <Link to='/'>
-              <div className='logo'>Nutrient Info</div>
+          <Header className="header">
+            <Link to="/">
+              <div className="logo">Nutrient Info</div>
             </Link>
           </Header>
           <Content>
             <PageContainer>
               <Switch>
-                <Route path='/food-details/:foodId'>
+                <Route path="/food-details/:foodId">
                   <FoodDetails></FoodDetails>
                 </Route>
-                <Route path='/'>
+                <Route path="/">
                   <SearchPage></SearchPage>
                 </Route>
               </Switch>
@@ -69,12 +71,12 @@ function LayoutSimple(params) {
           <div>
             {" "}
             Icons made by
-            <a href='https://www.freepik.com' title='Freepik'>
+            <a href="https://www.freepik.com" title="Freepik">
               {" "}
               Freepik
             </a>{" "}
             from
-            <a href='https://www.flaticon.com/' title='Flaticon'>
+            <a href="https://www.flaticon.com/" title="Flaticon">
               {" "}
               www.flaticon.com
             </a>
