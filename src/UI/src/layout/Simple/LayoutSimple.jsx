@@ -11,6 +11,7 @@ import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
 import "./LayoutSimple.css";
 import styled from "styled-components";
 import { useState } from "react";
+import { AboutPage } from "../../pages/AboutPage/AboutPage";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -26,27 +27,27 @@ function LayoutSimple() {
   const onCollapse = (collapsed) => setCollapsed(collapsed);
 
   return (
-    <Layout hasSider={true}>
-      <Sider
-        breakpoint="lg"
-        collapsedWidth={0}
-        width={180}
-        onCollapse={onCollapse}
-        collapsed={collapsed}
-        trigger={collapsed ? <MenuOutlined /> : <CloseOutlined />}
-      >
-        <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-          <Menu.Item key="1" icon={<DesktopOutlined />}>
-            Home
-          </Menu.Item>
-          <Menu.Item key="2" icon={<InfoCircleOutlined />}>
-            About
-          </Menu.Item>
-        </Menu>
-      </Sider>
-      {/* todo: desktop width */}
-      <Layout style={{ minWidth: "100vw" }}>
-        <Router>
+    <Router>
+      <Layout hasSider={true}>
+        <Sider
+          breakpoint="lg"
+          collapsedWidth={0}
+          width={180}
+          onCollapse={onCollapse}
+          collapsed={collapsed}
+          trigger={collapsed ? <MenuOutlined /> : <CloseOutlined />}
+        >
+          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+            <Menu.Item key="1" icon={<DesktopOutlined />}>
+              <Link to="/">Home</Link>
+            </Menu.Item>
+            <Menu.Item key="2" icon={<InfoCircleOutlined />}>
+              <Link to="/about">About</Link>
+            </Menu.Item>
+          </Menu>
+        </Sider>
+        {/* todo: desktop width */}
+        <Layout style={{ minWidth: "100vw" }}>
           <Header className="header">
             <Link to="/">
               <div className="logo">Nutrient Info</div>
@@ -58,32 +59,34 @@ function LayoutSimple() {
                 <Route path="/food-details/:foodId">
                   <FoodDetails></FoodDetails>
                 </Route>
+                <Route path="/about" component={AboutPage}></Route>
                 <Route path="/">
                   <SearchPage></SearchPage>
                 </Route>
               </Switch>
             </PageContainer>
           </Content>
-        </Router>
-        <Footer>
-          Gerappa Design ©2021 Created by Krzysztof Juszcze
-          <Divider />
-          <div>
-            {" "}
-            Icons made by
-            <a href="https://www.freepik.com" title="Freepik">
+
+          <Footer>
+            Gerappa Design ©2021 Created by Krzysztof Juszcze
+            <Divider />
+            <div>
               {" "}
-              Freepik
-            </a>{" "}
-            from
-            <a href="https://www.flaticon.com/" title="Flaticon">
-              {" "}
-              www.flaticon.com
-            </a>
-          </div>
-        </Footer>
+              Icons made by
+              <a href="https://www.freepik.com" title="Freepik">
+                {" "}
+                Freepik
+              </a>{" "}
+              from
+              <a href="https://www.flaticon.com/" title="Flaticon">
+                {" "}
+                www.flaticon.com
+              </a>
+            </div>
+          </Footer>
+        </Layout>
       </Layout>
-    </Layout>
+    </Router>
   );
 }
 
