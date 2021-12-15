@@ -30,11 +30,11 @@ function LayoutSimple() {
     <Router>
       <Layout hasSider={true}>
         <Sider
-          breakpoint="lg"
           collapsedWidth={0}
           width={180}
           onCollapse={onCollapse}
-          collapsed={collapsed}
+          defaultCollapsed={true}
+          collapsible
           trigger={collapsed ? <MenuOutlined /> : <CloseOutlined />}
         >
           <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
@@ -47,7 +47,7 @@ function LayoutSimple() {
           </Menu>
         </Sider>
         {/* todo: desktop width */}
-        <Layout style={{ minWidth: "100vw" }}>
+        <Layout style={{ minWidth: "85vw" }}>
           <Header className="header">
             <Link to="/">
               <div className="logo">Nutrient Info</div>
