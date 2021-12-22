@@ -38,6 +38,8 @@ namespace Application.IntegrationTests
                 w.EnvironmentName == "Development" &&
                 w.ApplicationName == "WebAPI"));
 
+            services.AddLogging();
+
             startup.ConfigureServices(services);
 
             _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
