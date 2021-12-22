@@ -1,10 +1,5 @@
-import LayoutSimple from './layout/Simple/LayoutSimple';
-import './App.css';
+import LayoutSimple from "./layout/Simple/LayoutSimple";
 
-const App = () => (
-  <div className="App">
-    <LayoutSimple></LayoutSimple>
-  </div>
-)
+const App = () => <LayoutSimple></LayoutSimple>;
 
 export default App;
