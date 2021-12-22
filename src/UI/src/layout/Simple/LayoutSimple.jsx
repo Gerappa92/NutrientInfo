@@ -8,12 +8,25 @@ import {
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import SearchPage from "../../pages/SearchPage/SearchPage";
 import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
-import "./LayoutSimple.css";
 import styled from "styled-components";
 import { useState } from "react";
 import { AboutPage } from "../../pages/AboutPage/AboutPage";
 
 const { Header, Content, Footer, Sider } = Layout;
+
+const NutrientHeader = styled(Header)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const NutrientLogo = styled.div`
+  padding: 0 20px;
+  font-family: "Kaushan Script", cursive;
+  font-size: x-large;
+  color: #fff;
+  width: -webkit-fill-available;
+`;
 
 const PageContainer = styled.div`
   min-height: 80vh;
@@ -24,35 +37,38 @@ const PageContainer = styled.div`
 function LayoutSimple() {
   const [collapsed, setCollapsed] = useState(true);
 
+  const hideMenu = true;
+
   const onCollapse = (collapsed) => setCollapsed(collapsed);
 
   return (
     <Router>
       <Layout hasSider={true}>
-        <Sider
-          collapsedWidth={0}
-          width={180}
-          onCollapse={onCollapse}
-          defaultCollapsed={true}
-          collapsible
-          trigger={collapsed ? <MenuOutlined /> : <CloseOutlined />}
-        >
-          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            <Menu.Item key="1" icon={<DesktopOutlined />}>
-              <Link to="/">Home</Link>
-            </Menu.Item>
-            <Menu.Item key="2" icon={<InfoCircleOutlined />}>
-              <Link to="/about">About</Link>
-            </Menu.Item>
-          </Menu>
-        </Sider>
-        {/* todo: desktop width */}
+        <div hidden={hideMenu}>
+          <Sider
+            collapsedWidth={0}
+            width={180}
+            onCollapse={onCollapse}
+            defaultCollapsed={true}
+            collapsible
+            trigger={collapsed ? <MenuOutlined /> : <CloseOutlined />}
+          >
+            <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+              <Menu.Item key="1" icon={<DesktopOutlined />}>
+                <Link to="/">Home</Link>
+              </Menu.Item>
+              <Menu.Item key="2" icon={<InfoCircleOutlined />}>
+                <Link to="/about">About</Link>
+              </Menu.Item>
+            </Menu>
+          </Sider>
+        </div>
         <Layout style={{ minWidth: "85vw" }}>
-          <Header className="header">
+          <NutrientHeader>
             <Link to="/">
-              <div className="logo">Nutrient Info</div>
+              <NutrientLogo>Nutrient Info</NutrientLogo>
             </Link>
-          </Header>
+          </NutrientHeader>
           <Content>
             <PageContainer>
               <Switch>
@@ -68,7 +84,7 @@ function LayoutSimple() {
           </Content>
 
           <Footer>
-            Gerappa Design ©2021 Created by Krzysztof Juszcze
+            Gerappa Design © 2021 Created by Krzysztof Juszcze
             <Divider />
             <div>
               {" "}
