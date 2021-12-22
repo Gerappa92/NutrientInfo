@@ -1,9 +1,12 @@
 name: .NET
 
 on:
+  push:
+    branches:
+      - development
   pull_request:
     branches: 
-      - develop
+      - development
 
 jobs:
   build:
