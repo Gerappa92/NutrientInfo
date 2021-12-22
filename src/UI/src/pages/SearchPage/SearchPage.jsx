@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { Input, Pagination, Empty, Spin, Checkbox } from "antd";
+import { Input, Pagination, Empty, Spin, Checkbox, Typography } from "antd";
 import { GenericList } from "../../components/GenericList/GenericList";
 import { FoodNutrientsCardItem } from "../../components/FoodNutrientsCardItem/FoodNutrientsCardItem";
 import axios from "axios";
 import styled from "styled-components";
 
+const { Title } = Typography;
 const { Search } = Input;
+
+const MottoDiv = styled.div`
+  margin: 5vh 10vh;
+`;
+
 const SearchPageContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -70,6 +76,12 @@ function SearchPage() {
   return (
     <SearchPageContainer>
       <div>
+        <MottoDiv>
+          <Title>You are what you eat</Title>
+          <Title level={5}>
+            Search from thousands of products and understand what's good for you
+          </Title>
+        </MottoDiv>
         <SearchArea>
           <Input.Group compact style={{ margin: "0 0 20px" }}>
             <Input

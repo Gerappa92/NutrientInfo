@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import { PageHeader, Tag, Spin } from "antd";
+import { PageHeader, Spin } from "antd";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { FoodTags } from "../../components/FoodTags/FoodTags";
@@ -35,18 +35,20 @@ export const FoodDetails = () => {
   }, [foodId]);
 
   return (
-    <Spin style={{ marginTop: "10vh" }} spinning={loading} size='large'>
+    <Spin style={{ marginTop: "10vh" }} spinning={loading} size="large">
       {!loading && (
         <PageHeader
           title={food.name}
-          subTitle={food.brandName ?? food.dataSourceName}>
+          subTitle={food.brandName ?? food.dataSourceName}
+        >
           <FoodTags tags={food.foodTags}></FoodTags>
           <FoodDetailsContainer>
             <FoodDetailsItems>
               <NutrientsTreeTable nutrients={food.nutrients} />
             </FoodDetailsItems>
             <FoodDetailsItems
-              style={{ height: "calc(100vh / var(--chart-divisor))" }}>
+              style={{ height: "calc(100vh / var(--chart-divisor))" }}
+            >
               <NutrientPieChart nutrients={food.nutrients} />
             </FoodDetailsItems>
           </FoodDetailsContainer>
