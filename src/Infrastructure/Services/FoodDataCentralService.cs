@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Food.Dto;
+using Application.Food.Queries;
 using AutoMapper;
 using Flurl.Http;
 using Infrastructure.Contracts.FoodDataCentral;
@@ -22,7 +23,6 @@ namespace Infrastructure.Services
         public FoodDataCentralService(IConfiguration configuration, IMapper mapper)
         {
             _mapper = mapper;
-
             _baseUrl = configuration.GetValue<string>("FoodCentralData:ApiBaseUrl");
             _apiKey = configuration.GetValue<string>("FoodCentralData:ApiKey");
             if (!Uri.IsWellFormedUriString(_baseUrl, UriKind.Absolute))
@@ -31,35 +31,57 @@ namespace Infrastructure.Services
             }
         }
 
-        public async Task<SearchFoodDto> SearchFood(string searchTerm, int pageSize = 10, int pageNumber = 1, string brandOwner = "", bool requireAllWords = false)
+        public async Task<SearchFoodDto> SearchFood(SearchFoodQuery query)
         {
-            string url = _baseUrl + "foods/search?" + GetQueryApiKey();
-            var searchQuery = new SearchQuery(searchTerm, pageSize, pageNumber, brandOwner, requireAllWords);
             try
             {
-                SearchResult searchResult = await url.PostJsonAsync(searchQuery).ReceiveJson<SearchResult>();
+                FoodDataSearchResult searchResult = await SearchFoodApiCall(query);
                 var dto = _mapper.Map<SearchFoodDto>(searchResult);
                 return dto;
             }
             catch (Exception e)
             {
                 throw new FoodDataCentralApiRequestException(e.Message);
-            }            
+            }
         }
 
-        public async Task<Domain.Entities.Food>  GetFood(string id)
+        public async Task<Domain.Entities.Food> GetFood(string id)
         {
-            string url = $"{_baseUrl}food/{id}?{GetQueryApiKey()}&format=abridged";
             try
             {
-                AbridgedFood searchResult = await url.GetJsonAsync<AbridgedFood>();
-                var dto = _mapper.Map<Domain.Entities.Food>(searchResult);
+                FoodDataEntityDetails entityDetails = await GetEntityDetailsApiCall(id);
+                var dto = _mapper.Map<Domain.Entities.Food>(entityDetails);
                 return dto;
             }
             catch (Exception e)
             {
                 throw new FoodDataCentralApiRequestException(e.Message);
             }
+        }
+        private async Task<FoodDataSearchResult> SearchFoodApiCall(SearchFoodQuery query)
+        {
+            string url = GetSearchFoodApiUrl();
+            var searchQuery = new FoodDataSearchQuery(query);
+            FoodDataSearchResult searchResult = await url.PostJsonAsync(searchQuery).ReceiveJson<FoodDataSearchResult>();
+            return searchResult;
+        }
+
+        private async Task<FoodDataEntityDetails> GetEntityDetailsApiCall(string id)
+        {
+            string url = GetEntityDetailsApiUrl(id);
+            FoodDataEntityDetails entityDetails = await url.GetJsonAsync<FoodDataEntityDetails>();
+            return entityDetails;
+        }
+
+
+        private string GetSearchFoodApiUrl()
+        {
+            return _baseUrl + "foods/search?" + GetQueryApiKey();
+        }
+
+        private string GetEntityDetailsApiUrl(string id)
+        {
+            return $"{_baseUrl}food/{id}?{GetQueryApiKey()}&format=abridged";
         }
     }
 }

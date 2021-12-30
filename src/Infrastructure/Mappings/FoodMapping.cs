@@ -8,7 +8,7 @@ namespace Infrastructure.Mappings
     {
         public FoodMapping()
         {
-            CreateMap<SearchResult, SearchFoodDto>()
+            CreateMap<FoodDataSearchResult, SearchFoodDto>()
                 .ForMember(dto => dto.Foods, c => c.MapFrom(r => r.foods))
                 .ForMember(dto => dto.Query, c => c.MapFrom(r => r.foodSearchCriteria.query))
                 .ForMember(dto => dto.TotalHits, c => c.MapFrom(r => r.totalHits));
@@ -24,7 +24,7 @@ namespace Infrastructure.Mappings
                 .ForMember(dto => dto.Name, c => c.MapFrom(r => r.nutrientName))
                 .ForMember(dto => dto.Value, c => c.MapFrom(r => r.value))
                 .ForMember(dto => dto.UnitName, c => c.MapFrom(r => r.unitName));
-            CreateMap<AbridgedFood, Domain.Entities.Food>()
+            CreateMap<FoodDataEntityDetails, Domain.Entities.Food>()
                 .ForMember(dto => dto.Id, c => c.MapFrom(r => r.fdcId))
                 .ForMember(dto => dto.BrandOwner, c => c.MapFrom(r => r.brandOwner))
                 .ForMember(dto => dto.BrandName, c => c.MapFrom(r => r.brandName))
