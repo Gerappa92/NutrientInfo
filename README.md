@@ -2,6 +2,8 @@
 
 Applicaiton to retriew a nutrient data from [The FoodData Central API](https://fdc.nal.usda.gov/api-guide.html)
 
+Application is avelible [here](https://nutrient-info.azurewebsites.net/)
+
 ## Available Scripts
 
 In the project directory, you can run:
