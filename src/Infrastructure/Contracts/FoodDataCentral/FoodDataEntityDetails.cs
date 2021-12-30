@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Contracts.FoodDataCentral
 {
-    public class AbridgedFood
+    public class FoodDataEntityDetails
     {
         public int fdcId { get; set; }
         public string description { get; set; }

@@ -26,7 +26,7 @@ namespace Application.Food.Queries
 
         public async Task<SearchFoodDto> Handle(SearchFoodQuery request, CancellationToken cancellationToken)
         {
-            var dto = await _foodDataService.SearchFood(request.SearchTerm, request.PageSize, request.PageNumber, request.BrandOwner, request.RequireAllWords);
+            var dto = await _foodDataService.SearchFood(request);
             return dto;
         }
     }

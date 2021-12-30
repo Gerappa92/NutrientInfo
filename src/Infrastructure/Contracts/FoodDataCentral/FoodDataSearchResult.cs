@@ -1,5 +1,5 @@
 ﻿
-public class SearchResult
+public class FoodDataSearchResult
 {
     public FoodSearchCriteria foodSearchCriteria { get; set; }
     public int totalHits { get; set; }

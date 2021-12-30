@@ -1,19 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿using Application.Food.Queries;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Contracts.FoodDataCentral
 {
-    public class SearchQuery
+    public class FoodDataSearchQuery
     {
-        public SearchQuery(string searchTerm, int pageSize, int pageNumber, string brandOwner, bool requireAllWords)
+        public FoodDataSearchQuery(SearchFoodQuery query)
         {
-            Query = searchTerm ?? "";
+            Query = query.SearchTerm ?? "";
             DataType = new string[] { };
-            PageSize = pageSize;
-            PageNumber = pageNumber;
+            PageSize = query.PageSize;
+            PageNumber = query.PageNumber;
             SortBy = "";
             SortOrder = "";
-            BrandOwner = brandOwner ?? "";
-            RequireAllWords = requireAllWords;
+            BrandOwner = query.BrandOwner ?? "";
+            RequireAllWords = query.RequireAllWords;
         }
         [JsonProperty("query")]
         public string Query { get; set; }

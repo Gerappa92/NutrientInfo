@@ -13,20 +13,17 @@ namespace Application.IntegrationTests.Food.Queries
         private SearchFoodQueryHandler _searchFoodQueryHandler;
 
        [Test]
-       public async Task ReturnAnyFoods()
+       public async Task ShouldReturnFoods()
         {
             var foodDataServiceMock = new Mock<IFoodDataService>();
-            foodDataServiceMock.Setup(s => s.SearchFood(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
+            var query = new SearchFoodQuery();
+            foodDataServiceMock.Setup(s => s.SearchFood(query))
                 .ReturnsAsync(new Application.Food.Dto.SearchFoodDto()
                 {
                     Foods = new Domain.Entities.Food[] {new Domain.Entities.Food() }
                 });
-            _searchFoodQueryHandler = new SearchFoodQueryHandler(foodDataServiceMock.Object);
 
-            var query = new SearchFoodQuery()
-            {
-                SearchTerm = "Banana"
-            };
+            _searchFoodQueryHandler = new SearchFoodQueryHandler(foodDataServiceMock.Object);
 
             var result = await _searchFoodQueryHandler.Handle(query, new System.Threading.CancellationToken());
 
