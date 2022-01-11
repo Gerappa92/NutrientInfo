@@ -11,6 +11,7 @@ import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
 import styled from "styled-components";
 import { useState } from "react";
 import { AboutPage } from "../../pages/AboutPage/AboutPage";
+import { MealCreatorPage } from "../../pages/MealCreator/MealCreatorPage";
 import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
 
 const { Content, Footer, Sider } = Layout;
@@ -47,6 +48,9 @@ function LayoutSimple() {
               <Menu.Item key="2" icon={<InfoCircleOutlined />}>
                 <Link to="/about">About</Link>
               </Menu.Item>
+              <Menu.Item key="3" icon={<InfoCircleOutlined />}>
+                <Link to="/meal-creator">About</Link>
+              </Menu.Item>
             </Menu>
           </Sider>
         </div>
@@ -59,6 +63,7 @@ function LayoutSimple() {
                   <FoodDetails></FoodDetails>
                 </Route>
                 <Route path="/about" component={AboutPage}></Route>
+                <Route path="/meal-creator" component={MealCreatorPage}></Route>
                 <Route path="/">
                   <SearchPage></SearchPage>
                 </Route>
