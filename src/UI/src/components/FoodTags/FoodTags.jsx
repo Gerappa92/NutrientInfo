@@ -1,13 +1,22 @@
 import { Tag } from "antd";
+import styled from "styled-components";
+
+const TagsContainer = styled.div`
+  margin: 5px;
+`;
+
+const FoodTag = styled(Tag)`
+  margin-bottom: 5px;
+`;
 
 export const FoodTags = ({ tags }) => {
   console.log(tags);
   const getTag = (tag) => {
     const color = getTagColor(tag.mark);
     return (
-      <Tag key={tag.name} color={color}>
+      <FoodTag key={tag.name} color={color}>
         {tag.name}
-      </Tag>
+      </FoodTag>
     );
   };
 
@@ -21,5 +30,5 @@ export const FoodTags = ({ tags }) => {
         break;
     }
   };
-  return <>{tags.map((tag) => getTag(tag))}</>;
+  return <TagsContainer>{tags.map((tag) => getTag(tag))}</TagsContainer>;
 };
