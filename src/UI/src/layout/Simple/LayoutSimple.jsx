@@ -11,22 +11,9 @@ import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
 import styled from "styled-components";
 import { useState } from "react";
 import { AboutPage } from "../../pages/AboutPage/AboutPage";
+import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
 
-const { Header, Content, Footer, Sider } = Layout;
-
-const NutrientHeader = styled(Header)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const NutrientLogo = styled.div`
-  padding: 0 20px;
-  font-family: "Kaushan Script", cursive;
-  font-size: x-large;
-  color: #fff;
-  width: -webkit-fill-available;
-`;
+const { Content, Footer, Sider } = Layout;
 
 const PageContainer = styled.div`
   min-height: 80vh;
@@ -64,11 +51,7 @@ function LayoutSimple() {
           </Sider>
         </div>
         <Layout style={{ minWidth: "85vw" }}>
-          <NutrientHeader>
-            <Link to="/">
-              <NutrientLogo>Nutrient Info</NutrientLogo>
-            </Link>
-          </NutrientHeader>
+          <NutrientHeader></NutrientHeader>
           <Content>
             <PageContainer>
               <Switch>
