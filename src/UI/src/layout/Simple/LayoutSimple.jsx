@@ -16,9 +16,13 @@ import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
 
 const { Content, Footer, Sider } = Layout;
 
+const NutrientInfoLayout = styled(Layout)`
+  background: #fff;
+`;
+
 const PageContainer = styled.div`
   min-height: 80vh;
-  background: #fff;
+
   padding: "0 10px";
 `;
 
@@ -31,7 +35,7 @@ function LayoutSimple() {
 
   return (
     <Router>
-      <Layout hasSider={true}>
+      <NutrientInfoLayout hasSider={true}>
         <div hidden={hideMenu}>
           <Sider
             collapsedWidth={0}
@@ -54,7 +58,7 @@ function LayoutSimple() {
             </Menu>
           </Sider>
         </div>
-        <Layout style={{ minWidth: "85vw" }}>
+        <NutrientInfoLayout style={{ minWidth: "85vw" }}>
           <NutrientHeader></NutrientHeader>
           <Content>
             <PageContainer>
@@ -88,8 +92,8 @@ function LayoutSimple() {
               </a>
             </div>
           </Footer>
-        </Layout>
-      </Layout>
+        </NutrientInfoLayout>
+      </NutrientInfoLayout>
     </Router>
   );
 }

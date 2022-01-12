@@ -8,6 +8,7 @@ const HeaderStyled = styled(Header)`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 `;
 
 const NutrientLogo = styled.div`

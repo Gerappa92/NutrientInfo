@@ -9,7 +9,7 @@ const { Title } = Typography;
 const { Search } = Input;
 
 const MottoDiv = styled.div`
-  margin: 5vh 10vh;
+  margin: 0 10vw;
 `;
 
 const SearchPageContainer = styled.div`
