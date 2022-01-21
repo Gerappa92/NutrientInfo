@@ -1,6 +1,7 @@
 import { Typography } from "antd";
 import { MealCreatorForm } from "../../components/MealCreatorForm/MealCreatorForm";
 import styled from "styled-components";
+import { MyMealCreatorForm } from "../../components/MealCreatorForm/MyMealCreatorForm";
 
 const { Title } = Typography;
 
@@ -15,7 +16,8 @@ export const MealCreatorPage = () => {
   return (
     <MealCreatorPageContainer>
       <Title>Meal Creator</Title>
-      <MealCreatorForm></MealCreatorForm>
+      {/* <MealCreatorForm></MealCreatorForm> */}
+      <MyMealCreatorForm />
     </MealCreatorPageContainer>
   );
 };
