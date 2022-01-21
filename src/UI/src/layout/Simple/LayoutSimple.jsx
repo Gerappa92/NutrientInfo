@@ -1,4 +1,4 @@
-import { Layout, Divider, Menu } from "antd";
+import { Layout, Menu } from "antd";
 import {
   DesktopOutlined,
   InfoCircleOutlined,
@@ -13,8 +13,9 @@ import { useState } from "react";
 import { AboutPage } from "../../pages/AboutPage/AboutPage";
 import { MealCreatorPage } from "../../pages/MealCreator/MealCreatorPage";
 import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
+import Footer from "../../components/Footer/Footer";
 
-const { Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const NutrientInfoLayout = styled(Layout)`
   background: #fff;
@@ -22,7 +23,6 @@ const NutrientInfoLayout = styled(Layout)`
 
 const PageContainer = styled.div`
   min-height: 80vh;
-
   padding: "0 10px";
 `;
 
@@ -74,24 +74,7 @@ function LayoutSimple() {
               </Switch>
             </PageContainer>
           </Content>
-
-          <Footer>
-            Gerappa Design © 2021 Created by Krzysztof Juszcze
-            <Divider />
-            <div>
-              {" "}
-              Icons made by
-              <a href="https://www.freepik.com" title="Freepik">
-                {" "}
-                Freepik
-              </a>{" "}
-              from
-              <a href="https://www.flaticon.com/" title="Flaticon">
-                {" "}
-                www.flaticon.com
-              </a>
-            </div>
-          </Footer>
+          <Footer />
         </NutrientInfoLayout>
       </NutrientInfoLayout>
     </Router>
