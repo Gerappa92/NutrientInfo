@@ -1,7 +1,8 @@
 import { Typography } from "antd";
 import { MealCreatorForm } from "../../components/MealCreatorForm/MealCreatorForm";
 import styled from "styled-components";
-import { MyMealCreatorForm } from "../../components/MealCreatorForm/MyMealCreatorForm";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const { Title } = Typography;
 
@@ -13,11 +14,23 @@ const MealCreatorPageContainer = styled.div`
 `;
 
 export const MealCreatorPage = () => {
+  const [meal, setMeal] = useState();
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
+  useEffect(() => {
+    console.info(meal);
+    postMeal();
+  }, [meal]);
+
+  const postMeal = () => {
+    const url = `${apiBaseUrl}mealmaker`;
+    axios.post(url, meal);
+  };
+
   return (
     <MealCreatorPageContainer>
       <Title>Meal Creator</Title>
-      {/* <MealCreatorForm></MealCreatorForm> */}
-      <MyMealCreatorForm />
+      <MealCreatorForm setMeal={setMeal}></MealCreatorForm>
     </MealCreatorPageContainer>
   );
 };
