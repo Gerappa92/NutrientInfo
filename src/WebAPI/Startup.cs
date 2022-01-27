@@ -27,8 +27,8 @@ namespace WebAPI
 
             services.AddControllers()
                 .AddFluentValidation();
-            services.AddApplication(Configuration);
-            services.AddInfrastructure(Configuration);
+            services.AddApplication();
+            services.AddInfrastructure();
             services.AddSingleton(p => Configuration);
 
             services.AddCors(options => AllowAll(options));

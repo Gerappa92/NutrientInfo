@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Domain.Exceptions;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Domain.Entities
@@ -38,6 +39,18 @@ namespace Domain.Entities
             }
 
             FoodTags = filteredTags.ToList();
+        }
+
+        public void SetNutrientsDailyValues(IEnumerable<DailyValue> dailyValues)
+        {
+            foreach (var nutrient in Nutrients)
+            {
+                var dv = dailyValues.FirstOrDefault(d => d.Id.ToString() == nutrient.Id);
+                if (dv != null)
+                {
+                    nutrient.CalcDailyValuePercentage(dv.Value);
+                }
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Food.Queries;
+using AutoMapper;
 using Moq;
 using NUnit.Framework;
 using System.Linq;
@@ -18,12 +19,12 @@ namespace Application.IntegrationTests.Food.Queries
             var foodDataServiceMock = new Mock<IFoodDataService>();
             var query = new SearchFoodQuery();
             foodDataServiceMock.Setup(s => s.SearchFood(query))
-                .ReturnsAsync(new Application.Food.Dto.SearchFoodDto()
+                .ReturnsAsync(new Domain.Collections.FilteredFoodList()
                 {
                     Foods = new Domain.Entities.Food[] {new Domain.Entities.Food() }
                 });
 
-            _searchFoodQueryHandler = new SearchFoodQueryHandler(foodDataServiceMock.Object);
+            _searchFoodQueryHandler = new SearchFoodQueryHandler(foodDataServiceMock.Object, new Mock<IMapper>().Object);
 
             var result = await _searchFoodQueryHandler.Handle(query, new System.Threading.CancellationToken());
 

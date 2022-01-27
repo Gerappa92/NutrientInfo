@@ -1,5 +1,4 @@
 ﻿using Application.Common.Interfaces;
-using Application.Food.Dto;
 using Application.Food.Queries;
 using AutoMapper;
 using Flurl.Http;
@@ -31,12 +30,12 @@ namespace Infrastructure.Services
             }
         }
 
-        public async Task<SearchFoodDto> SearchFood(SearchFoodQuery query)
+        public async Task<Domain.Collections.FilteredFoodList> SearchFood(SearchFoodQuery query)
         {
             try
             {
                 FoodDataSearchResult searchResult = await SearchFoodApiCall(query);
-                var dto = _mapper.Map<SearchFoodDto>(searchResult);
+                var dto = _mapper.Map<Domain.Collections.FilteredFoodList>(searchResult);
                 return dto;
             }
             catch (Exception e)
