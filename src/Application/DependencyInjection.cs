@@ -1,5 +1,7 @@
 ﻿using Application.Common.Behaviours;
+using Application.Common.Interfaces;
 using Application.Common.Mappings;
+using Application.Food;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,7 @@ namespace Application
             services.AddMediatR(executingAssembly);
             services.AddValidatorsFromAssembly(executingAssembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient<IFoodBuilder, FoodBuilder>();
 
             return services;
         }

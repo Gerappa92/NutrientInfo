@@ -14,26 +14,19 @@ namespace Application.Food.Queries
 
     public class GetFoodQueryHandler : IRequestHandler<GetFoodQuery, FoodDto>
     {
-        private readonly IFoodDataService _foodDataService;
-        private readonly IDailyValuesRepository _dailyValuesRepository;
-        private readonly IFoodTagsRepository _foodTagsRepository;
+        private IFoodBuilder _foodBuilder;
         private readonly IMapper _mapper;
 
-        public GetFoodQueryHandler(IFoodDataService foodDataService, IDailyValuesRepository dailyValuesRepository, IFoodTagsRepository foodTagsRepository, IMapper mapper)
+        public GetFoodQueryHandler(IFoodBuilder foodBuilder, IMapper mapper)
         {
-            _foodDataService = foodDataService;
-            _dailyValuesRepository = dailyValuesRepository;
-            _foodTagsRepository = foodTagsRepository;
+            _foodBuilder = foodBuilder;
             _mapper = mapper;
         }
 
         public async Task<FoodDto> Handle(GetFoodQuery request, CancellationToken cancellationToken)
         {
-            var food = await _foodDataService.GetFood(request.Id);
-            var dailyValues = _dailyValuesRepository.GetDailyValues();
-            var tags = _foodTagsRepository.GetAll();
-
-            food.SetDetails(dailyValues, tags);
+            var food = await _foodBuilder.GetFood(request.Id);
+            _foodBuilder.SetDetailes(food);
             
             FoodDto dto = MapToFoodDto(food);
 

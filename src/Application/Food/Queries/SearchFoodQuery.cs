@@ -30,8 +30,13 @@ namespace Application.Food.Queries
         public async Task<FilteredFoodListDto> Handle(SearchFoodQuery request, CancellationToken cancellationToken)
         {
             var filteredFoodList = await _foodDataService.SearchFood(request);
-            var dto = _mapper.Map<FilteredFoodListDto>(filteredFoodList);
+            var dto = MapToDto(filteredFoodList);
             return dto;
+        }
+
+        private FilteredFoodListDto MapToDto(Domain.Collections.FilteredFoodList filteredFoodList)
+        {
+            return _mapper.Map<FilteredFoodListDto>(filteredFoodList);
         }
     }
 }
