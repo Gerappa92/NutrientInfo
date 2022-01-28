@@ -1,10 +1,11 @@
-﻿namespace Domain.Entities
+﻿using System;
+
+namespace Domain.Entities
 {
-    public class Ingriedient : Food
+    public class Ingriedient : Food, IEquatable<Ingriedient>
     {
         public float Amount { get; set; }
-        public string UnitName { get; set; }
-        public Ingriedient(Food food, float amount, string unitName)
+        public Ingriedient(Food food, float amount)
         {
             Id = food.Id;
             Name = food.Name;
@@ -14,7 +15,6 @@
             DataSourceName = food.DataSourceName;
             FoodTags = food.FoodTags;
             Amount = amount;
-            UnitName = unitName;
             CalcNutrientsValues();
         }
 
@@ -24,6 +24,20 @@
             {
                 nutrient.Value = nutrient.Value * (Amount / 100);
             }
+        }
+
+        public bool Equals(Ingriedient other)
+        {
+            return this.Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 29 + Id.GetHashCode();
+            hash = hash * 29 + Name.GetHashCode();
+            hash = hash * 29 + BrandOwner.GetHashCode();
+            return hash;
         }
     }
 }
