@@ -8,12 +8,12 @@ namespace Domain.UnitTests.Entities
     [TestFixture]
     public class MealTests
     {
-        private Meal _meal;
+        private User _user;
 
         [SetUp]
         public void Setup()
         {
-            _meal = new Meal();
+            _user = new User();
         }
 
         [Test]
@@ -23,9 +23,9 @@ namespace Domain.UnitTests.Entities
             var potato2 = CreateIngredient("1", "Potato", 2);
             var ingriedients = new Ingriedient[] { potato1, potato2 };
 
-            _meal.AddIngriedients(ingriedients);
+            var meal = new Meal("Name", _user, ingriedients);
 
-            _meal.Ingriedients.Should().HaveCount(1);
+            meal.Ingriedients.Should().HaveCount(1);
         }
 
         [Test]
@@ -36,9 +36,9 @@ namespace Domain.UnitTests.Entities
             var tomato = CreateIngredient("2", "Tomato", 100);
             tomato.Nutrients.Add(CreateNutrient("1", "Sugar", 10));
             var ingriedients = new Ingriedient[] { potato, tomato };
-            _meal.AddIngriedients(ingriedients);
+            var meal = new Meal("Name", _user, ingriedients);
 
-            var mealNutrients = _meal.GroupNutrients();
+            var mealNutrients = meal.GroupNutrients();
 
             mealNutrients.First(n => n.Name == "Sugar").Value.Should().Be(20);
         }
@@ -51,9 +51,9 @@ namespace Domain.UnitTests.Entities
             var tomato = CreateIngredient("2", "Tomato", 100);
             tomato.Nutrients.Add(CreateNutrient("1", "Sugar", 10));
             var ingriedients = new Ingriedient[] { potato, tomato };
-            _meal.AddIngriedients(ingriedients);
+            var meal = new Meal("Name", _user, ingriedients);
 
-            var mealNutrients = _meal.GroupNutrients();
+            var mealNutrients = meal.GroupNutrients();
 
             mealNutrients.Should().HaveCount(1);
         }
@@ -62,9 +62,9 @@ namespace Domain.UnitTests.Entities
         public void GroupNutrients_Should_ShouldReturnEmptyListWhenThereAreNoIngriedients()
         {
             var ingriedients = new Ingriedient[0];
-            _meal.AddIngriedients(ingriedients);
+            var meal = new Meal("Name", _user, ingriedients);
 
-            var mealNutrients = _meal.GroupNutrients();
+            var mealNutrients = meal.GroupNutrients();
 
             mealNutrients.Should().HaveCount(0);
         }

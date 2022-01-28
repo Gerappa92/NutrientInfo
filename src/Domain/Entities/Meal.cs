@@ -5,10 +5,18 @@ namespace Domain.Entities
 {
     public class Meal
     {
+        public Meal(string name, User author, IEnumerable<Ingriedient> ingriedients)
+        { 
+            Name = name;
+            Author = author;
+            AddIngriedients(ingriedients);
+        }
+
         public string Id { get; set; }
         public string Name { get; set; }
         public User Author { get; set; }
         public HashSet<Ingriedient> Ingriedients { get; set; } = new HashSet<Ingriedient>();
+        
 
         public void AddIngriedients(IEnumerable<Ingriedient> ingriedients)
         {
