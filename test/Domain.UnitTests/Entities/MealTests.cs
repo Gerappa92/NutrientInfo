@@ -1,0 +1,62 @@
+﻿using Domain.Entities;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Domain.UnitTests.Entities
+{
+    [TestFixture]
+    public class MealTests
+    {
+        private Meal _meal;
+
+        private string _potatoId = "1";
+
+        [SetUp]
+        public void Setup()
+        {
+            _meal = new Meal();
+        }
+
+        [Test]
+        public void AddIngriedients_Should_AddOnlyUniqueIngriediens()
+        {
+
+        }
+
+        [Test]
+        public void GroupNutrients_Should_SumsTheSameNutrientsValues()
+        {
+
+        }
+
+        [Test]
+        public void GroupNutrients_Should_ReturnOnlyUniqueNutrients()
+        {
+
+        }
+
+        [Test]
+        public void GroupNutrients_Should_ShouldReturnEmptyListWhenThereAreNoIngriedients()
+        {
+
+        }
+
+        private Ingriedient CreatePotatoIngredient(float amount, string unitName)
+        {
+            var potato = new Food()
+            {
+                Id = _potatoId,
+                Name = "Potato",
+                BrandName = "BrandName",
+                BrandOwner = "BrandOwner"
+            };
+
+            var ingriedient = new Ingriedient(potato, amount, unitName);
+            return ingriedient;
+        }
+    }
+}

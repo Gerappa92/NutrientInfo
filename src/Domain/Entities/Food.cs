@@ -11,7 +11,7 @@ namespace Domain.Entities
         public string BrandName { get; set; }
         public List<NutrientItem> Nutrients { get; set; } = new List<NutrientItem>();
         public string DataSourceName { get; set; }
-        public List<FoodTag> FoodTags { get; private set; } = new List<FoodTag>();
+        public List<FoodTag> FoodTags { get; protected set; } = new List<FoodTag>();
 
         public void SetDetails(IEnumerable<DailyValue> dailyValues, IEnumerable<FoodTag> tags)
         {
@@ -23,7 +23,7 @@ namespace Domain.Entities
         {
             foreach (var nutrient in Nutrients)
             {
-                var recommendedDailyValue = dailyValues.FirstOrDefault(d => d.Id.ToString() == nutrient.Id);
+                var recommendedDailyValue = dailyValues.FirstOrDefault(d => d.Id == nutrient.Id);
                 if (recommendedDailyValue != null)
                 {
                     nutrient.CalcDailyValuePercentage(recommendedDailyValue.Value);

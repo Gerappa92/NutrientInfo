@@ -120,7 +120,7 @@ namespace Domain.UnitTests.Entities
         {
             var sugarDailyValue = new DailyValue()
             {
-                Id = 1,
+                Id = "1",
                 Name = "Sugar",
                 Value = value
             };
