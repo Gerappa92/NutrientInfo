@@ -1,6 +1,6 @@
 import { Button, Spin } from "antd";
 import { useState } from "react";
-import { List, Typography, Input } from "antd";
+import { List, Typography, Input, Pagination } from "antd";
 import { SearchFood } from "../SearchFood/SearchFood";
 import { IngridientListAddItem } from "../IngridientList/IngridientListAddItem";
 import { IngridientListItem } from "../IngridientList/IngridientListItem";
@@ -16,6 +16,7 @@ export const MealForm = (props) => {
   const [meal, setMeal] = useState(defaultMeal);
   const [ingridients, setIngridients] = useState(defaultIngridients);
   const [tableLoading, setTableLoading] = useState(false);
+  const [pagination, setPagination] = useState({ pageNumber: 1, pageSize: 5 });
 
   const addIngridient = (ingriditent) => {
     console.log(ingriditent);
@@ -34,6 +35,14 @@ export const MealForm = (props) => {
         ingridients: prevMeal.ingridients.filter((i) => i.id !== ingridient.id),
       };
     });
+  };
+
+  const onPageChange = (pageNumber) => {
+    setPagination((prevPagination) => ({ ...prevPagination, pageNumber }));
+  };
+
+  const onShowSizeChange = (current, pageSize) => {
+    setPagination((prevPagination) => ({ ...prevPagination, pageSize }));
   };
 
   return (
@@ -57,21 +66,31 @@ export const MealForm = (props) => {
               <SearchFood
                 setData={setIngridients}
                 setTableLoading={setTableLoading}
-                pageNumber={1}
-                pageSize={3}
+                pageNumber={pagination.pageNumber}
+                pageSize={pagination.pageSize}
+                enableRequireAllWordsOption={true}
               />
               <Spin spinning={tableLoading} size="large">
                 {ingridients.foods.length > 0 && (
-                  <List
-                    bordered
-                    dataSource={ingridients.foods}
-                    renderItem={(item) => (
-                      <IngridientListAddItem
-                        ingridient={item}
-                        handleClick={addIngridient}
-                      />
-                    )}
-                  ></List>
+                  <>
+                    <List
+                      bordered
+                      dataSource={ingridients.foods}
+                      renderItem={(item) => (
+                        <IngridientListAddItem
+                          ingridient={item}
+                          handleClick={addIngridient}
+                        />
+                      )}
+                    ></List>
+                    <Pagination
+                      current={pagination.pageNumber}
+                      total={ingridients.totalHits}
+                      hideOnSinglePage={true}
+                      onChange={onPageChange}
+                      onShowSizeChange={onShowSizeChange}
+                    />
+                  </>
                 )}
               </Spin>
             </>
