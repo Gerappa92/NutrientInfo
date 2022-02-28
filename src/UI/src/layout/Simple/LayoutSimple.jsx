@@ -11,7 +11,7 @@ import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
 import styled from "styled-components";
 import { useState } from "react";
 import { AboutPage } from "../../pages/AboutPage/AboutPage";
-import { MealCreatorPage } from "../../pages/MealCreator/MealCreatorPage";
+import { NewMealPage } from "../../pages/NewMealPage/NewMealPage";
 import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
 import Footer from "../../components/Footer/Footer";
 
@@ -67,7 +67,7 @@ function LayoutSimple() {
                   <FoodDetails></FoodDetails>
                 </Route>
                 <Route path="/about" component={AboutPage}></Route>
-                <Route path="/meal-creator" component={MealCreatorPage}></Route>
+                <Route path="/meal-creator" component={NewMealPage}></Route>
                 <Route path="/">
                   <SearchPage></SearchPage>
                 </Route>

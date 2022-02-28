@@ -1,5 +1,5 @@
 import { Typography } from "antd";
-import { MealCreatorForm } from "../../components/MealCreatorForm/MealCreatorForm";
+import { MealForm } from "../../components/MealForm/MealForm";
 import styled from "styled-components";
 import { useState } from "react";
 
@@ -12,7 +12,7 @@ const MealCreatorPageContainer = styled.div`
   padding: 0 5%;
 `;
 
-export const MealCreatorPage = () => {
+export const NewMealPage = () => {
   // const [meal, setMeal] = useState();
   // const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -30,7 +30,7 @@ export const MealCreatorPage = () => {
     <MealCreatorPageContainer>
       <Title>Meal Creator</Title>
       {/* <MealCreatorForm setMeal={setMeal}></MealCreatorForm> */}
-      <MealCreatorForm></MealCreatorForm>
+      <MealForm></MealForm>
     </MealCreatorPageContainer>
   );
 };

@@ -6,7 +6,7 @@ import { IngridientListAddItem } from "../IngridientList/IngridientListAddItem";
 import { IngridientListItem } from "../IngridientList/IngridientListItem";
 import styled from "styled-components";
 
-export const MealCreatorForm = (props) => {
+export const MealForm = (props) => {
   const defaultMeal = {
     name: "",
     ingridients: [],
