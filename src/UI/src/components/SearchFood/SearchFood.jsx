@@ -16,7 +16,7 @@ export const SearchFood = (props) => {
   const defaultQuery = {
     searchTerm: "",
     brandOwner: "",
-    requireAllWords: false,
+    requireAllWords: true,
   };
   const [query, setQuery] = useState(defaultQuery);
 
@@ -85,7 +85,9 @@ export const SearchFood = (props) => {
         />
       </Input.Group>
       {props.enableRequireAllWordsOption && (
-        <Checkbox onChange={onRequireAllWords}>Require All Words</Checkbox>
+        <Checkbox checked={query.requireAllWords} onChange={onRequireAllWords}>
+          Require All Words
+        </Checkbox>
       )}
     </SearchArea>
   );

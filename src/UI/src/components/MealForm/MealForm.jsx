@@ -68,7 +68,6 @@ export const MealForm = (props) => {
                 setTableLoading={setTableLoading}
                 pageNumber={pagination.pageNumber}
                 pageSize={pagination.pageSize}
-                enableRequireAllWordsOption={true}
               />
               <Spin spinning={tableLoading} size="large">
                 {ingridients.foods.length > 0 && (
