@@ -11,8 +11,6 @@ const SearchArea = styled.div`
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-console.log("hello search food!");
-
 export const SearchFood = (props) => {
   const defaultData = { foods: [], totalHits: 0 };
   const defaultQuery = {
@@ -47,17 +45,11 @@ export const SearchFood = (props) => {
     props.setTableLoading(false);
   };
 
-  const onSearchTerm = (event) => {
+  const handleQuery = (event) => {
+    const propName = event.target.name;
     setQuery((prevQuery) => ({
       ...prevQuery,
-      searchTerm: event.target.value,
-    }));
-  };
-
-  const onBrandOwnerChange = (event) => {
-    setQuery((prevFullQuery) => ({
-      ...prevFullQuery,
-      brandOwner: event.target.value,
+      [propName]: event.target.value,
     }));
   };
 
@@ -77,20 +69,24 @@ export const SearchFood = (props) => {
     <SearchArea>
       <Input.Group compact style={{ margin: "0 0 20px" }}>
         <Input
+          name="searchTerm"
           placeholder="e.g. banana, cucumber, milk"
-          onChange={onSearchTerm}
+          onChange={handleQuery}
           style={{ maxWidth: "200px", textAlign: "left" }}
           onPressEnter={onSearch}
         />
         <Search
+          name="brandOwner"
           placeholder="brand owner"
           onSearch={onSearch}
-          onChange={onBrandOwnerChange}
+          onChange={handleQuery}
           style={{ maxWidth: "200px" }}
           enterButton
         />
       </Input.Group>
-      <Checkbox onChange={onRequireAllWords}>Require All Words</Checkbox>
+      {props.enableRequireAllWordsOption && (
+        <Checkbox onChange={onRequireAllWords}>Require All Words</Checkbox>
+      )}
     </SearchArea>
   );
 };
