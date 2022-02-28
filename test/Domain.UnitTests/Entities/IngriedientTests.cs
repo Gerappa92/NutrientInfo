@@ -1,10 +1,7 @@
 ﻿using Domain.Entities;
+using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.UnitTests.Entities
 {
@@ -14,20 +11,30 @@ namespace Domain.UnitTests.Entities
         private Ingriedient _ingriedient;
         private string _potatoId = "1";
 
-        [SetUp]
-        public void Setup()
-        {
-            //_ingriedient = new Ingriedient();
-        }
-
         [Test]
-        public void CreateIngriedient_Should_RecalculateNutrientsValues()
+        [TestCase(100f, 10f, 20f, 10f, 20f)]
+        [TestCase(50f, 10f, 20f, 5f, 10f)]
+        [TestCase(12.5f, 10f, 20f, 1.25f, 2.5f)]
+        [TestCase(200f, 10f, 20f, 20f, 40f)]
+        public void CreateIngriedient_Should_RecalculateNutrientsValues(float amount, float sugarValue, float fatValue, float sugarRecalculated, float fatRecalculated)
         {
+            var sugarId = "1";
+            var fatId = "2";
+            var sugar = new NutrientItem()
+            {
+                Id = sugarId,
+                Name = "Sugar",
+                Value = sugarValue,
+                UnitName = "g"
+            };
+            var fat = new NutrientItem()
+            {
+                Id = fatId,
+                Name = "Fat",
+                Value = fatValue,
+                UnitName = "g"
+            };
 
-        }
-
-        private Ingriedient CreatePotatoIngredient(float amount, string unitName)
-        {
             var potato = new Food()
             {
                 Id = _potatoId,
@@ -36,8 +43,13 @@ namespace Domain.UnitTests.Entities
                 BrandOwner = "BrandOwner"
             };
 
-            var ingriedient = new Ingriedient(potato, amount, unitName);
-            return ingriedient;
+            potato.Nutrients.Add(sugar);
+            potato.Nutrients.Add(fat);
+
+            _ingriedient = new Ingriedient(potato, amount);
+            _ingriedient.Nutrients.First(n => n.Id == sugarId).Value.Should().Be(sugarRecalculated);
+            _ingriedient.Nutrients.First(n => n.Id == fatId).Value.Should().Be(fatRecalculated);
+
         }
     }
 }
