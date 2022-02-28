@@ -18,6 +18,12 @@ const SearchPageContainer = styled.div`
   padding-bottom: 50px;
 `;
 
+const ListContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+`;
+
 // // const SearchArea = styled.div`
 // //   margin: 20px 0 20px;
 // // `;
@@ -50,6 +56,7 @@ function SearchPage() {
           setTableLoading={setTableLoading}
           pageNumber={pagination.pageNumber}
           pageSize={pagination.pageSize}
+          enableRequireAllWordsOption={true}
         />
         <Pagination
           current={pagination.pageNumber}
@@ -59,11 +66,13 @@ function SearchPage() {
           onShowSizeChange={onShowSizeChange}
         />
         <Spin spinning={tableLoading} size="large">
-          <GenericList
-            items={data.foods}
-            resourceName="food"
-            itemComponent={FoodNutrientsCardItem}
-          ></GenericList>
+          <ListContainer>
+            <GenericList
+              items={data.foods}
+              resourceName="food"
+              itemComponent={FoodNutrientsCardItem}
+            ></GenericList>
+          </ListContainer>
 
           {data.foods.length === 0 && (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
