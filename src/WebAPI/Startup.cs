@@ -24,11 +24,11 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers()
                 .AddFluentValidation();
             services.AddApplication();
             services.AddInfrastructure();
+            services.AddJwtAuthentication();
             services.AddSingleton(p => Configuration);
 
             services.AddCors(options => AllowAll(options));
@@ -55,6 +55,8 @@ namespace WebAPI
             }
 
             app.UseApiException();
+
+            app.UseAuthentication();
 
             app.UseRouting();
             app.UseDefaultFiles();
