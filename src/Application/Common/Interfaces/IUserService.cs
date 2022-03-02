@@ -6,6 +6,7 @@ namespace Application.Common.Interfaces
     {
         public Domain.Entities.User Get(string id);
         public Task Register(Domain.Entities.User user);
+        public Task<string> Login(Domain.Entities.User user);
 
     }
 }
