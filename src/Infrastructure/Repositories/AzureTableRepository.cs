@@ -14,7 +14,7 @@ namespace Infrastructure.Repositories
 
         public AzureTableRepository(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("AzureStorageAccount");            
+            _connectionString = configuration.GetConnectionString("AzureStorageAccount");
         }
 
         public void CreateTableClient(string tableName)
