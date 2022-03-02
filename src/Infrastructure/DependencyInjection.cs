@@ -5,6 +5,7 @@ using Infrastructure.Mappings;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Interfaces;
 using Infrastructure.Services;
+using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -25,12 +26,13 @@ namespace Infrastructure
             services.AddTransient(typeof(IAzureTableRepository<>), typeof(AzureTableRepository<>));
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IJwtTokenService, JwtTokenService>();
             return services;
         }
 
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
+        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            string secret = "secret";
+            string secret = configuration.GetValue<string>("JwtSettings:Secret");
 
             services.AddAuthentication(config =>
             {
@@ -47,7 +49,8 @@ namespace Infrastructure
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret)),
                     ValidateIssuer = false,
                     RequireExpirationTime = false,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
+                    ValidateAudience = false
                 };
             });
             return services;
