@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Azure.Data.Tables;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -64,6 +65,20 @@ namespace AzureTableIdentityProvider.DataAccessLayer
         public async Task<ApplicationUser> FindByNameAsync(string normalizedUserName)
         {
             var pages = _userTableClient.QueryAsync<ApplicationUser>(u => u.NormalizedName == normalizedUserName);
+            ApplicationUser user = null;
+
+            await foreach (var item in pages)
+            {
+                user = item;
+                break;
+            }
+
+            return user;
+        }
+
+        public async Task<ApplicationUser> FindByEmailAsync(string normalizedEmail)
+        {
+            var pages = _userTableClient.QueryAsync<ApplicationUser>(u => u.NormalizedEmail == normalizedEmail);
             ApplicationUser user = null;
 
             await foreach (var item in pages)

@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Azure.Data.Tables;
+using Newtonsoft.Json;
 using System;
 using System.Security.Principal;
 
@@ -9,6 +10,7 @@ namespace AzureTableIdentityProvider
     {
         public virtual string Id { get; set; }
         public virtual string Email { get; set; }
+        public string NormalizedEmail { get; set; }
         public virtual bool EmailConfirmed { get; set; }
         public virtual string PasswordHash { get; set; }
         public string AuthenticationType { get; set; }
@@ -19,5 +21,9 @@ namespace AzureTableIdentityProvider
         public string RowKey { get; set; }
         public DateTimeOffset? Timestamp { get; set; }
         public ETag ETag { get; set; }
+        public string RefreshTokenJson { get; set; }
+
+        public RefreshToken GetRefreshToken() => JsonConvert.DeserializeObject<RefreshToken>(RefreshTokenJson);
+        public void SetRefreshToken(RefreshToken refreshToken) => RefreshTokenJson = JsonConvert.SerializeObject(refreshToken);
     }
 }

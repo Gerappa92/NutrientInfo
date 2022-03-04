@@ -1,19 +1,18 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.UsersManagement;
+using Application.Common.UsersManagement.Contracts;
 using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.User.Queries
 {
-    public class LoginUserQuery : IRequest<string>
+    public class LoginUserQuery : IRequest<LoginResponse>
     {
-        public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
     }
 
-    public class LoginUserCommandHandler : IRequestHandler<LoginUserQuery, string>
+    public class LoginUserCommandHandler : IRequestHandler<LoginUserQuery, LoginResponse>
     {
         private IUserService _userService;
 
@@ -22,9 +21,9 @@ namespace Application.User.Queries
             _userService = userService;
         }
 
-        public async Task<string> Handle(LoginUserQuery request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
-            var user = new Domain.Entities.User(request.Email, request.Name, request.Password);
+            var user = new Domain.Entities.User(request.Email, request.Password);
             var token = await _userService.Login(user);
             return token;
         }

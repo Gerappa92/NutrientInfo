@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Application.Common.Interfaces
+namespace Application.Common.Repositories
 {
     public interface IFoodTagsRepository
     {

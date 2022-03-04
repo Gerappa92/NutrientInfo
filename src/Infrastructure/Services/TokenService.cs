@@ -1,27 +1,28 @@
 ﻿using AzureTableIdentityProvider;
 using Infrastructure.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Infrastructure.Settings;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Infrastructure.Services
 {
-    public class JwtTokenService : IJwtTokenService
+    public class TokenService : ITokenService
     {
-        private readonly string _secret;
+        private readonly JwtSettings _jwtSettings;
 
-        public JwtTokenService(IConfiguration configuration)
+        public TokenService(JwtSettings jwtSettings)
         {
-            _secret = configuration.GetValue<string>("JwtSettings:Secret");
+            _jwtSettings = jwtSettings;
         }
 
-        public string GenerateToken(ApplicationUser user)
+        public string GenerateJwtToken(ApplicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secret);
+            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
@@ -31,13 +32,28 @@ namespace Infrastructure.Services
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim("id", user.Id)
                 }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddSeconds(_jwtSettings.JwtTokenLifetime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
+        }
+
+        public RefreshToken GenerateRefreshToken()
+        {
+            using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
+            {
+                var randomBytes = new byte[64];
+                rngCryptoServiceProvider.GetBytes(randomBytes);
+                return new RefreshToken
+                {
+                    Token = Convert.ToBase64String(randomBytes),
+                    Expires = DateTime.UtcNow.AddSeconds(_jwtSettings.RefreshTokenLifetime),
+                    Created = DateTime.UtcNow,
+                };
+            }
         }
     }
 }

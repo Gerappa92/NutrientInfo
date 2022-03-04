@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.UsersManagement;
+using Application.Common.UsersManagement.Contracts;
 using AutoMapper;
 using AzureTableIdentityProvider;
 using Domain.Entities;
@@ -16,12 +17,11 @@ namespace Infrastructure.Services
 
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
-        private IJwtTokenService _jwtTokenService;
+        private ITokenService _tokenService;
 
         private IMapper _mapper;
 
-
-        public UserService(UserManager<ApplicationUser> userManager, IJwtTokenService jwtTokenService, SignInManager<ApplicationUser> signInManager)
+        public UserService(UserManager<ApplicationUser> userManager, ITokenService jwtTokenService, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _mapper = new MapperConfiguration(config =>
@@ -29,27 +29,21 @@ namespace Infrastructure.Services
                     config.CreateMap<User, ApplicationUser>();
                     config.CreateMap<ApplicationUser, User>();
                 }).CreateMapper();
-            _jwtTokenService = jwtTokenService;
+            _tokenService = jwtTokenService;
             _signInManager = signInManager;
         }
 
-        public User Get(string id)
+        public async Task<LoginResponse> Login(User user)
         {
-            throw new System.NotImplementedException();
-        }
+            await SignInUser(user);
 
-        public async Task<string> Login(User user)
-        {
-            var signInResult = await _signInManager.PasswordSignInAsync(user.Email, user.Password, isPersistent: false, lockoutOnFailure: false);
+            var appUser = await _userManager.FindByEmailAsync(user.Email);
+            var refreshToken = _tokenService.GenerateRefreshToken();
 
-            if(!signInResult.Succeeded)
-            {
-                throw new UserServiceException($"Login/password combination is wrong");
-            }
+            await SetUserRefreshToken(appUser, refreshToken);
 
-            var appUser = Map(user);
-            var token = _jwtTokenService.GenerateToken(appUser);
-            return token;
+            var token = _tokenService.GenerateJwtToken(appUser);
+            return new LoginResponse { Token = token, RefreshToken = refreshToken.Token };
         }
 
         public async Task Register(User user)
@@ -69,6 +63,21 @@ namespace Infrastructure.Services
             appUser.PartitionKey = _partitionKey;
             appUser.RowKey = appUser.Id;
             return appUser;
+        }
+        
+        private async Task SignInUser(User user)
+        {
+            var signInResult = await _signInManager.PasswordSignInAsync(user.Email, user.Password, isPersistent: false, lockoutOnFailure: false);
+            if (!signInResult.Succeeded)
+            {
+                throw new UserServiceException($"Login/password combination is wrong");
+            }
+        }
+
+        private async Task SetUserRefreshToken(ApplicationUser appUser, RefreshToken refreshToken)
+        {
+            appUser.SetRefreshToken(refreshToken);
+            await _userManager.UpdateAsync(appUser);
         }
     }
 }

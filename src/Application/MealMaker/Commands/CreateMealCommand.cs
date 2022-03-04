@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.UsersManagement;
 using Domain.Entities;
 using MediatR;
 using System.Collections.Generic;
@@ -29,11 +30,11 @@ namespace Application.MealMaker.Commands
 
         public async Task<Unit> Handle(CreateMealCommand request, CancellationToken cancellationToken)
         {
-            var user = _userService.GetUser(request.UserId);
+            //var user = _userService.Get(request.UserId);
 
-            var ingriedients = await GetIngriedients(request.Ingriedients);
+            //var ingriedients = await GetIngriedients(request.Ingriedients);
 
-            var meal = new Meal(request.Name, user, ingriedients);
+            //var meal = new Meal(request.Name, user, ingriedients);
 
             return Unit.Value;
         }

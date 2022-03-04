@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AzureTableIdentityProvider.DataAccessLayer
 {
-    public class AzureTableUserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>
+    public class AzureTableUserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>, IUserEmailStore<ApplicationUser>
     {
         private AzureTableUserTable _userTable;
         public AzureTableUserStore(AzureTableConnection connection)
@@ -136,6 +136,67 @@ namespace AzureTableIdentityProvider.DataAccessLayer
             if (user == null) throw new ArgumentNullException(nameof(user));
 
             return await _userTable.UpdateAsync(user);
+        }
+
+        public Task SetEmailAsync(ApplicationUser user, string email, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (email == null) throw new ArgumentNullException(nameof(email));
+
+            user.Email = email;
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            return Task.FromResult(user.Email);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            return Task.FromResult(user.EmailConfirmed);
+        }
+
+        public Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            user.EmailConfirmed = confirmed;
+            return Task.CompletedTask;
+        }
+
+        public async Task<ApplicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (normalizedEmail == null || string.IsNullOrEmpty(normalizedEmail)) throw new ArgumentNullException(nameof(normalizedEmail));
+
+            return await _userTable.FindByEmailAsync(normalizedEmail);
+        }
+
+        public Task<string> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            return Task.FromResult(user.Email.ToUpper());
+        }
+
+        public Task SetNormalizedEmailAsync(ApplicationUser user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (normalizedEmail == null || string.IsNullOrEmpty(normalizedEmail)) throw new ArgumentNullException(nameof(normalizedEmail));
+
+            user.NormalizedEmail = normalizedEmail;
+            return Task.CompletedTask;
         }
     }
 }

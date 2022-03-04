@@ -1,4 +1,4 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.UsersManagement;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +7,6 @@ namespace Application.User.Commands
 {
     public class RegisterUserCommand : IRequest
     {
-        public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
     }
@@ -23,7 +22,7 @@ namespace Application.User.Commands
 
         public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            Domain.Entities.User user = new Domain.Entities.User(request.Email, request.Name, request.Password);
+            Domain.Entities.User user = new Domain.Entities.User(request.Email, request.Password);
             await _userManager.Register(user);
 
             return Unit.Value;

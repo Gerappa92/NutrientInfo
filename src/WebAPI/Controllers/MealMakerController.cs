@@ -12,6 +12,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] MealMakerDto command)
         {
+            var refreshtoken = Request.Cookies["refreshToken"];
             Console.WriteLine(command.Name);
             return Ok();
         }

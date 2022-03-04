@@ -1,4 +1,6 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Repositories;
+using Application.Common.UsersManagement;
 using AzureTableIdentityProvider;
 using AzureTableIdentityProvider.DataAccessLayer;
 using Infrastructure.Mappings;
@@ -6,6 +8,7 @@ using Infrastructure.Repositories;
 using Infrastructure.Repositories.Interfaces;
 using Infrastructure.Services;
 using Infrastructure.Services.Interfaces;
+using Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +29,7 @@ namespace Infrastructure
             services.AddTransient(typeof(IAzureTableRepository<>), typeof(AzureTableRepository<>));
 
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IJwtTokenService, JwtTokenService>();
+            services.AddTransient<ITokenService, TokenService>();
             return services;
         }
 
@@ -65,6 +68,15 @@ namespace Infrastructure
             services.AddTransient<IRoleStore<ApplicationRole>, AzureTableRoleStore>();
 
             services.AddIdentity<ApplicationUser, ApplicationRole>().AddDefaultTokenProviders();
+            return services;
+        }
+
+        public static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = new JwtSettings();
+            configuration.Bind(nameof(JwtSettings), jwtSettings);
+            services.AddSingleton(jwtSettings);
+
             return services;
         }
     }

@@ -4,10 +4,15 @@ namespace Domain.Entities
 {
     public class User
     {
-        public User(string email, string name, string password)
+        public User()
+        {
+
+        }
+
+        public User(string email, string password)
         {
             Email = email;
-            Name = string.IsNullOrEmpty(name) ? email : name;
+            Name = email;
             Password = password;
         }
         public string Id { get; set; } = Guid.NewGuid().ToString();

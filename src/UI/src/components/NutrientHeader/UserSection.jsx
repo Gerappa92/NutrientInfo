@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { AuthModal } from "../User/AuthModal/AuthModal";
 import styled from "styled-components";
+import axios from "axios";
+
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 export const UserSection = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -17,17 +20,34 @@ export const UserSection = () => {
     }
   };
 
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   const handleAuth = (values) => {
     console.log(values);
     setWaitingForAuth(true);
-    setTimeout(() => {
-      setWaitingForAuth(false);
-      setIsModalVisible(false);
-    }, 2000);
+
+    Promise.resolve(auth(values))
+      .then(() => {
+        setWaitingForAuth(false);
+        setIsModalVisible(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setWaitingForAuth(false);
+      });
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
+  const auth = async (credentials) => {
+    const action = modalType === "login" ? "login" : "register";
+
+    const response = await axios.post(
+      `${apiBaseUrl}user/${action}`,
+      credentials,
+      { withCredentials: true }
+    );
+    console.log(response);
   };
 
   return (

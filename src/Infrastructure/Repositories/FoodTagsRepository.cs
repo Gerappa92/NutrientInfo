@@ -1,4 +1,4 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Repositories;
 using AutoMapper;
 using Infrastructure.Contracts.AzureTables;
 using Infrastructure.Repositories.Interfaces;

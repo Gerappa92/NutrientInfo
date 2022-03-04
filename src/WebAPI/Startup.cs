@@ -24,6 +24,7 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSettings(Configuration);
             services.AddControllers()
                 .AddFluentValidation();
             services.AddApplication();
@@ -32,7 +33,7 @@ namespace WebAPI
             services.AddAzureTableIdentityProvider(Configuration);
             services.AddSingleton(p => Configuration);
 
-            services.AddCors(options => AllowAll(options));
+            services.AddCors(options => Dev(options));
 
             services.AddSwaggerGen(c =>
             {
@@ -67,7 +68,7 @@ namespace WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(ALLOW_ALL_CORS_POLICY);
+                app.UseCors(DEV_CORS_POLICY);
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
             }
