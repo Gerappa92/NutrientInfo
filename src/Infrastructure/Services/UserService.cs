@@ -33,29 +33,73 @@ namespace Infrastructure.Services
             _signInManager = signInManager;
         }
 
-        public async Task<LoginResponse> Login(User user)
-        {
-            await SignInUser(user);
-
-            var appUser = await _userManager.FindByEmailAsync(user.Email);
-            var refreshToken = _tokenService.GenerateRefreshToken();
-
-            await SetUserRefreshToken(appUser, refreshToken);
-
-            var token = _tokenService.GenerateJwtToken(appUser);
-            return new LoginResponse { Token = token, RefreshToken = refreshToken.Token };
-        }
-
         public async Task Register(User user)
         {
             var appUser = Map(user);
 
             var result = await _userManager.CreateAsync(appUser, user.Password);
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 throw new UserServiceException($"Register failed. ${string.Join(',', result.Errors.Select(e => e.Description))}");
             }
         }
+
+        public async Task<LoginResponse> Login(User user)
+        {
+            await SignInUser(user);
+
+            var appUser = await GetUser(user.Email);
+            var refreshToken = _tokenService.GenerateRefreshToken();
+
+            await SetUserRefreshToken(appUser, refreshToken);
+
+            var token = _tokenService.GenerateJwtToken(appUser);
+
+            return new LoginResponse(token, refreshToken.Token);
+        }
+
+        public async Task<LoginResponse> RefreshCredentials(string userEmail, string refreshToken)
+        {
+            var appUser = await GetUser(userEmail);
+
+            if(appUser == null)
+            {
+                throw new UserServiceException($"User with email {userEmail} does not exist");
+            }
+
+            var crt = appUser.GetRefreshToken();
+
+            if(crt.IsExpired)
+            {
+                throw new UserServiceException("Current refresh token expired");
+            }
+            if(crt.Token != refreshToken)
+            {
+                throw new UserServiceException("Refresh token is not equal with current refresh token");
+            }
+
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            appUser.SetRefreshToken(newRefreshToken);
+            await _userManager.UpdateAsync(appUser);
+
+            var jwtToken = _tokenService.GenerateJwtToken(appUser);
+            return new LoginResponse(jwtToken, newRefreshToken.Token);
+        }
+
+        public async Task<bool> IsRefreshTokenValid(string userEmail, string refreshToken)
+        {
+            var appUser = await GetUser(userEmail);
+            if (appUser == null)
+            {
+                throw new UserServiceException($"User with email {userEmail} does not exist");
+            }
+            
+            var crt = appUser.GetRefreshToken();
+
+            return crt.IsActive && crt.Token == refreshToken;
+        }
+
+        private async Task<ApplicationUser> GetUser(string email) => await _userManager.FindByEmailAsync(email);
 
         private ApplicationUser Map(User user)
         {

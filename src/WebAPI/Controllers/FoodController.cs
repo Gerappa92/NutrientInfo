@@ -10,7 +10,6 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<FilteredFoodListDto>> Search([FromQuery] SearchFoodQuery query)
         {
-            var refreshtoken = Request.Cookies["refreshToken"];
             return await Mediator.Send(query);
         }
 

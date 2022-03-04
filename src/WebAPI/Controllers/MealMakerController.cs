@@ -1,18 +1,21 @@
 ﻿using Application.MealMaker.Dto;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class MealMakerController : ApiBaseController
     {
         [HttpPost]
-        public IActionResult Create([FromBody] MealMakerDto command)
+        public async Task<IActionResult> Create([FromBody] MealMakerDto command)
         {
-            var refreshtoken = Request.Cookies["refreshToken"];
+            if(await IsRefreshTokenInvalidAsync())
+            {
+                return Unauthorized();
+            }
             Console.WriteLine(command.Name);
             return Ok();
         }

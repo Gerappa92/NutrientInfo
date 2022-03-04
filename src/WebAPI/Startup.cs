@@ -29,8 +29,10 @@ namespace WebAPI
                 .AddFluentValidation();
             services.AddApplication();
             services.AddInfrastructure();
-            services.AddJwtAuthentication(Configuration);
             services.AddAzureTableIdentityProvider(Configuration);
+            services.AddJwtAuthentication(Configuration);
+            
+
             services.AddSingleton(p => Configuration);
 
             services.AddCors(options => Dev(options));

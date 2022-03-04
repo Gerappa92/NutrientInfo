@@ -1,11 +1,8 @@
-﻿
-using Application.Common.UsersManagement.Contracts;
-using Application.User.Commands;
+﻿using Application.User.Commands;
 using Application.User.Queries;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
+using WebAPI.Contracts;
 
 namespace WebAPI.Controllers
 {
@@ -21,21 +18,17 @@ namespace WebAPI.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginUserQuery command)
         {
-            var token = await Mediator.Send(command);
-            SetRefreshTokenCookie(token.RefreshToken);
-            return token;
+            var tokens = await Mediator.Send(command);
+            SetRefreshTokenCookie(tokens.RefreshToken);
+            return new LoginResponse(tokens.Token);
         }
 
-        private void SetRefreshTokenCookie(string token)
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<LoginResponse>> Refresh([FromBody] RefreshCredentialsCommand command)
         {
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(1),
-                SameSite=SameSiteMode.None,
-                Secure=true
-            };
-            Response.Cookies.Append("refreshToken", token, cookieOptions);
+            var tokens = await Mediator.Send(command);
+            SetRefreshTokenCookie(tokens.RefreshToken);
+            return new LoginResponse(tokens.Token);
         }
     }
 }
