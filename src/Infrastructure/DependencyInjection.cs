@@ -79,5 +79,11 @@ namespace Infrastructure
 
             return services;
         }
+
+        public static IServiceCollection AddAthorizations(this IServiceCollection services)
+        {
+            services.AddAuthorization(config => config.AddPolicy("NI-Policy", pc => pc.RequireAuthenticatedUser()));
+            return services;
+        }
     }
 }

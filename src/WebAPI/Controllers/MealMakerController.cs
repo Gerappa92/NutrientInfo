@@ -12,10 +12,6 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] MealMakerDto command)
         {
-            if(await IsRefreshTokenInvalidAsync())
-            {
-                return Unauthorized();
-            }
             Console.WriteLine(command.Name);
             return Ok();
         }
