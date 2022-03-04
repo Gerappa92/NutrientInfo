@@ -18,9 +18,12 @@ export const MealForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log(values);
     const url = `${apiBaseUrl}mealmaker`;
-    // axios.post(url, values);
+    const jwtToken = localStorage.getItem("jwtToken");
+    axios.post(url, values, {
+      withCredentials: true,
+      headers: { Authorization: `Bearer ${jwtToken}` },
+    });
   };
 
   const validateIngridients = (_, ingridients) => {

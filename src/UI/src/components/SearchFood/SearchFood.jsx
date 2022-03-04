@@ -31,7 +31,7 @@ export const SearchFood = (props) => {
     }
     props.setTableLoading(true);
 
-    var response = await axios.get(
+    const response = await axios.get(
       `${apiBaseUrl}food?searchTerm=${query.searchTerm}&pageSize=${props.pageSize}&pageNumber=${props.pageNumber}&brandOwner=${query.brandOwner}&requireAllWords=${query.requireAllWords}`
     );
 

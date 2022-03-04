@@ -48,6 +48,7 @@ export const UserSection = () => {
       { withCredentials: true }
     );
     console.log(response);
+    localStorage.setItem("jwtToken", response.data.token);
   };
 
   return (
