@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AuthModal } from "../User/AuthModal/AuthModal";
-import { axiosClient } from "../../modules/axios-client";
+import { login, register } from "../../modules/user-module";
 import styled from "styled-components";
 
 export const UserSection = () => {
@@ -22,11 +22,11 @@ export const UserSection = () => {
     setIsModalVisible(false);
   };
 
-  const handleAuth = (values) => {
+  const handleAuth = async (values) => {
     console.log(values);
     setWaitingForAuth(true);
 
-    Promise.resolve(auth(values))
+    await auth(values)
       .then(() => {
         setWaitingForAuth(false);
         setIsModalVisible(false);
@@ -38,13 +38,11 @@ export const UserSection = () => {
   };
 
   const auth = async (credentials) => {
-    const action = modalType === "login" ? "login" : "register";
-
-    const response = await axiosClient.post(`user/${action}`, credentials, {
-      withCredentials: true,
-    });
-
-    localStorage.setItem("jwtToken", response.data.token);
+    if (modalType === "login") {
+      login(credentials);
+    } else {
+      register(credentials);
+    }
   };
 
   return (

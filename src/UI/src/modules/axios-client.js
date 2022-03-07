@@ -1,12 +1,15 @@
 import axios from "axios";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+const tokenLocalStorageName = "jwtToken";
+
+const getJwtToken = () => localStorage.getItem(tokenLocalStorageName);
 
 export const axiosClient = createClient();
 
 function createClient() {
   let settings = { baseURL: apiBaseUrl };
-  const jwtToken = localStorage.getItem("jwtToken");
+  const jwtToken = getJwtToken();
 
   if (jwtToken) {
     settings = {
