@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { AuthModal } from "../User/AuthModal/AuthModal";
+import { axiosClient } from "../../modules/axios-client";
 import styled from "styled-components";
-import axios from "axios";
-
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 export const UserSection = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -42,12 +40,10 @@ export const UserSection = () => {
   const auth = async (credentials) => {
     const action = modalType === "login" ? "login" : "register";
 
-    const response = await axios.post(
-      `${apiBaseUrl}user/${action}`,
-      credentials,
-      { withCredentials: true }
-    );
-    console.log(response);
+    const response = await axiosClient.post(`user/${action}`, credentials, {
+      withCredentials: true,
+    });
+
     localStorage.setItem("jwtToken", response.data.token);
   };
 

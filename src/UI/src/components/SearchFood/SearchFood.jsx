@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { Input, Checkbox } from "antd";
-import axios from "axios";
 import styled from "styled-components";
+import { axiosClient } from "../../modules/axios-client";
 
 const { Search } = Input;
 
 const SearchArea = styled.div`
   margin: 20px 0 20px;
 `;
-
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 export const SearchFood = (props) => {
   const defaultData = { foods: [], totalHits: 0 };
@@ -31,8 +29,8 @@ export const SearchFood = (props) => {
     }
     props.setTableLoading(true);
 
-    const response = await axios.get(
-      `${apiBaseUrl}food?searchTerm=${query.searchTerm}&pageSize=${props.pageSize}&pageNumber=${props.pageNumber}&brandOwner=${query.brandOwner}&requireAllWords=${query.requireAllWords}`
+    const response = await axiosClient.get(
+      `food?searchTerm=${query.searchTerm}&pageSize=${props.pageSize}&pageNumber=${props.pageNumber}&brandOwner=${query.brandOwner}&requireAllWords=${query.requireAllWords}`
     );
 
     if (response.data.foods.length === 0) {
