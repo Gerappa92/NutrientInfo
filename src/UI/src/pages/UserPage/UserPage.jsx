@@ -1,10 +1,13 @@
-import { Col, Menu, Row, Typography } from "antd";
+import { Layout, Menu, Typography } from "antd";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Unauthorized } from "../../components/Unathorized/Unauthorized";
 import { UserOverview } from "../../components/User/UserOverview/UserOverview";
 import { DeleteAccount } from "../../components/User/DeleteAccount/DeleteAccount";
 import { useContext } from "react";
 import { UserContext } from "../../App";
+import styled from "styled-components";
+
+const { Sider, Content } = Layout;
 
 export const UserPage = () => {
   const userContext = useContext(UserContext);
@@ -13,8 +16,8 @@ export const UserPage = () => {
     <>
       {userContext.user && userContext.user.isLogged ? (
         <Router>
-          <Row>
-            <Col>
+          <Layout>
+            <Sider breakpoint="lg" collapsedWidth="0">
               <Menu>
                 <Menu.Item key="overview">
                   <Link to={"/user-settings/overview"}>
@@ -27,20 +30,22 @@ export const UserPage = () => {
                   </Link>
                 </Menu.Item>
               </Menu>
-            </Col>
-            <Col>
+            </Sider>
+            <Content>
               <Switch>
-                <Route
-                  path="/user-settings/overview"
-                  component={UserOverview}
-                ></Route>
-                <Route
-                  path="/user-settings/delete-account"
-                  component={DeleteAccount}
-                ></Route>
+                <ContentDiv>
+                  <Route
+                    path="/user-settings/overview"
+                    component={UserOverview}
+                  ></Route>
+                  <Route
+                    path="/user-settings/delete-account"
+                    component={DeleteAccount}
+                  ></Route>
+                </ContentDiv>
               </Switch>
-            </Col>
-          </Row>
+            </Content>
+          </Layout>
         </Router>
       ) : (
         <Unauthorized />
@@ -48,3 +53,8 @@ export const UserPage = () => {
     </>
   );
 };
+
+const ContentDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`;
