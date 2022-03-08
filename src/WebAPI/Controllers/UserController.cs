@@ -34,5 +34,12 @@ namespace WebAPI.Controllers
             var tokens = await Mediator.Send(command);
             return new LoginResponse(tokens.Token);
         }
+
+        [HttpPost("is-authenticated")]
+        public IActionResult IsAuthenticated()
+        {
+            return Ok();
+        }
+        
     }
 }

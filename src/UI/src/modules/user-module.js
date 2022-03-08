@@ -26,7 +26,7 @@ export const logout = () => {
   clearJwtToken();
 };
 
-const refreshTokenInterval = () => {
+export const refreshTokenInterval = () => {
   const timeout = 1 * 60 * 1000;
   refreshIntervalId = setInterval(async () => {
     const response = await axiosClient()
@@ -53,5 +53,9 @@ export const login = async (credentails) => {
   refreshTokenInterval();
 };
 
-export const isLoggedIn = () =>
-  localStorage.getItem(tokenLocalStorageName) !== null;
+export const isLoggedIn = async () => {
+  return await axiosClient()
+    .post("user/is-authenticated")
+    .then(() => true)
+    .catch(() => false);
+};

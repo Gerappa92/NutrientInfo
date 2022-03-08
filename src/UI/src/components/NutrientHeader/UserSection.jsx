@@ -1,17 +1,30 @@
 import { useContext, useState } from "react";
+import { Dropdown, Menu, Typography } from "antd";
 import { AuthModal } from "../User/AuthModal/AuthModal";
-import { login, register } from "../../modules/user-module";
+import { login, register, logout } from "../../modules/user-module";
 import { UserOutlined } from "@ant-design/icons";
 import { UserContext } from "../../App";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export const UserSection = (props) => {
+const userMenu = (logout) => (
+  <Menu>
+    <Menu.Item key="logout" onClick={logout}>
+      <Typography.Text>Log out</Typography.Text>
+    </Menu.Item>
+    <Menu.Item>
+      <Link to="/user-settings">
+        <Typography.Text>Settings</Typography.Text>
+      </Link>
+    </Menu.Item>
+  </Menu>
+);
+
+export const UserSection = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalType, setModalType] = useState("register");
   const [waitingForAuth, setWaitingForAuth] = useState(false);
   const userContext = useContext(UserContext);
-
-  console.log(userContext);
 
   const showModal = (type) => {
     if (type === "login") {
@@ -50,11 +63,20 @@ export const UserSection = (props) => {
     }
   };
 
+  const handleLogout = () => {
+    userContext.setUser({
+      isLogged: false,
+    });
+    logout();
+  };
+
   return (
     <>
       {userContext.user.isLogged ? (
         <div>
-          <UserHeader />
+          <Dropdown overlay={userMenu(handleLogout)}>
+            <UserHeader />
+          </Dropdown>
         </div>
       ) : (
         <>
