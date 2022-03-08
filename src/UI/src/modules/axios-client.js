@@ -5,7 +5,7 @@ const tokenLocalStorageName = "jwtToken";
 
 const getJwtToken = () => localStorage.getItem(tokenLocalStorageName);
 
-export const axiosClient = createClient();
+export const axiosClient = () => createClient();
 
 function createClient() {
   let settings = { baseURL: apiBaseUrl };

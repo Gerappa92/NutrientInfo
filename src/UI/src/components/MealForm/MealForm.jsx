@@ -16,7 +16,7 @@ export const MealForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    axiosClient.post("mealmaker", values);
+    axiosClient().post("mealmaker", values);
   };
 
   const validateIngridients = (_, ingridients) => {

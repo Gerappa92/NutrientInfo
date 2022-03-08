@@ -31,7 +31,7 @@ export const FoodDetails = () => {
 
   useEffect(() => {
     (async function fetchData() {
-      let response = await axiosClient.get(`food/${foodId}`);
+      let response = await axiosClient().get(`food/${foodId}`);
       foodSet(response.data);
       setLoading(false);
     })();

@@ -8,7 +8,7 @@ const setJwtToken = (token) =>
 const clearJwtToken = () => localStorage.removeItem(tokenLocalStorageName);
 
 export const register = async (credentails) => {
-  await axiosClient
+  await axiosClient()
     .post("user/register", credentails, {
       withCredentials: true,
     })
@@ -27,22 +27,21 @@ export const logout = () => {
 };
 
 const refreshTokenInterval = () => {
-  const timeout = 0.1 * 60 * 1000;
+  const timeout = 1 * 60 * 1000;
   refreshIntervalId = setInterval(async () => {
-    const response = await axiosClient.post("user/refresh-token").catch((e) => {
-      console.error("Refresh login failed", e);
-      logout();
-    });
-    console.log("Refresh", response);
+    const response = await axiosClient()
+      .post("user/refresh-token")
+      .catch((e) => {
+        console.error("Refresh login failed", e);
+        logout();
+      });
+
     setJwtToken(response.data.token);
   }, timeout);
 };
 
-export const isLoggedIn = () =>
-  localStorage.getItem(tokenLocalStorageName) !== null;
-
 export const login = async (credentails) => {
-  const response = await axiosClient
+  const response = await axiosClient()
     .post("user/login", credentails, {
       withCredentials: true,
     })
@@ -53,3 +52,6 @@ export const login = async (credentails) => {
   setJwtToken(response.data.token);
   refreshTokenInterval();
 };
+
+export const isLoggedIn = () =>
+  localStorage.getItem(tokenLocalStorageName) !== null;
