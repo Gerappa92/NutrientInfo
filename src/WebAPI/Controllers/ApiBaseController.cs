@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -11,6 +13,7 @@ namespace WebAPI.Controllers
     public class ApiBaseController : ControllerBase
     {
         private ISender _mediator;
+        private const string REFRESH_TOKEN_COOKIE = "refreshToken";
 
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
 
@@ -23,7 +26,19 @@ namespace WebAPI.Controllers
                 SameSite = SameSiteMode.None,
                 Secure = true
             };
-            Response.Cookies.Append("refreshToken", token, cookieOptions);
+            Response.Cookies.Append(REFRESH_TOKEN_COOKIE, token, cookieOptions);
+        }
+
+        protected string GetRefreshTokenCookie()
+        {
+            var refreshToken = HttpContext.Request.Cookies[REFRESH_TOKEN_COOKIE];
+            return refreshToken == null ? string.Empty : refreshToken;
+        }
+
+        protected string GetUserEmail()
+        {
+            var userEmailClaim = HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email);
+            return userEmailClaim == null ? string.Empty : userEmailClaim.Value;
         }
     }
 }

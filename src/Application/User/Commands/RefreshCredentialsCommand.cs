@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Application.User.Commands
 {
-    public class RefreshCredentialsCommand : IRequest<LoginResponse>
+    public class RefreshCredentialsCommand : IRequest<RefreshResponse>
     {
         public string UserEmail { get; set; }
         public string RefreshToken { get; set; }
     }
 
-    public class RefreshCredentialsCommandHandler : IRequestHandler<RefreshCredentialsCommand, LoginResponse>
+    public class RefreshCredentialsCommandHandler : IRequestHandler<RefreshCredentialsCommand, RefreshResponse>
     {
         private readonly IUserService _userService;
 
@@ -21,7 +21,7 @@ namespace Application.User.Commands
             _userService = userService;
         }
 
-        public async Task<LoginResponse> Handle(RefreshCredentialsCommand request, CancellationToken cancellationToken)
+        public async Task<RefreshResponse> Handle(RefreshCredentialsCommand request, CancellationToken cancellationToken)
         {
             var tokens = await _userService.RefreshCredentials(request.UserEmail, request.RefreshToken);
             return tokens;

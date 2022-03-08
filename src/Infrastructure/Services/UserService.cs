@@ -58,7 +58,7 @@ namespace Infrastructure.Services
             return new LoginResponse(token, refreshToken.Token);
         }
 
-        public async Task<LoginResponse> RefreshCredentials(string userEmail, string refreshToken)
+        public async Task<RefreshResponse> RefreshCredentials(string userEmail, string refreshToken)
         {
             var appUser = await GetUser(userEmail);
 
@@ -78,12 +78,8 @@ namespace Infrastructure.Services
                 throw new UserServiceException("Refresh token is not equal with current refresh token");
             }
 
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
-            appUser.SetRefreshToken(newRefreshToken);
-            await _userManager.UpdateAsync(appUser);
-
             var jwtToken = _tokenService.GenerateJwtToken(appUser);
-            return new LoginResponse(jwtToken, newRefreshToken.Token);
+            return new RefreshResponse(jwtToken);
         }
 
         public async Task<bool> IsRefreshTokenValid(string userEmail, string refreshToken)

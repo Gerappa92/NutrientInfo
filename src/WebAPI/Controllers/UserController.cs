@@ -1,13 +1,16 @@
 ﻿using Application.User.Commands;
 using Application.User.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebAPI.Contracts;
 
 namespace WebAPI.Controllers
 {
+    [Authorize]
     public class UserController : ApiBaseController
     {
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
@@ -15,6 +18,7 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginUserQuery command)
         {
@@ -24,10 +28,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<LoginResponse>> Refresh([FromBody] RefreshCredentialsCommand command)
+        public async Task<ActionResult<LoginResponse>> Refresh()
         {
+            var command = new RefreshCredentialsCommand { RefreshToken = GetRefreshTokenCookie(), UserEmail = GetUserEmail() };
             var tokens = await Mediator.Send(command);
-            SetRefreshTokenCookie(tokens.RefreshToken);
             return new LoginResponse(tokens.Token);
         }
     }

@@ -7,7 +7,7 @@ namespace Application.Common.UsersManagement
     {
         public Task Register(Domain.Entities.User user);
         public Task<LoginResponse> Login(Domain.Entities.User user);
-        public Task<LoginResponse> RefreshCredentials(string userEmail, string refreshToken);
+        public Task<RefreshResponse> RefreshCredentials(string userEmail, string refreshToken);
         public Task<bool> IsRefreshTokenValid(string userEmail, string refreshToken);
     }
 }
