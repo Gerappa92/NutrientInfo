@@ -5,7 +5,6 @@ export const AuthModal = (props) => {
   const [form] = useForm();
 
   const handleOk = () => {
-    // setIsModalVisible(false);
     form
       .validateFields()
       .then((values) => {

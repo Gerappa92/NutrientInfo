@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { AuthModal } from "../User/AuthModal/AuthModal";
 import { login, register } from "../../modules/user-module";
+import { UserOutlined } from "@ant-design/icons";
+import { UserContext } from "../../App";
 import styled from "styled-components";
 
-export const UserSection = () => {
+export const UserSection = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalType, setModalType] = useState("register");
   const [waitingForAuth, setWaitingForAuth] = useState(false);
+  const userContext = useContext(UserContext);
+
+  console.log(userContext);
 
   const showModal = (type) => {
     if (type === "login") {
@@ -23,7 +28,6 @@ export const UserSection = () => {
   };
 
   const handleAuth = async (values) => {
-    console.log(values);
     setWaitingForAuth(true);
 
     await auth(values)
@@ -40,6 +44,7 @@ export const UserSection = () => {
   const auth = async (credentials) => {
     if (modalType === "login") {
       login(credentials);
+      userContext.setUser({ isLogged: true });
     } else {
       register(credentials);
     }
@@ -47,17 +52,26 @@ export const UserSection = () => {
 
   return (
     <>
-      <HeaderButton onClick={() => showModal("register")}>
-        Register
-      </HeaderButton>
-      <HeaderButton onClick={() => showModal("login")}>Login</HeaderButton>
-      <AuthModal
-        isVisible={isModalVisible}
-        type={modalType}
-        handleCancel={handleCancel}
-        handleAuth={handleAuth}
-        isLoading={waitingForAuth}
-      />
+      {userContext.user.isLogged ? (
+        <div>
+          <UserHeader />
+        </div>
+      ) : (
+        <>
+          <HeaderButton onClick={() => showModal("register")}>
+            Register
+          </HeaderButton>
+          <HeaderButton onClick={() => showModal("login")}>Login</HeaderButton>
+
+          <AuthModal
+            isVisible={isModalVisible}
+            type={modalType}
+            handleCancel={handleCancel}
+            handleAuth={handleAuth}
+            isLoading={waitingForAuth}
+          />
+        </>
+      )}
     </>
   );
 };
@@ -66,4 +80,11 @@ const HeaderButton = styled.p`
   color: white;
   margin: 0 10px;
   cursor: pointer;
+`;
+
+const UserHeader = styled(UserOutlined)`
+  background-color: white;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: x-large;
 `;

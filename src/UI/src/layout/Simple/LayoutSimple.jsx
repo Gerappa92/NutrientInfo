@@ -17,16 +17,7 @@ import Footer from "../../components/Footer/Footer";
 
 const { Content, Sider } = Layout;
 
-const NutrientInfoLayout = styled(Layout)`
-  background: #fff;
-`;
-
-const PageContainer = styled.div`
-  min-height: 80vh;
-  padding: "0 10px";
-`;
-
-function LayoutSimple() {
+export const LayoutSimple = () => {
   const [collapsed, setCollapsed] = useState(true);
 
   const hideMenu = true;
@@ -79,6 +70,13 @@ function LayoutSimple() {
       </NutrientInfoLayout>
     </Router>
   );
-}
+};
 
-export default LayoutSimple;
+const NutrientInfoLayout = styled(Layout)`
+  background: #fff;
+`;
+
+const PageContainer = styled.div`
+  min-height: 80vh;
+  padding: "0 10px";
+`;
