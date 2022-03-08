@@ -12,6 +12,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { AboutPage } from "../../pages/AboutPage/AboutPage";
 import { NewMealPage } from "../../pages/NewMealPage/NewMealPage";
+import { UserPage } from "../../pages/UserPage/UserPage";
 import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
 import Footer from "../../components/Footer/Footer";
 
@@ -59,6 +60,7 @@ export const LayoutSimple = () => {
                 </Route>
                 <Route path="/about" component={AboutPage}></Route>
                 <Route path="/meal-creator" component={NewMealPage}></Route>
+                <Route path="/user-settings" component={UserPage} />
                 <Route path="/">
                   <SearchPage></SearchPage>
                 </Route>

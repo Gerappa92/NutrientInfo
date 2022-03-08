@@ -12,7 +12,7 @@ const userMenu = (logout) => (
     <Menu.Item key="logout" onClick={logout}>
       <Typography.Text>Log out</Typography.Text>
     </Menu.Item>
-    <Menu.Item>
+    <Menu.Item key="user-settings">
       <Link to="/user-settings">
         <Typography.Text>Settings</Typography.Text>
       </Link>

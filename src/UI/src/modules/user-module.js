@@ -29,28 +29,30 @@ export const logout = () => {
 export const refreshTokenInterval = () => {
   const timeout = 1 * 60 * 1000;
   refreshIntervalId = setInterval(async () => {
-    const response = await axiosClient()
+    await axiosClient()
       .post("user/refresh-token")
+      .then((response) => {
+        setJwtToken(response.data.token);
+      })
       .catch((e) => {
         console.error("Refresh login failed", e);
         logout();
       });
-
-    setJwtToken(response.data.token);
   }, timeout);
 };
 
 export const login = async (credentails) => {
-  const response = await axiosClient()
+  await axiosClient()
     .post("user/login", credentails, {
       withCredentials: true,
+    })
+    .then((response) => {
+      setJwtToken(response.data.token);
+      refreshTokenInterval();
     })
     .catch((e) => {
       console.error("Login failed", e);
     });
-
-  setJwtToken(response.data.token);
-  refreshTokenInterval();
 };
 
 export const isLoggedIn = async () => {
