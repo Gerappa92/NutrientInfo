@@ -27,7 +27,7 @@ export const logout = () => {
 };
 
 export const refreshTokenInterval = () => {
-  const timeout = 1 * 60 * 1000;
+  const timeout = 4 * 60 * 1000;
   refreshIntervalId = setInterval(async () => {
     await axiosClient()
       .post("user/refresh-token")
@@ -60,4 +60,10 @@ export const isLoggedIn = async () => {
     .post("user/is-authenticated")
     .then(() => true)
     .catch(() => false);
+};
+
+export const deleteAccount = async (credentials) => {
+  return await axiosClient()
+    .post("user/delete-account", credentials)
+    .then(() => logout());
 };

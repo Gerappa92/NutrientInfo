@@ -13,7 +13,7 @@ const userMenu = (logout) => (
       <Typography.Text>Log out</Typography.Text>
     </Menu.Item>
     <Menu.Item key="user-settings">
-      <Link to="/user-settings">
+      <Link to="/user-settings/overview">
         <Typography.Text>Settings</Typography.Text>
       </Link>
     </Menu.Item>
@@ -56,10 +56,10 @@ export const UserSection = () => {
 
   const auth = async (credentials) => {
     if (modalType === "login") {
-      login(credentials);
+      await login(credentials);
       userContext.setUser({ isLogged: true });
     } else {
-      register(credentials);
+      await register(credentials);
     }
   };
 
@@ -109,4 +109,6 @@ const UserHeader = styled(UserOutlined)`
   border-radius: 50%;
   padding: 5px;
   font-size: x-large;
+  align-content: center;
+  display: flex;
 `;

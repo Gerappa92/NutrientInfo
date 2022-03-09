@@ -15,38 +15,36 @@ export const UserPage = () => {
   return (
     <>
       {userContext.user && userContext.user.isLogged ? (
-        <Router>
-          <Layout>
-            <Sider breakpoint="lg" collapsedWidth="0">
-              <Menu>
-                <Menu.Item key="overview">
-                  <Link to={"/user-settings/overview"}>
-                    <Typography.Text>Overview</Typography.Text>
-                  </Link>
-                </Menu.Item>
-                <Menu.Item key="delete">
-                  <Link to={"/user-settings/delete-account"}>
-                    <Typography.Text>Delete account</Typography.Text>
-                  </Link>
-                </Menu.Item>
-              </Menu>
-            </Sider>
-            <Content>
-              <Switch>
-                <ContentDiv>
-                  <Route
-                    path="/user-settings/overview"
-                    component={UserOverview}
-                  ></Route>
-                  <Route
-                    path="/user-settings/delete-account"
-                    component={DeleteAccount}
-                  ></Route>
-                </ContentDiv>
-              </Switch>
-            </Content>
-          </Layout>
-        </Router>
+        <Layout>
+          <Sider breakpoint="lg" collapsedWidth="0">
+            <Menu>
+              <Menu.Item key="overview">
+                <Link to={"/user-settings/overview"}>
+                  <Typography.Text>Overview</Typography.Text>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="delete">
+                <Link to={"/user-settings/delete-account"}>
+                  <Typography.Text>Delete account</Typography.Text>
+                </Link>
+              </Menu.Item>
+            </Menu>
+          </Sider>
+          <Content style={{ backgroundColor: "white" }}>
+            <Switch>
+              <ContentDiv>
+                <Route
+                  path="/user-settings/overview"
+                  component={UserOverview}
+                />
+                <Route
+                  path="/user-settings/delete-account"
+                  component={DeleteAccount}
+                />
+              </ContentDiv>
+            </Switch>
+          </Content>
+        </Layout>
       ) : (
         <Unauthorized />
       )}
@@ -56,5 +54,6 @@ export const UserPage = () => {
 
 const ContentDiv = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  margin: 0 28px;
 `;

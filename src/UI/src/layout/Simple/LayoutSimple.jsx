@@ -5,7 +5,13 @@ import {
   CloseOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 import SearchPage from "../../pages/SearchPage/SearchPage";
 import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
 import styled from "styled-components";
@@ -55,13 +61,14 @@ export const LayoutSimple = () => {
           <Content>
             <PageContainer>
               <Switch>
+                <Redirect exact from="/" to="/home" />
                 <Route path="/food-details/:foodId">
                   <FoodDetails></FoodDetails>
                 </Route>
                 <Route path="/about" component={AboutPage}></Route>
                 <Route path="/meal-creator" component={NewMealPage}></Route>
                 <Route path="/user-settings" component={UserPage} />
-                <Route path="/">
+                <Route exact path="/home">
                   <SearchPage></SearchPage>
                 </Route>
               </Switch>

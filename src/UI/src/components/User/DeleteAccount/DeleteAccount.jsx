@@ -1,9 +1,38 @@
 import { Typography } from "antd";
+import { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { AuthForm } from "../AuthForm/AuthForm";
+import { deleteAccount } from "../../../modules/user-module";
+import { UserContext } from "../../../App";
 
 export const DeleteAccount = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const history = useHistory();
+  const context = useContext(UserContext);
+
+  const handleDeleteAccount = async (credentials) => {
+    setIsLoading(true);
+    await deleteAccount(credentials)
+      .then(() => {
+        setIsLoading(false);
+        context.setUser({ isLogged: false });
+        history.push("/home");
+      })
+      .catch((e) => {
+        setIsLoading(false);
+        console.error("Deleting account failed");
+      });
+  };
+
   return (
     <>
-      <Typography.Title>Hello Delete account</Typography.Title>
+      <Typography.Title>Delete account</Typography.Title>
+      <AuthForm
+        submitButton="Delete"
+        submitButtonType="danger"
+        onSubmit={handleDeleteAccount}
+        isLoading={isLoading}
+      />
     </>
   );
 };
