@@ -23,8 +23,7 @@ namespace Application.User.Queries
 
         public async Task<LoginResponse> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
-            var user = new Domain.Entities.User(request.Email, request.Password);
-            var token = await _userService.Login(user);
+            var token = await _userService.Login(request.Email, request.Password);
             return token;
         }
     }

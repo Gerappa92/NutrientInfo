@@ -40,6 +40,21 @@ namespace WebAPI.Controllers
         {
             return Ok();
         }
-        
+
+        [HttpPost("delete-account")]
+        public async Task<IActionResult> Delete([FromBody] DeleteUserAccountCommand command)
+        {
+            command.UserEmail = GetUserEmail();
+            await Mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetUserPasswordCommand command)
+        {
+
+            await Mediator.Send(command);
+            return Ok();
+        }
     }
 }

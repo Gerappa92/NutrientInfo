@@ -8,6 +8,19 @@ namespace AzureTableIdentityProvider
 {
     public class ApplicationUser : IIdentity, ITableEntity
     {
+        public ApplicationUser()
+        {
+
+        }
+
+        public ApplicationUser(string email)
+        {
+            var id = Guid.NewGuid().ToString();
+            Id = id;
+            RowKey = id;
+            Email = email;
+            Name = email;
+        }
         public virtual string Id { get; set; }
         public virtual string Email { get; set; }
         public string NormalizedEmail { get; set; }
@@ -25,5 +38,6 @@ namespace AzureTableIdentityProvider
 
         public RefreshToken GetRefreshToken() => JsonConvert.DeserializeObject<RefreshToken>(RefreshTokenJson);
         public void SetRefreshToken(RefreshToken refreshToken) => RefreshTokenJson = JsonConvert.SerializeObject(refreshToken);
+        public void SetPartitionKey(string partitionKey) => PartitionKey = partitionKey;
     }
 }

@@ -22,9 +22,7 @@ namespace Application.User.Commands
 
         public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            Domain.Entities.User user = new Domain.Entities.User(request.Email, request.Password);
-            await _userManager.Register(user);
-
+            await _userManager.Register(request.Email, request.Password);
             return Unit.Value;
         }
     }

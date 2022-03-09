@@ -13,7 +13,7 @@ namespace Infrastructure.Services
 {
     public class UserService : IUserService
     {
-        private const string _partitionKey = "application_user";
+        private const string PARTITION_KEY = "application_user";
 
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
@@ -24,49 +24,37 @@ namespace Infrastructure.Services
         public UserService(UserManager<ApplicationUser> userManager, ITokenService jwtTokenService, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
+            _tokenService = jwtTokenService;
+            _signInManager = signInManager;
             _mapper = new MapperConfiguration(config =>
                 {
                     config.CreateMap<User, ApplicationUser>();
                     config.CreateMap<ApplicationUser, User>();
                 }).CreateMapper();
-            _tokenService = jwtTokenService;
-            _signInManager = signInManager;
         }
 
-        public async Task Register(User user)
+        public async Task Register(string userEmail, string password)
         {
-            var appUser = Map(user);
-
-            var result = await _userManager.CreateAsync(appUser, user.Password);
-            if (!result.Succeeded)
-            {
-                throw new UserServiceException($"Register failed. ${string.Join(',', result.Errors.Select(e => e.Description))}");
-            }
+            var appUser = new ApplicationUser(userEmail);
+            appUser.SetPartitionKey(PARTITION_KEY);
+            await CreateUser(password, appUser);
         }
 
-        public async Task<LoginResponse> Login(User user)
+        public async Task<LoginResponse> Login(string userEmail, string password)
         {
-            await SignInUser(user);
-
-            var appUser = await GetUser(user.Email);
+            var appUser = await GetUser(userEmail);
+            await CheckPassword(appUser, password);
             var refreshToken = _tokenService.GenerateRefreshToken();
-
-            await SetUserRefreshToken(appUser, refreshToken);
-
+            appUser.SetRefreshToken(refreshToken);
+            await UpdateUser(appUser);
             var token = _tokenService.GenerateJwtToken(appUser);
-
-            return new LoginResponse(token, refreshToken.Token);
+            var loginResponse = new LoginResponse(token, refreshToken.Token);
+            return loginResponse;
         }
 
         public async Task<RefreshResponse> RefreshCredentials(string userEmail, string refreshToken)
         {
             var appUser = await GetUser(userEmail);
-
-            if(appUser == null)
-            {
-                throw new UserServiceException($"User with email {userEmail} does not exist");
-            }
-
             var crt = appUser.GetRefreshToken();
 
             if(crt.IsExpired)
@@ -79,45 +67,62 @@ namespace Infrastructure.Services
             }
 
             var jwtToken = _tokenService.GenerateJwtToken(appUser);
-            return new RefreshResponse(jwtToken);
+            var refreshResponse = new RefreshResponse(jwtToken);
+            return refreshResponse;
         }
 
-        public async Task<bool> IsRefreshTokenValid(string userEmail, string refreshToken)
+        public async Task ResetPassword(string userEmail, string password, string newPassword)
         {
             var appUser = await GetUser(userEmail);
+
+            var result = await _userManager.ChangePasswordAsync(appUser, password, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new UserServiceException($"Reset password not succesed because of: {result.Errors.Select(e => e.Description)}");
+            }
+        }
+
+        public async Task Delete(string userEmail, string password)
+        {
+            var appUser = await GetUser(userEmail);
+            await CheckPassword(appUser, password);
+            await _userManager.DeleteAsync(appUser);
+        }
+
+        private async Task CreateUser(string password, ApplicationUser appUser)
+        {
+            var result = await _userManager.CreateAsync(appUser, password);
+            if (!result.Succeeded)
+            {
+                throw new UserServiceException($"Register failed. ${string.Join(',', result.Errors.Select(e => e.Description))}");
+            }
+        }
+        private async Task<ApplicationUser> GetUser(string userEmail)
+        {
+            var appUser = await _userManager.FindByEmailAsync(userEmail);
             if (appUser == null)
             {
-                throw new UserServiceException($"User with email {userEmail} does not exist");
+                throw new UserServiceException($"User with email: {userEmail} does not exist");
             }
-            
-            var crt = appUser.GetRefreshToken();
-
-            return crt.IsActive && crt.Token == refreshToken;
-        }
-
-        private async Task<ApplicationUser> GetUser(string email) => await _userManager.FindByEmailAsync(email);
-
-        private ApplicationUser Map(User user)
-        {
-            var appUser = _mapper.Map<ApplicationUser>(user);
-            appUser.PartitionKey = _partitionKey;
-            appUser.RowKey = appUser.Id;
             return appUser;
         }
-        
-        private async Task SignInUser(User user)
+
+        private async Task CheckPassword(ApplicationUser appUser, string password)
         {
-            var signInResult = await _signInManager.PasswordSignInAsync(user.Email, user.Password, isPersistent: false, lockoutOnFailure: false);
-            if (!signInResult.Succeeded)
+            var isPasswordCorrent = await _userManager.CheckPasswordAsync(appUser, password);
+            if (isPasswordCorrent == false)
             {
                 throw new UserServiceException($"Login/password combination is wrong");
             }
         }
 
-        private async Task SetUserRefreshToken(ApplicationUser appUser, RefreshToken refreshToken)
+        private async Task UpdateUser(ApplicationUser appUser)
         {
-            appUser.SetRefreshToken(refreshToken);
-            await _userManager.UpdateAsync(appUser);
+            var result = await _userManager.UpdateAsync(appUser);
+            if (!result.Succeeded)
+            {
+                throw new UserServiceException($"Update user not successed because of: {result.Errors.Select(e => e.Description)}");
+            }
         }
     }
 }
