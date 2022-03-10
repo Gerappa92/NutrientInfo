@@ -1,8 +1,10 @@
 ﻿using Application.Common.UsersManagement;
 using Application.Common.UsersManagement.Contracts;
+using FluentValidation;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+
 
 namespace Application.User.Commands
 {
@@ -25,6 +27,15 @@ namespace Application.User.Commands
         {
             var tokens = await _userService.RefreshCredentials(request.UserEmail, request.RefreshToken);
             return tokens;
+        }
+    }
+
+    public class RefreshCredentialsCommandValidator : AbstractValidator<RefreshCredentialsCommand>
+    {
+        public RefreshCredentialsCommandValidator()
+        {
+            RuleFor(p => p.UserEmail).NotEmpty().EmailAddress();
+            RuleFor(p => p.RefreshToken).NotEmpty();
         }
     }
 }

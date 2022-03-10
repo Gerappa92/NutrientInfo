@@ -44,7 +44,10 @@ namespace WebAPI.Controllers
         [HttpPost("delete-account")]
         public async Task<IActionResult> Delete([FromBody] DeleteUserAccountCommand command)
         {
-            command.UserEmail = GetUserEmail();
+            if(GetUserEmail() != command.Email)
+            {
+                return Unauthorized();
+            }
             await Mediator.Send(command);
             return Ok();
         }
@@ -52,7 +55,10 @@ namespace WebAPI.Controllers
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetUserPasswordCommand command)
         {
-            command.UserEmail = GetUserEmail();
+            if (GetUserEmail() != command.Email)
+            {
+                return Unauthorized();
+            }
             await Mediator.Send(command);
             return Ok();
         }

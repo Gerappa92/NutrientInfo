@@ -1,8 +1,11 @@
 ﻿using Application.Common.UsersManagement;
 using Application.Common.UsersManagement.Contracts;
+using FluentValidation;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using static Application.Common.Consts.RegexPatterns;
+
 
 namespace Application.User.Queries
 {
@@ -25,6 +28,15 @@ namespace Application.User.Queries
         {
             var token = await _userService.Login(request.Email, request.Password);
             return token;
+        }
+    }
+
+    public class LoginUserQueryValidator : AbstractValidator<LoginUserQuery>
+    {
+        public LoginUserQueryValidator()
+        {
+            RuleFor(p => p.Email).NotEmpty().EmailAddress();
+            RuleFor(p => p.Password).NotEmpty().Matches(PASSWORD_PATTERN);
         }
     }
 }

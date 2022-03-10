@@ -14,7 +14,6 @@ export const ResetPassword = () => {
       .finally(() => {
         setIsLoading(false);
       });
-    console.log("Credentials", credentials);
   };
 
   return (

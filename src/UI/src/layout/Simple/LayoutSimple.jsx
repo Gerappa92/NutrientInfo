@@ -62,15 +62,11 @@ export const LayoutSimple = () => {
             <PageContainer>
               <Switch>
                 <Redirect exact from="/" to="/home" />
-                <Route path="/food-details/:foodId">
-                  <FoodDetails></FoodDetails>
-                </Route>
+                <Route path="/food-details/:foodId" component={FoodDetails} />
                 <Route path="/about" component={AboutPage}></Route>
                 <Route path="/meal-creator" component={NewMealPage}></Route>
                 <Route path="/user-settings" component={UserPage} />
-                <Route exact path="/home">
-                  <SearchPage></SearchPage>
-                </Route>
+                <Route path="/" component={SearchPage} />
               </Switch>
             </PageContainer>
           </Content>

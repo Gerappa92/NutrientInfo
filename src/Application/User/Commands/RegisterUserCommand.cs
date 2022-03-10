@@ -1,7 +1,10 @@
 ﻿using Application.Common.UsersManagement;
+using FluentValidation;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using static Application.Common.Consts.RegexPatterns;
+
 
 namespace Application.User.Commands
 {
@@ -24,6 +27,15 @@ namespace Application.User.Commands
         {
             await _userManager.Register(request.Email, request.Password);
             return Unit.Value;
+        }
+    }
+
+    public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
+    {
+        public RegisterUserCommandValidator()
+        {
+            RuleFor(p => p.Email).NotEmpty().EmailAddress();
+            RuleFor(p => p.Password).NotEmpty().Matches(PASSWORD_PATTERN);
         }
     }
 }

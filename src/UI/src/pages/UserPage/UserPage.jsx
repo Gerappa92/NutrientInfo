@@ -1,5 +1,5 @@
 import { Layout, Menu, Typography } from "antd";
-import { BrowserRouter as Switch, Route, Link } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import { Unauthorized } from "../../components/Unathorized/Unauthorized";
 import { UserOverview } from "../../components/User/UserOverview/UserOverview";
 import { DeleteAccount } from "../../components/User/DeleteAccount/DeleteAccount";
@@ -66,4 +66,5 @@ const ContentDiv = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 28px;
+  height: 80vh;
 `;
