@@ -1,8 +1,6 @@
 ﻿using Application.Common.UsersManagement;
 using Application.Common.UsersManagement.Contracts;
-using AutoMapper;
 using AzureTableIdentityProvider;
-using Domain.Entities;
 using Infrastructure.Exceptions;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -16,21 +14,13 @@ namespace Infrastructure.Services
         private const string PARTITION_KEY = "application_user";
 
         private UserManager<ApplicationUser> _userManager;
-        private SignInManager<ApplicationUser> _signInManager;
         private ITokenService _tokenService;
 
-        private IMapper _mapper;
 
-        public UserService(UserManager<ApplicationUser> userManager, ITokenService jwtTokenService, SignInManager<ApplicationUser> signInManager)
+        public UserService(UserManager<ApplicationUser> userManager, ITokenService jwtTokenService)
         {
             _userManager = userManager;
             _tokenService = jwtTokenService;
-            _signInManager = signInManager;
-            _mapper = new MapperConfiguration(config =>
-                {
-                    config.CreateMap<User, ApplicationUser>();
-                    config.CreateMap<ApplicationUser, User>();
-                }).CreateMapper();
         }
 
         public async Task Register(string userEmail, string password)

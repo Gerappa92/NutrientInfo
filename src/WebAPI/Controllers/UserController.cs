@@ -52,7 +52,7 @@ namespace WebAPI.Controllers
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetUserPasswordCommand command)
         {
-
+            command.UserEmail = GetUserEmail();
             await Mediator.Send(command);
             return Ok();
         }

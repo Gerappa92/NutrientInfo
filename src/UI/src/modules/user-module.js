@@ -8,13 +8,9 @@ const setJwtToken = (token) =>
 const clearJwtToken = () => localStorage.removeItem(tokenLocalStorageName);
 
 export const register = async (credentails) => {
-  await axiosClient()
-    .post("user/register", credentails, {
-      withCredentials: true,
-    })
-    .catch((e) => {
-      console.error("Register failed", e);
-    });
+  await axiosClient().post("user/register", credentails, {
+    withCredentials: true,
+  });
 };
 
 const stopRefreshTokenInterval = () => {
@@ -35,8 +31,8 @@ export const refreshTokenInterval = () => {
         setJwtToken(response.data.token);
       })
       .catch((e) => {
-        console.error("Refresh login failed", e);
         logout();
+        throw e;
       });
   }, timeout);
 };
@@ -49,9 +45,6 @@ export const login = async (credentails) => {
     .then((response) => {
       setJwtToken(response.data.token);
       refreshTokenInterval();
-    })
-    .catch((e) => {
-      console.error("Login failed", e);
     });
 };
 
@@ -66,4 +59,8 @@ export const deleteAccount = async (credentials) => {
   return await axiosClient()
     .post("user/delete-account", credentials)
     .then(() => logout());
+};
+
+export const resetPassword = async (credentrials) => {
+  return await axiosClient().post("user/reset-password", credentrials);
 };

@@ -56,8 +56,9 @@ export const UserSection = () => {
 
   const auth = async (credentials) => {
     if (modalType === "login") {
-      await login(credentials);
-      userContext.setUser({ isLogged: true });
+      await login(credentials).then(() => {
+        userContext.setUser({ isLogged: true });
+      });
     } else {
       await register(credentials);
     }

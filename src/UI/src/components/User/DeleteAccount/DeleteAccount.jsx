@@ -14,14 +14,13 @@ export const DeleteAccount = () => {
     setIsLoading(true);
     await deleteAccount(credentials)
       .then(() => {
-        setIsLoading(false);
         context.setUser({ isLogged: false });
         history.push("/home");
       })
       .catch((e) => {
-        setIsLoading(false);
         console.error("Deleting account failed");
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (

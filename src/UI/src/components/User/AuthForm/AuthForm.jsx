@@ -6,6 +6,7 @@ export const AuthForm = ({
   isLoading = false,
   submitButton = "Login",
   submitButtonType = "primary",
+  children,
 }) => {
   const [form] = useForm();
 
@@ -50,6 +51,7 @@ export const AuthForm = ({
         >
           <Input.Password disabled={isLoading} />
         </Form.Item>
+        {children}
         <Form.Item>
           <Button type={submitButtonType} htmlType="submit">
             {submitButton}
