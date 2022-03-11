@@ -7,6 +7,7 @@ import { UserContext } from "../../../App";
 
 export const DeleteAccount = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoginFailed, setIsLoginFailed] = useState(false);
   const history = useHistory();
   const context = useContext(UserContext);
 
@@ -14,11 +15,12 @@ export const DeleteAccount = () => {
     setIsLoading(true);
     await deleteAccount(credentials)
       .then(() => {
+        setIsLoginFailed(false);
         context.setUser({ isLogged: false });
         history.push("/home");
       })
-      .catch((e) => {
-        console.error("Deleting account failed");
+      .catch(() => {
+        setIsLoginFailed(true);
       })
       .finally(() => setIsLoading(false));
   };
@@ -31,6 +33,7 @@ export const DeleteAccount = () => {
         submitButtonType="danger"
         onSubmit={handleDeleteAccount}
         isLoading={isLoading}
+        isLoginFailed={isLoginFailed}
       />
     </>
   );

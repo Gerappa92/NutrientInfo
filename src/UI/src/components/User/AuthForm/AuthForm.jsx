@@ -17,11 +17,6 @@ export const AuthForm = ({
 
   return (
     <Spin spinning={isLoading}>
-      {isLoginFailed && (
-        <Typography.Text type="danger">
-          User with this login and password does not exist
-        </Typography.Text>
-      )}
       <Form
         wrapperCol={{ span: 16 }}
         labelCol={{ span: 4 }}
@@ -60,6 +55,11 @@ export const AuthForm = ({
           <Input.Password disabled={isLoading} />
         </Form.Item>
         {children}
+        {isLoginFailed && (
+          <Typography.Text type="danger">
+            User with this login and password does not exist
+          </Typography.Text>
+        )}
         <Form.Item>
           <Button type={submitButtonType} htmlType="submit">
             {submitButton}

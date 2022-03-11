@@ -5,11 +5,14 @@ import { resetPassword } from "../../../modules/user-module";
 
 export const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoginFailed, setIsLoginFailed] = useState(false);
+
   const handleRestart = async (credentials) => {
     setIsLoading(true);
     await resetPassword(credentials)
+      .then(() => setIsLoginFailed(false))
       .catch((e) => {
-        console.error("Reset password failed", e);
+        setIsLoginFailed(true);
       })
       .finally(() => {
         setIsLoading(false);
@@ -23,6 +26,7 @@ export const ResetPassword = () => {
         submitButton="Restart"
         onSubmit={handleRestart}
         isLoading={isLoading}
+        isLoginFailed={isLoginFailed}
       >
         <Form.Item
           name="newpassword"
