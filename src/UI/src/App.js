@@ -19,7 +19,7 @@ const App = () => {
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
-      <LayoutSimple></LayoutSimple>;
+      <LayoutSimple></LayoutSimple>
     </UserContext.Provider>
   );
 };
