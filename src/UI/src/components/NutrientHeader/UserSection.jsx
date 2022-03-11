@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
-import { Dropdown, Menu, Typography } from "antd";
-import { AuthModal } from "../User/AuthModal/AuthModal";
+import { Dropdown, Menu, Modal, Typography } from "antd";
+import { AuthForm } from "../User/AuthForm/AuthForm";
 import { login, register, logout } from "../../modules/user-module";
 import { UserOutlined } from "@ant-design/icons";
 import { UserContext } from "../../App";
@@ -22,45 +22,50 @@ const userMenu = (logout) => (
 
 export const UserSection = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalType, setModalType] = useState("register");
+  const [authType, setAuthType] = useState("register");
   const [waitingForAuth, setWaitingForAuth] = useState(false);
+  const [isLoginFailed, setIsLoginFailed] = useState(false);
   const userContext = useContext(UserContext);
 
-  const showModal = (type) => {
-    if (type === "login") {
-      setModalType("login");
-      setIsModalVisible(true);
-    } else {
-      setModalType("register");
-      setIsModalVisible(true);
-    }
+  const loginAuthType = "login";
+  const registerAuthType = "register";
+
+  const showAuthModal = (authType) => {
+    setAuthType(authType);
+    setIsModalVisible(true);
   };
 
-  const handleCancel = () => {
+  const hideAuthModal = () => {
     setIsModalVisible(false);
   };
 
-  const handleAuth = async (values) => {
+  const handleAuth = async (credentials) => {
     setWaitingForAuth(true);
 
-    await auth(values)
+    await auth(credentials)
       .then(() => {
-        setWaitingForAuth(false);
-        setIsModalVisible(false);
+        setIsLoginFailed(false);
       })
-      .catch((e) => {
-        console.error(e);
+      .catch(() => {
+        setIsLoginFailed(true);
+      })
+      .finally(() => {
         setWaitingForAuth(false);
       });
   };
 
   const auth = async (credentials) => {
-    if (modalType === "login") {
-      await login(credentials).then(() => {
-        userContext.setUser({ isLogged: true });
-      });
-    } else {
-      await register(credentials);
+    switch (authType) {
+      case loginAuthType:
+        await login(credentials).then(() => {
+          userContext.setUser({ isLogged: true });
+        });
+        break;
+      case registerAuthType:
+        await register(credentials);
+        break;
+      default:
+        break;
     }
   };
 
@@ -69,30 +74,38 @@ export const UserSection = () => {
       isLogged: false,
     });
     logout();
+    setIsModalVisible(false);
   };
 
   return (
     <>
       {userContext.user.isLogged ? (
-        <div>
-          <Dropdown overlay={userMenu(handleLogout)}>
-            <UserHeader />
-          </Dropdown>
-        </div>
+        <Dropdown overlay={userMenu(handleLogout)} trigger="click">
+          <UserHeader />
+        </Dropdown>
       ) : (
         <>
-          <HeaderButton onClick={() => showModal("register")}>
+          <HeaderButton onClick={() => showAuthModal(registerAuthType)}>
             Register
           </HeaderButton>
-          <HeaderButton onClick={() => showModal("login")}>Login</HeaderButton>
+          <HeaderButton onClick={() => showAuthModal(loginAuthType)}>
+            Login
+          </HeaderButton>
 
-          <AuthModal
-            isVisible={isModalVisible}
-            type={modalType}
-            handleCancel={handleCancel}
-            handleAuth={handleAuth}
-            isLoading={waitingForAuth}
-          />
+          <Modal
+            title={authType === "login" ? "Login" : "Register"}
+            visible={isModalVisible}
+            onCancel={hideAuthModal}
+            centered
+            footer={null}
+          >
+            <AuthForm
+              submitButton={authType === "login" ? "Login" : "Register"}
+              onSubmit={handleAuth}
+              isLoading={waitingForAuth}
+              isLoginFailed={isLoginFailed}
+            />
+          </Modal>
         </>
       )}
     </>

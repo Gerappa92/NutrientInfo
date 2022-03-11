@@ -1,4 +1,4 @@
-import { Button, Form, Input, Spin } from "antd";
+import { Button, Form, Input, Spin, Typography } from "antd";
 import { useForm } from "antd/lib/form/Form";
 
 export const AuthForm = ({
@@ -7,6 +7,7 @@ export const AuthForm = ({
   submitButton = "Login",
   submitButtonType = "primary",
   children,
+  isLoginFailed = false,
 }) => {
   const [form] = useForm();
 
@@ -16,7 +17,14 @@ export const AuthForm = ({
 
   return (
     <Spin spinning={isLoading}>
+      {isLoginFailed && (
+        <Typography.Text type="danger">
+          User with this login and password does not exist
+        </Typography.Text>
+      )}
       <Form
+        wrapperCol={{ span: 16 }}
+        labelCol={{ span: 4 }}
         name="delete-account-form"
         form={form}
         onFinish={onSubmit}
