@@ -3,23 +3,6 @@ import { getJwtToken, setJwtToken, getUser } from "./storage-module";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-// export const axiosClient = () => createClient();
-
-// function createClient() {
-//   let settings = { baseURL: apiBaseUrl };
-//   const jwtToken = getJwtToken();
-
-//   if (jwtToken) {
-//     settings = {
-//       ...settings,
-//       withCredentials: true,
-//       headers: { Authorization: `Bearer ${jwtToken}` },
-//     };
-//   }
-
-//   return axios.create(settings);
-// }
-
 const httpClient = axios.create({
   baseURL: apiBaseUrl,
   headers: {
@@ -47,8 +30,6 @@ httpClient.interceptors.response.use(
     const authHeader = error.response.headers["www-authenticate"];
     const isTokenExpired = authHeader && authHeader.includes("token expired");
     const user = getUser();
-    console.log(status, isTokenExpired, user);
-    console.log(status === 401 && isTokenExpired && user && user.email);
 
     if (status === 401 && isTokenExpired && user && user.email) {
       try {
