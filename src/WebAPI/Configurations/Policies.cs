@@ -20,6 +20,7 @@ namespace WebAPI.Configurations
             options.AddPolicy(DEV_CORS_POLICY, policy => policy.WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
             .AllowAnyHeader()
+            .WithExposedHeaders("www-authenticate")
             .AllowCredentials());
         }
     }

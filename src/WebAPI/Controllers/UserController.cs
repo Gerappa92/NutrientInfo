@@ -1,9 +1,11 @@
 ﻿using Application.User.Commands;
 using Application.User.Queries;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebAPI.Contracts;
+using WebAPI.Contracts.Requests.User;
 
 namespace WebAPI.Controllers
 {
@@ -27,10 +29,11 @@ namespace WebAPI.Controllers
             return new LoginResponse(tokens.Token);
         }
 
+        [AllowAnonymous]
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<LoginResponse>> Refresh()
+        public async Task<ActionResult<LoginResponse>> Refresh([FromBody] RefreshTokenRequest request)
         {
-            var command = new RefreshCredentialsCommand { RefreshToken = GetRefreshTokenCookie(), UserEmail = GetUserEmail() };
+            var command = new RefreshCredentialsCommand { RefreshToken = GetRefreshTokenCookie(), UserEmail = request.Email };
             var tokens = await Mediator.Send(command);
             return new LoginResponse(tokens.Token);
         }
@@ -61,6 +64,18 @@ namespace WebAPI.Controllers
             }
             await Mediator.Send(command);
             return Ok();
+        }
+
+        [HttpGet("current")]
+        public ActionResult<Domain.Entities.User> GetCurrent()
+        {
+            var userEmail = GetUserEmail();
+            if(userEmail.IsEmpty())
+            {
+                return Unauthorized();
+            }
+            var currentUser = new Domain.Entities.User { Email = userEmail, IsAuthenticated= true };
+            return Ok(currentUser);
         }
     }
 }

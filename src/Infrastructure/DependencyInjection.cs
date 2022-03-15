@@ -53,7 +53,8 @@ namespace Infrastructure
                     ValidateIssuer = false,
                     RequireExpirationTime = false,
                     ValidateLifetime = true,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    // ClockSkew = System.TimeSpan.Zero
                 };
             });
             return services;
