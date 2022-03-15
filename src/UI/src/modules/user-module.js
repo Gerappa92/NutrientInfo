@@ -1,66 +1,53 @@
-import { axiosClient } from "./axios-client";
-
-const tokenLocalStorageName = "jwtToken";
-let refreshIntervalId = 0;
-
-const setJwtToken = (token) =>
-  localStorage.setItem(tokenLocalStorageName, token);
-const clearJwtToken = () => localStorage.removeItem(tokenLocalStorageName);
+import httpClient from "./axios-client";
+import { setJwtToken, deleteJwtToken, setUser } from "./storage-module";
 
 export const register = async (credentails) => {
-  await axiosClient().post("user/register", credentails, {
+  await httpClient.post("user/register", credentails, {
     withCredentials: true,
   });
 };
 
-const stopRefreshTokenInterval = () => {
-  clearInterval(refreshIntervalId);
-};
-
-export const logout = () => {
-  stopRefreshTokenInterval();
-  clearJwtToken();
-};
-
-export const refreshTokenInterval = () => {
-  const timeout = 4 * 60 * 1000;
-  refreshIntervalId = setInterval(async () => {
-    await axiosClient()
-      .post("user/refresh-token")
-      .then((response) => {
-        setJwtToken(response.data.token);
-      })
-      .catch((e) => {
-        logout();
-        throw e;
-      });
-  }, timeout);
-};
-
 export const login = async (credentails) => {
-  await axiosClient()
+  await httpClient
     .post("user/login", credentails, {
       withCredentials: true,
     })
     .then((response) => {
       setJwtToken(response.data.token);
-      refreshTokenInterval();
+      let user = { email: credentails.email };
+      setUser(user);
+    });
+};
+
+export const logout = () => {
+  deleteJwtToken();
+};
+
+export const refreshToken = async () => {
+  await httpClient
+    .post("user/refresh-token")
+    .then((response) => {
+      setJwtToken(response.data.token);
+    })
+    .catch((e) => {
+      logout();
+      throw e;
     });
 };
 
 export const isLoggedIn = async () => {
-  return await axiosClient()
+  return await httpClient
     .post("user/is-authenticated")
     .then(() => true)
     .catch(() => false);
 };
 
 export const deleteAccount = async (credentials) => {
-  return await axiosClient()
+  return await httpClient
     .post("user/delete-account", credentials)
     .then(() => logout());
 };
 
 export const resetPassword = async (credentrials) => {
-  return await axiosClient().post("user/reset-password", credentrials);
+  return await httpClient.post("user/reset-password", credentrials);
 };

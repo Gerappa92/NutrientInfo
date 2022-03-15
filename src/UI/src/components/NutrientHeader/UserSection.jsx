@@ -1,16 +1,18 @@
 import { useContext, useState } from "react";
 import { Dropdown, Menu, Modal, Typography } from "antd";
 import { AuthForm } from "../User/AuthForm/AuthForm";
-import { login, register, logout } from "../../modules/user-module";
+import { register } from "../../modules/user-module";
 import { UserOutlined } from "@ant-design/icons";
-import { UserContext } from "../../App";
+import { UserContext } from "../User/UserStateContainer/UserStateContainer";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const userMenu = (logout) => (
   <Menu>
     <Menu.Item key="logout" onClick={logout}>
-      <Typography.Text>Log out</Typography.Text>
+      <Link to="/home">
+        <Typography.Text>Log out</Typography.Text>
+      </Link>
     </Menu.Item>
     <Menu.Item key="user-settings">
       <Link to="/user-settings/overview">
@@ -22,9 +24,9 @@ const userMenu = (logout) => (
 
 export const UserSection = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [authType, setAuthType] = useState("register");
   const [waitingForAuth, setWaitingForAuth] = useState(false);
   const [isLoginFailed, setIsLoginFailed] = useState(false);
+  const [authType, setAuthType] = useState("register");
   const userContext = useContext(UserContext);
 
   const loginAuthType = "login";
@@ -57,9 +59,7 @@ export const UserSection = () => {
   const auth = async (credentials) => {
     switch (authType) {
       case loginAuthType:
-        await login(credentials).then(() => {
-          userContext.setUser({ isLogged: true });
-        });
+        await userContext.handleLogin(credentials);
         break;
       case registerAuthType:
         await register(credentials);
@@ -70,16 +70,13 @@ export const UserSection = () => {
   };
 
   const handleLogout = () => {
-    userContext.setUser({
-      isLogged: false,
-    });
-    logout();
+    userContext.handleLogout();
     setIsModalVisible(false);
   };
 
   return (
     <>
-      {userContext.user.isLogged ? (
+      {userContext.isLogged ? (
         <Dropdown overlay={userMenu(handleLogout)} trigger="click">
           <UserHeader />
         </Dropdown>

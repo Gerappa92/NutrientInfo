@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
 import { IngridientInput } from "./IngridientInput";
-import { axiosClient } from "../../modules/axios-client";
+import httpClient from "../../modules/axios-client";
 
 const layout = {
   labelCol: { span: 8 },
@@ -16,7 +16,7 @@ export const MealForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    axiosClient().post("mealmaker", values);
+    httpClient.post("mealmaker", values);
   };
 
   const validateIngridients = (_, ingridients) => {

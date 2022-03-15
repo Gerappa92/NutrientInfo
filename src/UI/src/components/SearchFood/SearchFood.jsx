@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Input, Checkbox } from "antd";
 import styled from "styled-components";
-import { axiosClient } from "../../modules/axios-client";
+
+import httpClient from "../../modules/axios-client";
 
 const { Search } = Input;
 
@@ -29,7 +30,7 @@ export const SearchFood = (props) => {
     }
     props.setTableLoading(true);
 
-    const response = await axiosClient().get(
+    const response = await httpClient.get(
       `food?searchTerm=${query.searchTerm}&pageSize=${props.pageSize}&pageNumber=${props.pageNumber}&brandOwner=${query.brandOwner}&requireAllWords=${query.requireAllWords}`
     );
 

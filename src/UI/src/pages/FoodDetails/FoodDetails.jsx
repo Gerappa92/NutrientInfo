@@ -7,7 +7,7 @@ import { FoodTags } from "../../components/FoodTags/FoodTags";
 import styled from "styled-components";
 import "./FoodDetails.css";
 import { FoodHeader } from "../../components/FoodHeader/FoodHeader";
-import { axiosClient } from "../../modules/axios-client";
+import httpClient from "../../modules/axios-client";
 
 const DetailsHeader = styled.div`
   padding: 10px;
@@ -31,7 +31,7 @@ export const FoodDetails = () => {
 
   useEffect(() => {
     (async function fetchData() {
-      let response = await axiosClient().get(`food/${foodId}`);
+      let response = await httpClient.get(`food/${foodId}`);
       foodSet(response.data);
       setLoading(false);
     })();

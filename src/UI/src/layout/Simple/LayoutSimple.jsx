@@ -21,8 +21,11 @@ import { NewMealPage } from "../../pages/NewMealPage/NewMealPage";
 import { UserPage } from "../../pages/UserPage/UserPage";
 import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
 import Footer from "../../components/Footer/Footer";
+import { securedComponent } from "../../components/HOC/securedComponent";
 
 const { Content, Sider } = Layout;
+const NewMealPageSecured = securedComponent(NewMealPage);
+const UserPageSecured = securedComponent(UserPage);
 
 export const LayoutSimple = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -64,8 +67,8 @@ export const LayoutSimple = () => {
                 <Redirect exact from="/" to="/home" />
                 <Route path="/food-details/:foodId" component={FoodDetails} />
                 <Route path="/about" component={AboutPage}></Route>
-                <Route path="/meal-creator" component={NewMealPage}></Route>
-                <Route path="/user-settings" component={UserPage} />
+                <Route path="/meal-creator" component={NewMealPageSecured} />
+                <Route path="/user-settings" component={UserPageSecured} />
                 <Route path="/" component={SearchPage} />
               </Switch>
             </PageContainer>

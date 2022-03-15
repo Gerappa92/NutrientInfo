@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthForm } from "../AuthForm/AuthForm";
 import { deleteAccount } from "../../../modules/user-module";
-import { UserContext } from "../../../App";
+import { UserContext } from "../UserStateContainer/UserStateContainer";
 
 export const DeleteAccount = () => {
   const [isLoading, setIsLoading] = useState(false);
