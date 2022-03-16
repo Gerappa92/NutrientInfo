@@ -23,85 +23,122 @@ const userMenu = (logout) => (
 );
 
 export const UserSection = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [waitingForAuth, setWaitingForAuth] = useState(false);
-  const [isLoginFailed, setIsLoginFailed] = useState(false);
-  const [authType, setAuthType] = useState("register");
+  const [loginModal, setLoginModal] = useState({
+    show: false,
+    loading: false,
+    fail: false,
+  });
+  const [registryModal, setRegistryModal] = useState({
+    show: false,
+    loading: false,
+    fail: false,
+    success: false,
+  });
+
+  const showLoginModal = () =>
+    setLoginModal(() => ({ show: true, loading: false, fail: false }));
+  const hideLoginModal = () =>
+    setLoginModal((prev) => ({ ...prev, show: false }));
+
+  const showRegistryModal = () =>
+    setRegistryModal(() => ({
+      show: true,
+      loading: false,
+      fail: false,
+      success: false,
+    }));
+  const hideRegistryModal = () =>
+    setRegistryModal((prev) => ({ ...prev, show: false }));
+
   const userContext = useContext(UserContext);
 
-  const loginAuthType = "login";
-  const registerAuthType = "register";
-
-  const showAuthModal = (authType) => {
-    setAuthType(authType);
-    setIsModalVisible(true);
-  };
-
-  const hideAuthModal = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleAuth = async (credentials) => {
-    setWaitingForAuth(true);
-
-    await auth(credentials)
+  const handleLogin = async (credentials) => {
+    setLoginModal((prev) => ({ ...prev, loading: true }));
+    await userContext
+      .handleLogin(credentials)
       .then(() => {
-        setIsLoginFailed(false);
+        setLoginModal(() => ({ show: false, loading: false, fail: false }));
       })
       .catch(() => {
-        setIsLoginFailed(true);
-      })
-      .finally(() => {
-        setWaitingForAuth(false);
+        setLoginModal(() => ({ show: true, loading: false, fail: true }));
       });
   };
 
-  const auth = async (credentials) => {
-    switch (authType) {
-      case loginAuthType:
-        await userContext.handleLogin(credentials);
-        break;
-      case registerAuthType:
-        await register(credentials);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleLogout = () => {
-    userContext.handleLogout();
-    setIsModalVisible(false);
+  const handleRegistration = async (credentials) => {
+    setRegistryModal((prev) => ({ ...prev, loading: true }));
+    await register(credentials)
+      .then(() => {
+        setRegistryModal((prev) => ({
+          ...prev,
+          loading: false,
+          fail: false,
+          success: true,
+        }));
+      })
+      .catch(() => {
+        setRegistryModal((prev) => ({
+          ...prev,
+          loading: false,
+          fail: true,
+          success: false,
+        }));
+      });
   };
 
   return (
     <>
       {userContext.isLogged ? (
-        <Dropdown overlay={userMenu(handleLogout)} trigger="click">
+        <Dropdown overlay={userMenu(userContext.handleLogout)} trigger="click">
           <UserHeader />
         </Dropdown>
       ) : (
         <>
-          <HeaderButton onClick={() => showAuthModal(registerAuthType)}>
-            Register
-          </HeaderButton>
-          <HeaderButton onClick={() => showAuthModal(loginAuthType)}>
-            Login
-          </HeaderButton>
+          <HeaderButton onClick={showRegistryModal}>Register</HeaderButton>
+          <HeaderButton onClick={showLoginModal}>Login</HeaderButton>
 
           <Modal
-            title={authType === "login" ? "Login" : "Register"}
-            visible={isModalVisible}
-            onCancel={hideAuthModal}
+            title="Login"
+            visible={loginModal.show}
+            onCancel={hideLoginModal}
             centered
             footer={null}
           >
             <AuthForm
-              submitButton={authType === "login" ? "Login" : "Register"}
-              onSubmit={handleAuth}
-              isLoading={waitingForAuth}
-              isLoginFailed={isLoginFailed}
-            />
+              submitButton="Login"
+              onSubmit={handleLogin}
+              isLoading={loginModal.loading}
+            >
+              {loginModal.fail && (
+                <Typography.Text type="danger">
+                  User with this login and password does not exist
+                </Typography.Text>
+              )}
+            </AuthForm>
+          </Modal>
+
+          <Modal
+            title="Register"
+            visible={registryModal.show}
+            onCancel={hideRegistryModal}
+            centered
+            footer={null}
+          >
+            <AuthForm
+              submitButton="Register"
+              onSubmit={handleRegistration}
+              isLoading={registryModal.loading}
+            >
+              {registryModal.success && (
+                <Typography.Text type="success">
+                  Registration success. Try to log in using your credentials.
+                </Typography.Text>
+              )}
+              {registryModal.fail && (
+                <Typography.Text type="danger">
+                  Registration failed
+                </Typography.Text>
+              )}
+            </AuthForm>
           </Modal>
         </>
       )}

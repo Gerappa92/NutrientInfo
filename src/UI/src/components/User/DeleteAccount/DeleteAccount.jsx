@@ -7,7 +7,7 @@ import { UserContext } from "../UserStateContainer/UserStateContainer";
 
 export const DeleteAccount = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoginFailed, setIsLoginFailed] = useState(false);
+  const [deleteFailed, setDeleteFailed] = useState(false);
   const history = useHistory();
   const context = useContext(UserContext);
 
@@ -15,12 +15,12 @@ export const DeleteAccount = () => {
     setIsLoading(true);
     await deleteAccount(credentials)
       .then(() => {
-        setIsLoginFailed(false);
-        context.setUser({ isLogged: false });
+        setDeleteFailed(false);
+        context.handleLogout();
         history.push("/home");
       })
       .catch(() => {
-        setIsLoginFailed(true);
+        setDeleteFailed(true);
       })
       .finally(() => setIsLoading(false));
   };
@@ -33,8 +33,13 @@ export const DeleteAccount = () => {
         submitButtonType="danger"
         onSubmit={handleDeleteAccount}
         isLoading={isLoading}
-        isLoginFailed={isLoginFailed}
-      />
+      >
+        {deleteFailed && (
+          <Typography.Text type="danger">
+            User with this login and password does not exist
+          </Typography.Text>
+        )}
+      </AuthForm>
     </>
   );
 };

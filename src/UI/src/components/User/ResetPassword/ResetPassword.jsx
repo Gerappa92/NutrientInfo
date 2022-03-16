@@ -4,18 +4,20 @@ import { Typography, Form, Input } from "antd";
 import { resetPassword } from "../../../modules/user-module";
 
 export const ResetPassword = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoginFailed, setIsLoginFailed] = useState(false);
+  const [settings, setSettings] = useState({
+    loading: false,
+    fail: false,
+    success: false,
+  });
 
   const handleRestart = async (credentials) => {
-    setIsLoading(true);
+    setSettings({ loading: true, fail: false, success: false });
     await resetPassword(credentials)
-      .then(() => setIsLoginFailed(false))
-      .catch((e) => {
-        setIsLoginFailed(true);
+      .then(() => {
+        setSettings({ loading: false, fail: false, success: true });
       })
-      .finally(() => {
-        setIsLoading(false);
+      .catch(() => {
+        setSettings({ loading: false, fail: true, success: false });
       });
   };
 
@@ -25,8 +27,7 @@ export const ResetPassword = () => {
       <AuthForm
         submitButton="Restart"
         onSubmit={handleRestart}
-        isLoading={isLoading}
-        isLoginFailed={isLoginFailed}
+        isLoading={settings.loading}
       >
         <Form.Item
           name="newpassword"
@@ -44,6 +45,16 @@ export const ResetPassword = () => {
         >
           <Input.Password />
         </Form.Item>
+        {settings.fail && (
+          <Typography.Text type="danger">
+            Password reset failed. Try again.
+          </Typography.Text>
+        )}
+        {settings.success && (
+          <Typography.Text type="success">
+            Password reset successed
+          </Typography.Text>
+        )}
       </AuthForm>
     </>
   );
