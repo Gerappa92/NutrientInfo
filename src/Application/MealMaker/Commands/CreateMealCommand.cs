@@ -13,7 +13,7 @@ namespace Application.MealMaker.Commands
         public string Name { get; set; }
         public string UserId { get; set; }
 
-        public IEnumerable<IngriedientDto> Ingriedients{ get; set; }
+        public IEnumerable<IngriedientDto> Ingriedients { get; set; }
 
         public class IngriedientDto
         {

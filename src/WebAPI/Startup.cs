@@ -31,7 +31,7 @@ namespace WebAPI
             services.AddInfrastructure();
             services.AddAzureTableIdentityProvider(Configuration);
             services.AddJwtAuthentication(Configuration);
-            
+
 
             services.AddSingleton(p => Configuration);
 
