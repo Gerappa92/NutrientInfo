@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import axios from "axios";
 import { Spin } from "antd";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
@@ -8,6 +7,7 @@ import { FoodTags } from "../../components/FoodTags/FoodTags";
 import styled from "styled-components";
 import "./FoodDetails.css";
 import { FoodHeader } from "../../components/FoodHeader/FoodHeader";
+import httpClient from "../../modules/axios-client";
 
 const DetailsHeader = styled.div`
   padding: 10px;
@@ -24,8 +24,6 @@ const FoodDetailsItems = styled.div`
   width: calc(100% / var(--col-divisor));
 `;
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-
 export const FoodDetails = () => {
   const { foodId } = useParams();
   const [food, foodSet] = useState({});
@@ -33,7 +31,7 @@ export const FoodDetails = () => {
 
   useEffect(() => {
     (async function fetchData() {
-      let response = await axios.get(`${apiBaseUrl}food/${foodId}`);
+      let response = await httpClient.get(`food/${foodId}`);
       foodSet(response.data);
       setLoading(false);
     })();

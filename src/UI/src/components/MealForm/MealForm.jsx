@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
 import { IngridientInput } from "./IngridientInput";
-import axios from "axios";
+import httpClient from "../../modules/axios-client";
 
 const layout = {
   labelCol: { span: 8 },
@@ -12,15 +12,11 @@ const tailLayout = {
   wrapperCol: { offset: 0, span: 24 },
 };
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-
 export const MealForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log(values);
-    const url = `${apiBaseUrl}mealmaker`;
-    // axios.post(url, values);
+    httpClient.post("mealmaker", values);
   };
 
   const validateIngridients = (_, ingridients) => {

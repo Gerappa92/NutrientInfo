@@ -4,6 +4,7 @@ using Infrastructure.Contracts.AzureTables;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -14,7 +15,7 @@ namespace Infrastructure.Repositories
 
         public AzureTableRepository(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("AzureStorageAccount");            
+            _connectionString = configuration.GetConnectionString("AzureStorageAccount");
         }
 
         public void CreateTableClient(string tableName)
@@ -30,6 +31,24 @@ namespace Infrastructure.Repositories
         public T[] GetAll()
         {
             return _tableClient.Query<T>().ToArray();
+        }
+
+        public async Task<T> GetAsync(string partitionKey, string rowKey)
+        {
+            return await _tableClient.GetEntityAsync<T>(partitionKey, rowKey);
+        }
+
+        public async Task<T> GetByIdAsync(string id)
+        {
+            var pages = _tableClient.QueryAsync<T>(q => q.Id == id);
+
+            T entity = null;
+            await foreach (var item in pages)
+            {
+                entity = item;
+                break;
+            }
+            return entity;
         }
     }
 }

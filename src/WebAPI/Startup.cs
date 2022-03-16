@@ -24,18 +24,43 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddSettings(Configuration);
             services.AddControllers()
                 .AddFluentValidation();
             services.AddApplication();
             services.AddInfrastructure();
+            services.AddAzureTableIdentityProvider(Configuration);
+            services.AddJwtAuthentication(Configuration);
+
+
             services.AddSingleton(p => Configuration);
 
-            services.AddCors(options => AllowAll(options));
+            services.AddCors(options => Dev(options));
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+                //c.ResolveConflictingActions(resolver => resolver.First());
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                         },
+                        new string[] { }
+                    }
+                });
             });
         }
 
@@ -45,7 +70,7 @@ namespace WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(ALLOW_ALL_CORS_POLICY);
+                app.UseCors(DEV_CORS_POLICY);
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
             }
@@ -55,6 +80,8 @@ namespace WebAPI
             }
 
             app.UseApiException();
+
+            app.UseAuthentication();
 
             app.UseRouting();
             app.UseDefaultFiles();

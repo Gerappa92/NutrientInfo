@@ -10,7 +10,6 @@ const FoodTag = styled(Tag)`
 `;
 
 export const FoodTags = ({ tags }) => {
-  console.log(tags);
   const getTag = (tag) => {
     const color = getTagColor(tag.mark);
     return (

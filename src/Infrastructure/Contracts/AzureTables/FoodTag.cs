@@ -2,7 +2,6 @@
 {
     public class FoodTag : AzureTable
     {
-        public string Id { get; set; }
         public string Name { get; set; }
         public string Mark { get; set; }
         public double MinDailyValuePercentage { get; set; } = 0;

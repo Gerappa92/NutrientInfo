@@ -5,28 +5,29 @@ import {
   CloseOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 import SearchPage from "../../pages/SearchPage/SearchPage";
 import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
 import styled from "styled-components";
 import { useState } from "react";
 import { AboutPage } from "../../pages/AboutPage/AboutPage";
 import { NewMealPage } from "../../pages/NewMealPage/NewMealPage";
+import { UserPage } from "../../pages/UserPage/UserPage";
 import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
 import Footer from "../../components/Footer/Footer";
+import { securedComponent } from "../../components/HOC/securedComponent";
 
 const { Content, Sider } = Layout;
+const NewMealPageSecured = securedComponent(NewMealPage);
+const UserPageSecured = securedComponent(UserPage);
 
-const NutrientInfoLayout = styled(Layout)`
-  background: #fff;
-`;
-
-const PageContainer = styled.div`
-  min-height: 80vh;
-  padding: "0 10px";
-`;
-
-function LayoutSimple() {
+export const LayoutSimple = () => {
   const [collapsed, setCollapsed] = useState(true);
 
   const hideMenu = true;
@@ -63,14 +64,12 @@ function LayoutSimple() {
           <Content>
             <PageContainer>
               <Switch>
-                <Route path="/food-details/:foodId">
-                  <FoodDetails></FoodDetails>
-                </Route>
+                <Redirect exact from="/" to="/home" />
+                <Route path="/food-details/:foodId" component={FoodDetails} />
                 <Route path="/about" component={AboutPage}></Route>
-                <Route path="/meal-creator" component={NewMealPage}></Route>
-                <Route path="/">
-                  <SearchPage></SearchPage>
-                </Route>
+                <Route path="/meal-creator" component={NewMealPageSecured} />
+                <Route path="/user-settings" component={UserPageSecured} />
+                <Route path="/" component={SearchPage} />
               </Switch>
             </PageContainer>
           </Content>
@@ -79,6 +78,13 @@ function LayoutSimple() {
       </NutrientInfoLayout>
     </Router>
   );
-}
+};
 
-export default LayoutSimple;
+const NutrientInfoLayout = styled(Layout)`
+  background: #fff;
+`;
+
+const PageContainer = styled.div`
+  min-height: 80vh;
+  padding: "0 10px";
+`;

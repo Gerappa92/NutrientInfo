@@ -1,14 +1,29 @@
 import { Layout } from "antd";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { UserSection } from "./UserSection";
 
 const { Header } = Layout;
 
+export const NutrientHeader = () => {
+  return (
+    <HeaderStyled>
+      <Link to="/">
+        <NutrientLogo>Nutrient Info</NutrientLogo>
+      </Link>
+      <RightSection>
+        <UserSection />
+      </RightSection>
+    </HeaderStyled>
+  );
+};
+
 const HeaderStyled = styled(Header)`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  padding: 0 20px;
 `;
 
 const NutrientLogo = styled.div`
@@ -19,12 +34,7 @@ const NutrientLogo = styled.div`
   width: -webkit-fill-available;
 `;
 
-export const NutrientHeader = () => {
-  return (
-    <HeaderStyled>
-      <Link to="/">
-        <NutrientLogo>Nutrient Info</NutrientLogo>
-      </Link>
-    </HeaderStyled>
-  );
-};
+const RightSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
