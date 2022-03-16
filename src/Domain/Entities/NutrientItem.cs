@@ -18,6 +18,16 @@ namespace Domain.Entities
             CalcDailyValuePercentage(0);
         }
 
+        public NutrientItem(NutrientItem nutrient, float value)
+        {
+            Id = nutrient.Id;
+            Name = nutrient.Name;
+            Value = value;
+            UnitName = nutrient.UnitName;
+            DailyValuePercentage = nutrient.DailyValuePercentage;
+            Status = nutrient.Status;
+        }
+
         private Dictionary<float, NutrientItemStatus> Statuses = new Dictionary<float, NutrientItemStatus>()
         {
             { 0, NutrientItemStatus.Neutral },

@@ -1,4 +1,4 @@
-import { Layout, Divider, Menu } from "antd";
+import { Layout, Menu } from "antd";
 import {
   DesktopOutlined,
   InfoCircleOutlined,
@@ -11,26 +11,18 @@ import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
 import styled from "styled-components";
 import { useState } from "react";
 import { AboutPage } from "../../pages/AboutPage/AboutPage";
+import { NewMealPage } from "../../pages/NewMealPage/NewMealPage";
+import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
+import Footer from "../../components/Footer/Footer";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
-const NutrientHeader = styled(Header)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const NutrientLogo = styled.div`
-  padding: 0 20px;
-  font-family: "Kaushan Script", cursive;
-  font-size: x-large;
-  color: #fff;
-  width: -webkit-fill-available;
+const NutrientInfoLayout = styled(Layout)`
+  background: #fff;
 `;
 
 const PageContainer = styled.div`
   min-height: 80vh;
-  background: #fff;
   padding: "0 10px";
 `;
 
@@ -43,7 +35,7 @@ function LayoutSimple() {
 
   return (
     <Router>
-      <Layout hasSider={true}>
+      <NutrientInfoLayout hasSider={true}>
         <div hidden={hideMenu}>
           <Sider
             collapsedWidth={0}
@@ -60,15 +52,14 @@ function LayoutSimple() {
               <Menu.Item key="2" icon={<InfoCircleOutlined />}>
                 <Link to="/about">About</Link>
               </Menu.Item>
+              <Menu.Item key="3" icon={<InfoCircleOutlined />}>
+                <Link to="/meal-creator">About</Link>
+              </Menu.Item>
             </Menu>
           </Sider>
         </div>
-        <Layout style={{ minWidth: "85vw" }}>
-          <NutrientHeader>
-            <Link to="/">
-              <NutrientLogo>Nutrient Info</NutrientLogo>
-            </Link>
-          </NutrientHeader>
+        <NutrientInfoLayout style={{ minWidth: "85vw" }}>
+          <NutrientHeader></NutrientHeader>
           <Content>
             <PageContainer>
               <Switch>
@@ -76,32 +67,16 @@ function LayoutSimple() {
                   <FoodDetails></FoodDetails>
                 </Route>
                 <Route path="/about" component={AboutPage}></Route>
+                <Route path="/meal-creator" component={NewMealPage}></Route>
                 <Route path="/">
                   <SearchPage></SearchPage>
                 </Route>
               </Switch>
             </PageContainer>
           </Content>
-
-          <Footer>
-            Gerappa Design © 2021 Created by Krzysztof Juszcze
-            <Divider />
-            <div>
-              {" "}
-              Icons made by
-              <a href="https://www.freepik.com" title="Freepik">
-                {" "}
-                Freepik
-              </a>{" "}
-              from
-              <a href="https://www.flaticon.com/" title="Flaticon">
-                {" "}
-                www.flaticon.com
-              </a>
-            </div>
-          </Footer>
-        </Layout>
-      </Layout>
+          <Footer />
+        </NutrientInfoLayout>
+      </NutrientInfoLayout>
     </Router>
   );
 }

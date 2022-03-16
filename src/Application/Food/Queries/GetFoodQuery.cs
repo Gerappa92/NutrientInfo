@@ -1,47 +1,41 @@
 ﻿using Application.Common.Interfaces;
+using Application.Food.Dto;
+using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace Application.Food.Queries
 {
-    public class GetFoodQuery : IRequest<Domain.Entities.Food>
+    public class GetFoodQuery : IRequest<FoodDto>
     {
         public string Id { get; set; }
     }
 
-    public class GetFoodQueryHandler : IRequestHandler<GetFoodQuery, Domain.Entities.Food>
+    public class GetFoodQueryHandler : IRequestHandler<GetFoodQuery, FoodDto>
     {
-        private readonly IFoodDataService _foodDataService;
-        private readonly IDailyValuesRepository _dailyValuesRepository;
-        private readonly IFoodTagsRepository _foodTagsRepository;
+        private IFoodBuilder _foodBuilder;
+        private readonly IMapper _mapper;
 
-        public GetFoodQueryHandler(IFoodDataService foodDataService, IDailyValuesRepository dailyValuesRepository, IFoodTagsRepository foodTagsRepository)
+        public GetFoodQueryHandler(IFoodBuilder foodBuilder, IMapper mapper)
         {
-            _foodDataService = foodDataService;
-            _dailyValuesRepository = dailyValuesRepository;
-            _foodTagsRepository = foodTagsRepository;
+            _foodBuilder = foodBuilder;
+            _mapper = mapper;
         }
 
-        public async Task<Domain.Entities.Food> Handle(GetFoodQuery request, CancellationToken cancellationToken)
+        public async Task<FoodDto> Handle(GetFoodQuery request, CancellationToken cancellationToken)
         {
-            var food = await _foodDataService.GetFood(request.Id);
-            var dailyValues = _dailyValuesRepository.GetDailyValues();
+            var food = await _foodBuilder.GetFood(request.Id);
+            _foodBuilder.SetDetailes(food);
+            
+            FoodDto dto = MapToFoodDto(food);
 
-            foreach (var dailyValue in dailyValues)
-            {
-                var nutrient = food.Nutrients.FirstOrDefault(n => n.Id == dailyValue.Id.ToString());
-                if(nutrient != null)
-                {
-                    nutrient.CalcDailyValuePercentage(dailyValue.Value);
-                }
-            }
+            return dto;
+        }
 
-            var tags = _foodTagsRepository.GetAll();
-            food.SetFoodTags(tags);
-
-            return food;
+        private FoodDto MapToFoodDto(Domain.Entities.Food food)
+        {
+            return _mapper.Map<FoodDto>(food);
         }
     }
 }

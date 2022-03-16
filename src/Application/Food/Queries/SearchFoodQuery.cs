@@ -1,12 +1,13 @@
 ﻿using Application.Common.Interfaces;
 using Application.Food.Dto;
+using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Food.Queries
 {
-    public class SearchFoodQuery : IRequest<SearchFoodDto>
+    public class SearchFoodQuery : IRequest<FilteredFoodListDto>
     {
         public string SearchTerm { get; set; }
         public int PageSize { get; set; } = 10;
@@ -15,19 +16,27 @@ namespace Application.Food.Queries
         public bool RequireAllWords { get; set; }
     }
 
-    public class SearchFoodQueryHandler : IRequestHandler<SearchFoodQuery, SearchFoodDto>
+    public class SearchFoodQueryHandler : IRequestHandler<SearchFoodQuery, FilteredFoodListDto>
     {
         private readonly IFoodDataService _foodDataService;
+        private readonly IMapper _mapper;
 
-        public SearchFoodQueryHandler(IFoodDataService foodDataService)
+        public SearchFoodQueryHandler(IFoodDataService foodDataService, IMapper mapper)
         {
             _foodDataService = foodDataService;
+            _mapper = mapper;
         }
 
-        public async Task<SearchFoodDto> Handle(SearchFoodQuery request, CancellationToken cancellationToken)
+        public async Task<FilteredFoodListDto> Handle(SearchFoodQuery request, CancellationToken cancellationToken)
         {
-            var dto = await _foodDataService.SearchFood(request);
+            var filteredFoodList = await _foodDataService.SearchFood(request);
+            var dto = MapToDto(filteredFoodList);
             return dto;
+        }
+
+        private FilteredFoodListDto MapToDto(Domain.Collections.FilteredFoodList filteredFoodList)
+        {
+            return _mapper.Map<FilteredFoodListDto>(filteredFoodList);
         }
     }
 }

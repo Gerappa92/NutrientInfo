@@ -12,74 +12,149 @@ namespace Domain.UnitTests.Entities
     [TestFixture]
     public class FoodTests
     {
-        [Test]
-        public void Filter_Should_ReturnLowSugarTag()
+        private Food _food;
+        private List<NutrientItem> _nutrients;
+        private List<DailyValue> _dailyValues;
+        private List<FoodTag> _foodTags;
+        private string _sugarId = "1";
+
+        [SetUp]
+        public void Setup()
         {
-            var nutrients = new List<NutrientItem> { GetNutrientItem(1, 100) };
-            var food = new Food() { Nutrients = nutrients };
-
-            food.SetFoodTags(_foodTags);
-
-            food.FoodTags.Should().HaveCount(1);
-            food.FoodTags.First().Should().BeEquivalentTo(_foodTags[0]);
+            _food = new Food();
+            _nutrients = new List<NutrientItem>();
+            _dailyValues = new List<DailyValue>();
+            _foodTags = new List<FoodTag>();
         }
 
         [Test]
-        public void Filter_Should_ReturnHighSugarTag()
+        public void SetDetails_Should_NotThrowException_When_ThereIsNoNutrients()
         {
-            var nutrients = new List<NutrientItem> { GetNutrientItem(101, 100) };
-            var food = new Food() { Nutrients = nutrients };
-
-            food.SetFoodTags(_foodTags);
-
-            food.FoodTags.Should().HaveCount(1);
-            food.FoodTags.First().Should().BeEquivalentTo(_foodTags[1]);
+            _food.SetDetails(_dailyValues, _foodTags);
+            Assert.IsTrue(true);
         }
 
         [Test]
-        public void Filter_Should_NotReturnTag()
+        [TestCase(0, NutrientItemStatus.Neutral)]
+        [TestCase(50f, NutrientItemStatus.Good)]
+        [TestCase(100f, NutrientItemStatus.Warning)]
+        [TestCase(150f, NutrientItemStatus.Bad)]
+        public void SetDetails_Should_SetStatus_When_MatchCriteria(float value, NutrientItemStatus result)
         {
-            var nutrients = new List<NutrientItem> { GetNutrientItem(10, 100) };
-            var food = new Food() { Nutrients = nutrients };
+            AddSugar(value);
+            AddSugarRecommendation(100);
 
-            food.SetFoodTags(_foodTags);
+            _food.Nutrients = _nutrients;
+            _food.SetDetails(_dailyValues, _foodTags);
 
-            food.FoodTags.Should().HaveCount(0);
+            _food.Nutrients.Find(n => n.Id == _sugarId).Status.Should().Be(result.ToString());
         }
 
-        private FoodTag[] _foodTags = new FoodTag[]
+        
+
+        [Test]
+        public void SetDetails_Should_SetNeutralStatus_When_ThereIsNoRecommendedValue()
+        {
+            AddSugar(10);
+
+            _food.SetDetails(_dailyValues, _foodTags);
+
+            _food.Nutrients.Find(n => n.Id == _sugarId).Status.Should().Be(NutrientItemStatus.Neutral.ToString());
+        }
+
+        
+
+        [Test]
+        public void SetDetails_Should_SetLowSugarTag()
+        {
+            AddSugar(1);
+            AddSugarRecommendation(100);
+            var lowSugar = AddLowSugarTag();
+            AddHighSugarTag();
+
+            _food.SetDetails(_dailyValues, _foodTags);
+
+            _food.FoodTags.Should().HaveCount(1);
+            _food.FoodTags.First().Should().BeEquivalentTo(lowSugar);
+        }
+
+        [Test]
+        public void SetDetails_Should_SetHighSugarTag()
+        {
+            AddSugar(101);
+            AddSugarRecommendation(100);
+            AddLowSugarTag();
+            var highSugar = AddHighSugarTag();
+
+            _food.SetDetails(_dailyValues, _foodTags);
+
+            _food.FoodTags.Should().HaveCount(1);
+            _food.FoodTags.First().Should().BeEquivalentTo(highSugar);
+        }
+
+        [Test]
+        public void SetDetails_Should_NotReturnTag()
+        {
+            AddSugar(10);
+            AddSugarRecommendation(100);
+            AddLowSugarTag();
+            AddHighSugarTag();
+
+            _food.SetDetails(_dailyValues, _foodTags);
+
+            _food.FoodTags.Should().HaveCount(0);
+        }
+
+        private void AddSugar(float value)
+        {
+            var nutrient = new NutrientItem()
             {
-                new FoodTag()
-                {
-                    Id = "1",
-                    Mark = "Positive",
-                    MaxDailyValuePercentage = 1f,
-                    Name = "Low Sugar",
-                    NutrientId = "269",
-                    NutrientName = "Sugar"
-                },
-                new FoodTag()
-                {
-                    Id = "1",
-                    Mark = "Negative",
-                    MinDailyValuePercentage = 100,
-                    Name = "High Sugar",
-                    NutrientId = "269",
-                    NutrientName = "Sugar"
-                }
-            };
-
-        private Domain.Entities.NutrientItem GetNutrientItem(float value, float recommendedValue)
-        {
-            Domain.Entities.NutrientItem nutrientItem = new Domain.Entities.NutrientItem()
-            {
-                Id = "269",
+                Id = _sugarId,
                 Name = "Sugar",
-                Value = value,
-                UnitName = "g",
+                Value = value
             };
-            nutrientItem.CalcDailyValuePercentage(recommendedValue);
-            return nutrientItem;
+            _nutrients.Add(nutrient);
+            _food.Nutrients = _nutrients;
+        }
+        private void AddSugarRecommendation(float value)
+        {
+            var sugarDailyValue = new DailyValue()
+            {
+                Id = "1",
+                Name = "Sugar",
+                Value = value
+            };
+            _dailyValues.Add(sugarDailyValue);
+        }
+
+        private FoodTag AddLowSugarTag()
+        {
+            var lowSugarTag = new FoodTag()
+            {
+                Id = "1",
+                Mark = "Positive",
+                MaxDailyValuePercentage = 1f,
+                Name = "Low Sugar",
+                NutrientId = _sugarId,
+                NutrientName = "Sugar"
+            };
+            _foodTags.Add(lowSugarTag);
+            return lowSugarTag;
+        }
+
+        private FoodTag AddHighSugarTag()
+        {
+            var highSugarTag = new FoodTag()
+            {
+                Id = "1",
+                Mark = "Negative",
+                MinDailyValuePercentage = 100,
+                Name = "High Sugar",
+                NutrientId = _sugarId,
+                NutrientName = "Sugar"
+            };
+            _foodTags.Add(highSugarTag);
+            return highSugarTag;
         }
     }
 }

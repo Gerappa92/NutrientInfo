@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
-import { Input, Pagination, Empty, Spin, Checkbox, Typography } from "antd";
+import { useState } from "react";
+import { SearchFood } from "../../components/SearchFood/SearchFood";
+import { Pagination, Empty, Spin, Typography } from "antd";
 import { GenericList } from "../../components/GenericList/GenericList";
 import { FoodNutrientsCardItem } from "../../components/FoodNutrientsCardItem/FoodNutrientsCardItem";
-import axios from "axios";
 import styled from "styled-components";
 
 const { Title } = Typography;
-const { Search } = Input;
 
 const MottoDiv = styled.div`
-  margin: 5vh 10vh;
+  margin: 0 10vw;
 `;
 
 const SearchPageContainer = styled.div`
@@ -19,58 +18,28 @@ const SearchPageContainer = styled.div`
   padding-bottom: 50px;
 `;
 
-const SearchArea = styled.div`
-  margin: 20px 0 20px;
+const ListContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
 `;
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+// // const SearchArea = styled.div`
+// //   margin: 20px 0 20px;
+// // `;
 
 function SearchPage() {
   const defaultData = { foods: [], totalHits: 0 };
-  const [query, setQuery] = useState("");
-  const [brandOwner, setBrandOwner] = useState("");
-  const [requireAllWords, setRequireAllWords] = useState(false);
   const [data, setData] = useState(defaultData);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [tableLoading, setTableLoading] = useState(false);
-
-  useEffect(() => {
-    onSearch(query); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNumber, pageSize]);
-
-  const onSearch = async () => {
-    if (!query && !brandOwner) {
-      noData();
-      return;
-    }
-    setTableLoading(true);
-
-    var response = await axios.get(
-      `${apiBaseUrl}food?searchTerm=${query}&pageSize=${pageSize}&pageNumber=${pageNumber}&brandOwner=${brandOwner}&requireAllWords=${requireAllWords}`
-    );
-
-    if (response.data.foods.length === 0) {
-      noData();
-      return;
-    } else {
-      setData(response.data);
-    }
-
-    setTableLoading(false);
-  };
+  const [pagination, setPagination] = useState({ pageNumber: 1, pageSize: 10 });
 
   const onPageChange = (pageNumber) => {
-    setPageNumber(pageNumber);
+    setPagination((prevPagination) => ({ ...prevPagination, pageNumber }));
   };
 
   const onShowSizeChange = (current, pageSize) => {
-    setPageSize(pageSize);
-  };
-
-  const noData = () => {
-    setData(defaultData);
-    setTableLoading(false);
+    setPagination((prevPagination) => ({ ...prevPagination, pageSize }));
   };
 
   return (
@@ -82,46 +51,35 @@ function SearchPage() {
             Search from thousands of products and understand what's good for you
           </Title>
         </MottoDiv>
-        <SearchArea>
-          <Input.Group compact style={{ margin: "0 0 20px" }}>
-            <Input
-              placeholder="e.g. banana, cucumber, milk"
-              onChange={(e) => setQuery(e.target.value)}
-              style={{ maxWidth: "200px", textAlign: "left" }}
-              onPressEnter={onSearch}
-            />
-            <Search
-              placeholder="brand owner"
-              onSearch={onSearch}
-              onChange={(e) => setBrandOwner(e.target.value)}
-              style={{ maxWidth: "200px" }}
-              enterButton
-            />
-          </Input.Group>
-          <Checkbox onChange={(e) => setRequireAllWords(e.target.checked)}>
-            Require All Words
-          </Checkbox>
-        </SearchArea>
+        <SearchFood
+          setData={setData}
+          setTableLoading={setTableLoading}
+          pageNumber={pagination.pageNumber}
+          pageSize={pagination.pageSize}
+          enableRequireAllWordsOption={true}
+        />
         <Pagination
-          current={pageNumber}
+          current={pagination.pageNumber}
           total={data.totalHits}
           hideOnSinglePage={true}
           onChange={onPageChange}
           onShowSizeChange={onShowSizeChange}
         />
         <Spin spinning={tableLoading} size="large">
-          <GenericList
-            items={data.foods}
-            resourceName="food"
-            itemComponent={FoodNutrientsCardItem}
-          ></GenericList>
+          <ListContainer>
+            <GenericList
+              items={data.foods}
+              resourceName="food"
+              itemComponent={FoodNutrientsCardItem}
+            ></GenericList>
+          </ListContainer>
 
           {data.foods.length === 0 && (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
         </Spin>
         <Pagination
-          current={pageNumber}
+          current={pagination.pageNumber}
           total={data.totalHits}
           hideOnSinglePage={true}
           onChange={onPageChange}

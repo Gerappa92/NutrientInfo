@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import { PageHeader, Spin } from "antd";
+import { Spin } from "antd";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { FoodTags } from "../../components/FoodTags/FoodTags";
 import styled from "styled-components";
 import "./FoodDetails.css";
+import { FoodHeader } from "../../components/FoodHeader/FoodHeader";
+
+const DetailsHeader = styled.div`
+  padding: 10px;
+`;
 
 const FoodDetailsContainer = styled.div`
   display: flex;
@@ -37,10 +42,10 @@ export const FoodDetails = () => {
   return (
     <Spin style={{ marginTop: "10vh" }} spinning={loading} size="large">
       {!loading && (
-        <PageHeader
-          title={food.name}
-          subTitle={food.brandName ?? food.dataSourceName}
-        >
+        <>
+          <DetailsHeader>
+            <FoodHeader food={food}></FoodHeader>
+          </DetailsHeader>
           <FoodTags tags={food.foodTags}></FoodTags>
           <FoodDetailsContainer>
             <FoodDetailsItems>
@@ -52,7 +57,7 @@ export const FoodDetails = () => {
               <NutrientPieChart nutrients={food.nutrients} />
             </FoodDetailsItems>
           </FoodDetailsContainer>
-        </PageHeader>
+        </>
       )}
     </Spin>
   );

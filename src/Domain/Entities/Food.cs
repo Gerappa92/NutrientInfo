@@ -11,16 +11,41 @@ namespace Domain.Entities
         public string BrandName { get; set; }
         public List<NutrientItem> Nutrients { get; set; } = new List<NutrientItem>();
         public string DataSourceName { get; set; }
-        public List<FoodTag> FoodTags { get; private set; } = new List<FoodTag>();
+        public List<FoodTag> FoodTags { get; protected set; } = new List<FoodTag>();
 
-        public void SetFoodTags(IEnumerable<FoodTag> tags)
+        public void SetDetails(IEnumerable<DailyValue> dailyValues, IEnumerable<FoodTag> tags)
         {
-            if (Nutrients.Count() == 0 || tags.Count() == 0)
+            SetNutrientsDailyValues(dailyValues);
+            SetFoodTags(tags);
+        }
+
+        private void SetNutrientsDailyValues(IEnumerable<DailyValue> dailyValues)
+        {
+            foreach (var nutrient in Nutrients)
+            {
+                var recommendedDailyValue = dailyValues.FirstOrDefault(d => d.Id == nutrient.Id);
+                if (recommendedDailyValue != null)
+                {
+                    nutrient.CalcDailyValuePercentage(recommendedDailyValue.Value);
+                }
+            }
+        }
+
+        private void SetFoodTags(IEnumerable<FoodTag> tags)
+        {
+            if (IsNoNutrients())
             {
                 return;
             }
 
-            var filteredTags = new List<Domain.Entities.FoodTag>();
+            FoodTags = MatchTagsWithNutrients(tags);
+        }
+
+        private bool IsNoNutrients() => !Nutrients.Any();
+
+        private List<FoodTag> MatchTagsWithNutrients(IEnumerable<FoodTag> tags)
+        {
+            var filteredTags = new List<FoodTag>();
 
             foreach (var tag in tags)
             {
@@ -37,7 +62,7 @@ namespace Domain.Entities
                 }
             }
 
-            FoodTags = filteredTags.ToList();
+            return filteredTags;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Application.Food.Dto;
-using AutoMapper;
+﻿using AutoMapper;
 using Infrastructure.Contracts.FoodDataCentral;
 
 namespace Infrastructure.Mappings
@@ -8,7 +7,7 @@ namespace Infrastructure.Mappings
     {
         public FoodMapping()
         {
-            CreateMap<FoodDataSearchResult, SearchFoodDto>()
+            CreateMap<FoodDataSearchResult, Domain.Collections.FilteredFoodList>()
                 .ForMember(dto => dto.Foods, c => c.MapFrom(r => r.foods))
                 .ForMember(dto => dto.Query, c => c.MapFrom(r => r.foodSearchCriteria.query))
                 .ForMember(dto => dto.TotalHits, c => c.MapFrom(r => r.totalHits));
