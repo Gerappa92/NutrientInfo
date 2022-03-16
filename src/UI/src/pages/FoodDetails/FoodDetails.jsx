@@ -9,21 +9,6 @@ import "./FoodDetails.css";
 import { FoodHeader } from "../../components/FoodHeader/FoodHeader";
 import httpClient from "../../modules/axios-client";
 
-const DetailsHeader = styled.div`
-  padding: 10px;
-`;
-
-const FoodDetailsContainer = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  padding-bottom: 50px;
-`;
-
-const FoodDetailsItems = styled.div`
-  width: calc(100% / var(--col-divisor));
-`;
-
 export const FoodDetails = () => {
   const { foodId } = useParams();
   const [food, foodSet] = useState({});
@@ -60,3 +45,18 @@ export const FoodDetails = () => {
     </Spin>
   );
 };
+
+const DetailsHeader = styled.div`
+  padding: 10px;
+`;
+
+const FoodDetailsContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  padding-bottom: 50px;
+`;
+
+const FoodDetailsItems = styled.div`
+  width: calc(100% / var(--col-divisor));
+`;

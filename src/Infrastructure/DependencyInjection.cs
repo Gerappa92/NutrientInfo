@@ -30,6 +30,7 @@ namespace Infrastructure
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IMealCalculator, MealCalculator>();
             return services;
         }
 

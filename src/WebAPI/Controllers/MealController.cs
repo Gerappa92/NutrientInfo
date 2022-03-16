@@ -1,6 +1,9 @@
 ﻿using Application.Meal.Commands;
+using Application.Meal.Query;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
@@ -14,6 +17,13 @@ namespace WebAPI.Controllers
             command.UserEmail = GetUserEmail();
             await Mediator.Send(command);
             return Ok();
+        }
+
+        [HttpPost("calculate-nutrients")]
+        public async Task<ActionResult<IEnumerable<NutrientItem>>> CalculateNutrients([FromBody] GetMealNutrientsQuery query)
+        {
+            var nutrients = await Mediator.Send(query);
+            return Ok(nutrients);
         }
     }
 }
