@@ -1,34 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Domain.Entities
 {
     public class Meal
     {
-        public Meal(string name, User author, IEnumerable<Ingriedient> ingriedients)
+        public Meal(string name, string author)
         { 
             Name = name;
             Author = author;
-            AddIngriedients(ingriedients);
         }
 
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; }
-        public User Author { get; set; }
-        public HashSet<Ingriedient> Ingriedients { get; set; } = new HashSet<Ingriedient>();
+        public string Author { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
+        public HashSet<Ingredient> Ingredients { get; set; } = new HashSet<Ingredient>();
         
 
-        public void AddIngriedients(IEnumerable<Ingriedient> ingriedients)
+        public void AddIngredients(IEnumerable<Ingredient> ingredients)
         {
-            foreach (var ingriedient in ingriedients)
+            foreach (var ingredient in ingredients)
             {
-                Ingriedients.Add(ingriedient);
+                Ingredients.Add(ingredient);
             }
         }
 
         public IEnumerable<NutrientItem> GroupNutrients()
         {
-            var groupedNutrients = Ingriedients
+            var groupedNutrients = Ingredients
                 .SelectMany(i => i.Nutrients)
                 .GroupBy(n => n.Id)
                 .Select(n => new NutrientItem(n.First(), n.Sum(s => s.Value)));

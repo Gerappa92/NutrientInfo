@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
-import { IngridientInput } from "./IngridientInput";
+import { IngredientInput } from "./IngredientInput";
 import httpClient from "../../modules/axios-client";
 
 const layout = {
@@ -16,17 +16,17 @@ export const MealForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    httpClient.post("mealmaker", values);
+    httpClient.post("meal/create", values);
   };
 
-  const validateIngridients = (_, ingridients) => {
-    if (!ingridients || ingridients.length < 1) {
+  const validateIngredients = (_, ingredients) => {
+    if (!ingredients || ingredients.length < 1) {
       return Promise.reject(new Error("At least 1 ingredient is required"));
     }
     return Promise.resolve();
   };
 
-  const validateIngridientAmount = (_, value) => {
+  const validateIngredientsAmount = (_, value) => {
     if (!value) {
       return Promise.reject(new Error("An ingredient must selected"));
     }
@@ -54,10 +54,10 @@ export const MealForm = () => {
         <Input.TextArea rows={2} placeholder="This meal is perfect for..." />
       </Form.Item>
       <Form.List
-        name="ingridients"
+        name="ingredients"
         rules={[
           {
-            validator: validateIngridients,
+            validator: validateIngredients,
           },
         ]}
       >
@@ -68,21 +68,21 @@ export const MealForm = () => {
                 style={{ marginBottom: 5 }}
                 {...restField}
                 key={key}
-                name={[name, "ingridient"]}
-                label="Ingridient"
+                name={[name]}
+                label="Ingredient"
                 rules={[
                   {
-                    validator: validateIngridientAmount,
+                    validator: validateIngredientsAmount,
                   },
                 ]}
               >
-                <IngridientInput onRemove={() => remove(name)} />
+                <IngredientInput onRemove={() => remove(name)} />
               </Form.Item>
             ))}
             <Form.Item {...tailLayout}>
               <Form.ErrorList errors={errors} />
               <Button type="dashed" onClick={() => add()}>
-                Add Ingridient
+                Add Ingredient
               </Button>
             </Form.Item>
           </>

@@ -3,14 +3,14 @@ import { Space, List, Input, Typography, Button, Spin, Pagination } from "antd";
 import { SearchFood } from "../SearchFood/SearchFood";
 import { FoodHeader } from "../FoodHeader/FoodHeader";
 
-export const IngridientInput = ({ value = {}, onChange, onRemove }) => {
-  const [ingridient, setIngridient] = useState({
+export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
+  const [ingredient, setIngredient] = useState({
     id: 1,
     name: "",
     amount: null,
   });
 
-  const [ingridients, setIngridients] = useState({ foods: [], totalHits: 0 });
+  const [ingredients, setIngredients] = useState({ foods: [], totalHits: 0 });
   const [tableLoading, setTableLoading] = useState(false);
   const [pagination, setPagination] = useState({ pageNumber: 1, pageSize: 5 });
   const [hideInputs, setHideInputs] = useState(true);
@@ -18,9 +18,9 @@ export const IngridientInput = ({ value = {}, onChange, onRemove }) => {
 
   const triggerChange = (changedValue) => {
     onChange?.({
-      id: ingridient.id,
-      name: ingridient.name,
-      amount: ingridient.amount,
+      id: ingredient.id,
+      name: ingredient.name,
+      amount: ingredient.amount,
       ...value,
       ...changedValue,
     });
@@ -28,14 +28,14 @@ export const IngridientInput = ({ value = {}, onChange, onRemove }) => {
 
   const handleOnChange = (event) => {
     const { value, name } = event.target;
-    setIngridient((prevIngridient) => ({ ...prevIngridient, [name]: value }));
+    setIngredient((prevIngredient) => ({ ...prevIngredient, [name]: value }));
     triggerChange({ [name]: value });
   };
 
-  const addIngridient = (ingridient) => {
-    setIngridient(ingridient);
-    triggerChange(ingridient);
-    setIngridients({ foods: [], totalHits: 0 });
+  const addIngredient = (ingredient) => {
+    setIngredient(ingredient);
+    triggerChange(ingredient);
+    setIngredients({ foods: [], totalHits: 0 });
     setHideInputs(false);
     setHideSearch(true);
   };
@@ -54,7 +54,7 @@ export const IngridientInput = ({ value = {}, onChange, onRemove }) => {
         <Input
           name="id"
           type="text"
-          value={value.id || ingridient.id}
+          value={value.id || ingredient.id}
           onChange={handleOnChange}
           disabled={true}
           hidden
@@ -62,7 +62,7 @@ export const IngridientInput = ({ value = {}, onChange, onRemove }) => {
         <Input
           name="name"
           type="text"
-          value={value.name || ingridient.name}
+          value={value.name || ingredient.name}
           onChange={handleOnChange}
           placeholder="name"
           disabled={true}
@@ -70,7 +70,7 @@ export const IngridientInput = ({ value = {}, onChange, onRemove }) => {
         <Input
           name="amount"
           type="number"
-          value={value.amount || ingridient.amount}
+          value={value.amount || ingredient.amount}
           onChange={handleOnChange}
           placeholder="amount"
         />
@@ -82,17 +82,17 @@ export const IngridientInput = ({ value = {}, onChange, onRemove }) => {
       {!hideSearch && (
         <>
           <SearchFood
-            setData={setIngridients}
+            setData={setIngredients}
             setTableLoading={setTableLoading}
             pageNumber={pagination.pageNumber}
             pageSize={pagination.pageSize}
           />
           <Spin spinning={tableLoading} size="large">
-            {ingridients.foods.length > 0 && (
+            {ingredients.foods.length > 0 && (
               <>
                 <List
                   bordered
-                  dataSource={ingridients.foods}
+                  dataSource={ingredients.foods}
                   renderItem={(item) => (
                     <List.Item>
                       <FoodHeader
@@ -100,13 +100,13 @@ export const IngridientInput = ({ value = {}, onChange, onRemove }) => {
                         titleLevel={5}
                         spaceDirection="horizontal"
                       />
-                      <Button onClick={() => addIngridient(item)}>Add</Button>
+                      <Button onClick={() => addIngredient(item)}>Add</Button>
                     </List.Item>
                   )}
                 ></List>
                 <Pagination
                   current={pagination.pageNumber}
-                  total={ingridients.totalHits}
+                  total={ingredients.totalHits}
                   hideOnSinglePage={true}
                   onChange={onPageChange}
                   onShowSizeChange={onShowSizeChange}

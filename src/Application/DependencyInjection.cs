@@ -15,7 +15,7 @@ namespace Application
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
 
-            services.AddAutoMapper(typeof(FoodMapping));
+            services.AddAutoMapper(typeof(FoodMapping), typeof(MealMapping));
             services.AddMediatR(executingAssembly);
             services.AddValidatorsFromAssembly(executingAssembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));

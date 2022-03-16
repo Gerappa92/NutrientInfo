@@ -2,10 +2,10 @@
 
 namespace Domain.Entities
 {
-    public class Ingriedient : Food, IEquatable<Ingriedient>
+    public class Ingredient : Food, IEquatable<Ingredient>
     {
         public float Amount { get; set; }
-        public Ingriedient(Food food, float amount)
+        public Ingredient(Food food, float amount)
         {
             Id = food.Id;
             Name = food.Name;
@@ -26,7 +26,7 @@ namespace Domain.Entities
             }
         }
 
-        public bool Equals(Ingriedient other)
+        public bool Equals(Ingredient other)
         {
             return this.Id == other.Id;
         }
