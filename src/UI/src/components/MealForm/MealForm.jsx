@@ -76,10 +76,7 @@ export const MealForm = () => {
                   },
                 ]}
               >
-                <IngridientInput
-                  hideSearch={index + 1 < fields.length}
-                  onRemove={() => remove(name)}
-                />
+                <IngridientInput onRemove={() => remove(name)} />
               </Form.Item>
             ))}
             <Form.Item {...tailLayout}>

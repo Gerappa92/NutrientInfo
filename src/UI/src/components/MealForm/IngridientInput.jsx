@@ -3,12 +3,7 @@ import { Space, List, Input, Typography, Button, Spin, Pagination } from "antd";
 import { SearchFood } from "../SearchFood/SearchFood";
 import { FoodHeader } from "../FoodHeader/FoodHeader";
 
-export const IngridientInput = ({
-  value = {},
-  hideSearch,
-  onChange,
-  onRemove,
-}) => {
+export const IngridientInput = ({ value = {}, onChange, onRemove }) => {
   const [ingridient, setIngridient] = useState({
     id: 1,
     name: "",
@@ -18,6 +13,8 @@ export const IngridientInput = ({
   const [ingridients, setIngridients] = useState({ foods: [], totalHits: 0 });
   const [tableLoading, setTableLoading] = useState(false);
   const [pagination, setPagination] = useState({ pageNumber: 1, pageSize: 5 });
+  const [hideInputs, setHideInputs] = useState(true);
+  const [hideSearch, setHideSearch] = useState(false);
 
   const triggerChange = (changedValue) => {
     onChange?.({
@@ -39,6 +36,8 @@ export const IngridientInput = ({
     setIngridient(ingridient);
     triggerChange(ingridient);
     setIngridients({ foods: [], totalHits: 0 });
+    setHideInputs(false);
+    setHideSearch(true);
   };
 
   const onPageChange = (pageNumber) => {
@@ -51,7 +50,7 @@ export const IngridientInput = ({
 
   return (
     <>
-      <Space>
+      <Space hidden={hideInputs}>
         <Input
           name="id"
           type="text"

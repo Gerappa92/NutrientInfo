@@ -159,4 +159,5 @@ const UserHeader = styled(UserOutlined)`
   font-size: x-large;
   align-content: center;
   display: flex;
+  height: fit-content;
 `;
