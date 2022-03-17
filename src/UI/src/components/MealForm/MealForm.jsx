@@ -4,14 +4,17 @@ import { IngredientInput } from "./IngredientInput";
 import httpClient from "../../modules/axios-client";
 import { NutrientsTreeTable } from "../NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../NutrientsChart/NutrientPieChart";
+import { device } from "../../parameters/styles/media";
+import styled from "styled-components";
+
+const span = 4;
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 10 },
+  labelCol: { span: span },
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 10 },
+  wrapperCol: { offset: span, span: 24 - span },
 };
 
 export const MealForm = () => {
@@ -67,75 +70,97 @@ export const MealForm = () => {
 
   return (
     <>
-      <Form
-        {...layout}
-        form={form}
-        name="meal-form"
-        onFinish={onFinish}
-        onFieldsChange={onFieldsChange}
-      >
-        <Form.Item
-          name="name"
-          label="Meal name"
-          rules={[
-            {
-              required: true,
-              message: "The name of the meal must be specified",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item name="description" label="Description">
-          <Input.TextArea rows={2} placeholder="This meal is perfect for..." />
-        </Form.Item>
-        <Form.List
-          name="ingredients"
-          rules={[
-            {
-              validator: validateIngredients,
-            },
-          ]}
-        >
-          {(fields, { add, remove }, { errors }) => (
-            <>
-              {fields.map(({ key, name, ...restField }) => (
-                <Form.Item
-                  initialValue={{ id: 0, amount: null }}
-                  style={{ marginBottom: 5 }}
-                  {...restField}
-                  key={key}
-                  name={[name]}
-                  label="Ingredient"
-                  rules={[
-                    {
-                      validator: validateIngredientsAmount,
-                    },
-                  ]}
-                >
-                  <IngredientInput onRemove={() => remove(name)} />
-                </Form.Item>
-              ))}
-              <Form.Item {...tailLayout}>
-                <Form.ErrorList errors={errors} />
-                <Button type="dashed" onClick={() => add()} block>
-                  Add Ingredient
-                </Button>
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
+      <FormContainer>
+        <ContainerItem>
+          <Form
+            {...layout}
+            form={form}
+            name="meal-form"
+            onFinish={onFinish}
+            onFieldsChange={onFieldsChange}
+          >
+            <Form.Item
+              name="name"
+              label="Meal name"
+              rules={[
+                {
+                  required: true,
+                  message: "The name of the meal must be specified",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item name="description" label="Description">
+              <Input.TextArea
+                rows={2}
+                placeholder="This meal is perfect for..."
+              />
+            </Form.Item>
+            <Form.List
+              name="ingredients"
+              rules={[
+                {
+                  validator: validateIngredients,
+                },
+              ]}
+            >
+              {(fields, { add, remove }, { errors }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Form.Item
+                      initialValue={{ id: 0, amount: null }}
+                      style={{ marginBottom: 5 }}
+                      {...restField}
+                      key={key}
+                      name={[name]}
+                      label="Ingredient"
+                      rules={[
+                        {
+                          validator: validateIngredientsAmount,
+                        },
+                      ]}
+                    >
+                      <IngredientInput onRemove={() => remove(name)} />
+                    </Form.Item>
+                  ))}
+                  <Form.Item {...tailLayout}>
+                    <Form.ErrorList errors={errors} />
+                    <Button type="dashed" onClick={() => add()} block>
+                      Add Ingredient
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
 
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-      <NutrientsTreeTable nutrients={nutrients} />
-      <div style={{ width: "100vw", height: "380px" }}>
-        <NutrientPieChart nutrients={nutrients} />
-      </div>
+            <Form.Item {...tailLayout}>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </ContainerItem>
+        <ContainerItem>
+          <NutrientsTreeTable nutrients={nutrients} />
+          <NutrientPieChart nutrients={nutrients} />
+        </ContainerItem>
+      </FormContainer>
     </>
   );
 };
+
+const FormContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  padding-bottom: 50px;
+`;
+
+const ContainerItem = styled.div`
+  width: 100%;
+  @media ${device.laptop} {
+    margin: 0 1%;
+    width: 48%;
+  }
+`;

@@ -8,6 +8,7 @@ import styled from "styled-components";
 import "./FoodDetails.css";
 import { FoodHeader } from "../../components/FoodHeader/FoodHeader";
 import httpClient from "../../modules/axios-client";
+import { device } from "../../parameters/styles/media";
 
 export const FoodDetails = () => {
   const { foodId } = useParams();
@@ -27,7 +28,7 @@ export const FoodDetails = () => {
       {!loading && (
         <>
           <DetailsHeader>
-            <FoodHeader food={food}></FoodHeader>
+            <FoodHeader food={food} titleLevel={3}></FoodHeader>
           </DetailsHeader>
           <FoodTags tags={food.foodTags}></FoodTags>
           <FoodDetailsContainer>
@@ -58,5 +59,8 @@ const FoodDetailsContainer = styled.div`
 `;
 
 const FoodDetailsItems = styled.div`
-  width: calc(100% / var(--col-divisor));
+  width: 100%;
+  @media ${device.laptop} {
+    width: 50%;
+  }
 `;

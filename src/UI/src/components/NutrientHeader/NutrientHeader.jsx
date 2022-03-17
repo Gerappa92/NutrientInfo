@@ -16,7 +16,7 @@ export const NutrientHeader = () => {
       </Link>
       <RightSection>
         {userContext.isLogged && (
-          <Link to="meal-creator">
+          <Link to="/meal-creator">
             <HeaderButton>Calculator</HeaderButton>
           </Link>
         )}
