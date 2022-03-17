@@ -4,31 +4,11 @@ import { Pagination, Empty, Spin, Typography } from "antd";
 import { GenericList } from "../../components/GenericList/GenericList";
 import { FoodNutrientsCardItem } from "../../components/FoodNutrientsCardItem/FoodNutrientsCardItem";
 import styled from "styled-components";
+import { device } from "../../parameters/styles/media";
 
 const { Title } = Typography;
 
-const MottoDiv = styled.div`
-  margin: 0 10vw;
-`;
-
-const SearchPageContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  padding-bottom: 50px;
-`;
-
-const ListContainer = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-`;
-
-// // const SearchArea = styled.div`
-// //   margin: 20px 0 20px;
-// // `;
-
-function SearchPage() {
+const SearchPage = () => {
   const defaultData = { foods: [], totalHits: 0 };
   const [data, setData] = useState(defaultData);
   const [tableLoading, setTableLoading] = useState(false);
@@ -44,13 +24,13 @@ function SearchPage() {
 
   return (
     <SearchPageContainer>
-      <div>
-        <MottoDiv>
-          <Title>You are what you eat</Title>
-          <Title level={5}>
-            Search from thousands of products and understand what's good for you
-          </Title>
-        </MottoDiv>
+      <MottoDiv>
+        <Title>You are what you eat</Title>
+        <Title level={5}>
+          Search from thousands of products and understand what's good for you
+        </Title>
+      </MottoDiv>
+      <SearchFoodDiv>
         <SearchFood
           setData={setData}
           setTableLoading={setTableLoading}
@@ -58,36 +38,60 @@ function SearchPage() {
           pageSize={pagination.pageSize}
           enableRequireAllWordsOption={true}
         />
-        <Pagination
-          current={pagination.pageNumber}
-          total={data.totalHits}
-          hideOnSinglePage={true}
-          onChange={onPageChange}
-          onShowSizeChange={onShowSizeChange}
-        />
-        <Spin spinning={tableLoading} size="large">
-          <ListContainer>
-            <GenericList
-              items={data.foods}
-              resourceName="food"
-              itemComponent={FoodNutrientsCardItem}
-            ></GenericList>
-          </ListContainer>
+      </SearchFoodDiv>
+      <Pagination
+        current={pagination.pageNumber}
+        total={data.totalHits}
+        hideOnSinglePage={true}
+        onChange={onPageChange}
+        onShowSizeChange={onShowSizeChange}
+      />
+      <Spin spinning={tableLoading} size="large">
+        <ListContainer>
+          <GenericList
+            items={data.foods}
+            resourceName="food"
+            itemComponent={FoodNutrientsCardItem}
+          ></GenericList>
+        </ListContainer>
 
-          {data.foods.length === 0 && (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          )}
-        </Spin>
-        <Pagination
-          current={pagination.pageNumber}
-          total={data.totalHits}
-          hideOnSinglePage={true}
-          onChange={onPageChange}
-          onShowSizeChange={onShowSizeChange}
-        />
-      </div>
+        {data.foods.length === 0 && (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        )}
+      </Spin>
+      <Pagination
+        current={pagination.pageNumber}
+        total={data.totalHits}
+        hideOnSinglePage={true}
+        onChange={onPageChange}
+        onShowSizeChange={onShowSizeChange}
+      />
     </SearchPageContainer>
   );
-}
+};
 
 export default SearchPage;
+
+const SearchPageContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 50px;
+`;
+
+const MottoDiv = styled.div`
+  margin: 0 10vw;
+`;
+
+const SearchFoodDiv = styled.div`
+  width: 300px;
+  @media ${device.laptop} {
+    width: 540px;
+  }
+`;
+
+const ListContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+`;
