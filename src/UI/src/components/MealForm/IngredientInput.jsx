@@ -50,35 +50,6 @@ export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
 
   return (
     <>
-      <Space hidden={hideInputs}>
-        <Input
-          name="id"
-          type="text"
-          value={value.id || ingredient.id}
-          onChange={handleOnChange}
-          disabled={true}
-          hidden
-        />
-        <Input
-          name="name"
-          type="text"
-          value={value.name || ingredient.name}
-          onChange={handleOnChange}
-          placeholder="name"
-          disabled={true}
-        />
-        <Input
-          name="amount"
-          type="number"
-          value={value.amount || ingredient.amount}
-          onChange={handleOnChange}
-          placeholder="amount"
-        />
-        <Typography.Text type="secondary">g</Typography.Text>
-        <Button danger type="dashed" onClick={onRemove}>
-          Remove
-        </Button>
-      </Space>
       {!hideSearch && (
         <>
           <SearchFood
@@ -87,6 +58,10 @@ export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
             pageNumber={pagination.pageNumber}
             pageSize={pagination.pageSize}
           />
+          <Button danger type="dashed" onClick={onRemove} block>
+            Remove
+          </Button>
+
           <Spin spinning={tableLoading} size="large">
             {ingredients.foods.length > 0 && (
               <>
@@ -116,6 +91,35 @@ export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
           </Spin>
         </>
       )}
+      <Space hidden={hideInputs}>
+        <Input
+          name="id"
+          type="text"
+          value={value.id || ingredient.id}
+          onChange={handleOnChange}
+          disabled={true}
+          hidden
+        />
+        <Input
+          name="name"
+          type="text"
+          value={value.name || ingredient.name}
+          onChange={handleOnChange}
+          placeholder="name"
+          disabled={true}
+        />
+        <Input
+          name="amount"
+          type="number"
+          value={value.amount || ingredient.amount}
+          onChange={handleOnChange}
+          placeholder="amount"
+        />
+        <Typography.Text type="secondary">g</Typography.Text>
+        <Button danger type="dashed" onClick={onRemove}>
+          Remove
+        </Button>
+      </Space>
     </>
   );
 };

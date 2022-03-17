@@ -11,7 +11,7 @@ const layout = {
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 0, span: 24 },
+  wrapperCol: { offset: 8, span: 10 },
 };
 
 export const MealForm = () => {
@@ -118,7 +118,7 @@ export const MealForm = () => {
               ))}
               <Form.Item {...tailLayout}>
                 <Form.ErrorList errors={errors} />
-                <Button type="dashed" onClick={() => add()}>
+                <Button type="dashed" onClick={() => add()} block>
                   Add Ingredient
                 </Button>
               </Form.Item>
@@ -126,11 +126,10 @@ export const MealForm = () => {
           )}
         </Form.List>
 
-        <Form.Item>
+        <Form.Item {...tailLayout}>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
-          <Button onClick={calculateNutrients}>Calculate</Button>
         </Form.Item>
       </Form>
       <NutrientsTreeTable nutrients={nutrients} />

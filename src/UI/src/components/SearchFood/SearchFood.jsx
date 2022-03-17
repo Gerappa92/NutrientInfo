@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { Input, Checkbox } from "antd";
-import styled from "styled-components";
 
 import httpClient from "../../modules/axios-client";
 
 const { Search } = Input;
-
-const SearchArea = styled.div`
-  margin: 20px 0 20px;
-`;
 
 export const SearchFood = (props) => {
   const defaultData = { foods: [], totalHits: 0 };
@@ -65,13 +60,13 @@ export const SearchFood = (props) => {
   };
 
   return (
-    <SearchArea>
-      <Input.Group compact style={{ margin: "0 0 20px" }}>
+    <>
+      <Input.Group compact style={{}}>
         <Input
           name="searchTerm"
           placeholder="e.g. banana, cucumber, milk"
           onChange={handleQuery}
-          style={{ maxWidth: "200px", textAlign: "left" }}
+          style={{ maxWidth: "50%", textAlign: "left" }}
           onPressEnter={onSearch}
         />
         <Search
@@ -79,7 +74,7 @@ export const SearchFood = (props) => {
           placeholder="brand owner"
           onSearch={onSearch}
           onChange={handleQuery}
-          style={{ maxWidth: "200px" }}
+          style={{ maxWidth: "50%" }}
           enterButton
         />
       </Input.Group>
@@ -88,6 +83,6 @@ export const SearchFood = (props) => {
           Require All Words
         </Checkbox>
       )}
-    </SearchArea>
+    </>
   );
 };
