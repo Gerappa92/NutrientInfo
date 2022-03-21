@@ -12,22 +12,22 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
-import SearchPage from "../../pages/SearchPage/SearchPage";
-import { FoodDetails } from "../../pages/FoodDetails/FoodDetails";
+import SearchPage from "../pages/SearchPage/SearchPage";
+import { FoodDetails } from "../pages/FoodDetails/FoodDetails";
 import styled from "styled-components";
 import { useState } from "react";
-import { AboutPage } from "../../pages/AboutPage/AboutPage";
-import { NewMealPage } from "../../pages/NewMealPage/NewMealPage";
-import { UserPage } from "../../pages/UserPage/UserPage";
-import { NutrientHeader } from "../../components/NutrientHeader/NutrientHeader";
-import Footer from "../../components/Footer/Footer";
-import { securedComponent } from "../../components/HOC/securedComponent";
+import { AboutPage } from "../pages/AboutPage/AboutPage";
+import { MealCalculatorPage } from "../pages/MealCalculatorPage/MealCalculatorPage";
+import { UserPage } from "../pages/UserPage/UserPage";
+import { NutrientHeader } from "../components/NutrientHeader/NutrientHeader";
+import Footer from "../components/Footer/Footer";
+import { securedComponent } from "../components/HOC/securedComponent";
 
 const { Content, Sider } = Layout;
-const NewMealPageSecured = securedComponent(NewMealPage);
+const MealCalculatorPageSecured = securedComponent(MealCalculatorPage);
 const UserPageSecured = securedComponent(UserPage);
 
-export const LayoutSimple = () => {
+export const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
 
   const hideMenu = true;
@@ -67,7 +67,10 @@ export const LayoutSimple = () => {
                 <Redirect exact from="/" to="/home" />
                 <Route path="/food-details/:foodId" component={FoodDetails} />
                 <Route path="/about" component={AboutPage}></Route>
-                <Route path="/meal-creator" component={NewMealPageSecured} />
+                <Route
+                  path="/meal-creator"
+                  component={MealCalculatorPageSecured}
+                />
                 <Route path="/user-settings" component={UserPageSecured} />
                 <Route path="/" component={SearchPage} />
               </Switch>

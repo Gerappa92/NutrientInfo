@@ -91,7 +91,7 @@ export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
           </Spin>
         </>
       )}
-      <Space hidden={hideInputs}>
+      <Space hidden={hideInputs} style={{ width: "100%" }}>
         <Input
           name="id"
           type="text"
