@@ -31,7 +31,7 @@ namespace Application.Meal.Commands
         {
             var meal = new Domain.Entities.Meal(request.Name, request.UserEmail);
             var ingredients = MealMappingHelper.MapIngredients(request.Ingredients);
-            meal.AddIngredients(ingredients);
+            meal.AddUniqeIngredients(ingredients);
 
             return await Task.FromResult(Unit.Value);
         }

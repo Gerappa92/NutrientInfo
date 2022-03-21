@@ -25,7 +25,7 @@ namespace Domain.UnitTests.Entities
             var ingredients = new Ingredient[] { potato1, potato2 };
 
             var meal = new Meal("Name", _userEmail);
-            meal.AddIngredients(ingredients);
+            meal.AddUniqeIngredients(ingredients);
 
 
             meal.Ingredients.Should().HaveCount(1);
@@ -40,7 +40,7 @@ namespace Domain.UnitTests.Entities
             tomato.Nutrients.Add(CreateNutrient("1", "Sugar", 10));
             var ingredients = new Ingredient[] { potato, tomato };
             var meal = new Meal("Name", _userEmail);
-            meal.AddIngredients(ingredients);
+            meal.AddUniqeIngredients(ingredients);
 
             var mealNutrients = meal.GroupNutrients();
 
@@ -56,7 +56,7 @@ namespace Domain.UnitTests.Entities
             tomato.Nutrients.Add(CreateNutrient("1", "Sugar", 10));
             var ingredients = new Ingredient[] { potato, tomato };
             var meal = new Meal("Name", _userEmail);
-            meal.AddIngredients(ingredients);
+            meal.AddUniqeIngredients(ingredients);
 
             var mealNutrients = meal.GroupNutrients();
 
@@ -68,7 +68,7 @@ namespace Domain.UnitTests.Entities
         {
             var ingredients = new Ingredient[0];
             var meal = new Meal("Name", _userEmail);
-            meal.AddIngredients(ingredients);
+            meal.AddUniqeIngredients(ingredients);
 
             var mealNutrients = meal.GroupNutrients();
 

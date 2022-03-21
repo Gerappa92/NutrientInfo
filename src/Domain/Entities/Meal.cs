@@ -6,25 +6,33 @@ namespace Domain.Entities
 {
     public class Meal
     {
+        public Meal()
+        {
+
+        }
+
         public Meal(string name, string author)
         { 
+            Id = Guid.NewGuid().ToString();
+            CreationDate = DateTime.UtcNow;
             Name = name;
             Author = author;
         }
 
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Author { get; set; }
-        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
-        public HashSet<Ingredient> Ingredients { get; set; } = new HashSet<Ingredient>();
-        
+        public DateTime CreationDate { get; set; }
+        public IEnumerable<Ingredient> Ingredients { get; set; } = new HashSet<Ingredient>();
 
-        public void AddIngredients(IEnumerable<Ingredient> ingredients)
+        public void AddUniqeIngredients(IEnumerable<Ingredient> ingredients)
         {
+            var ingredientsHashSet = new HashSet<Ingredient>();
             foreach (var ingredient in ingredients)
             {
-                Ingredients.Add(ingredient);
+                ingredientsHashSet.Add(ingredient);
             }
+            Ingredients = ingredientsHashSet;
         }
 
         public IEnumerable<NutrientItem> GroupNutrients()
