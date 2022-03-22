@@ -1,4 +1,5 @@
-﻿using Infrastructure.Exceptions;
+﻿using FluentValidation;
+using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -14,17 +15,10 @@ namespace WebAPI.Middlewares
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
 
-        private readonly IDictionary<Type, Func<Exception, HttpContext, Task>> _exceptionHandlers;
-
         public ApiExceptionMiddleware(RequestDelegate next, ILogger<ApiExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;
-
-            _exceptionHandlers = new Dictionary<Type, Func<Exception, HttpContext, Task>>
-            {
-                { typeof(InfrastructureException), HandleInfrastructureException }
-            };
         }
 
         public async Task Invoke(HttpContext context)
@@ -36,21 +30,34 @@ namespace WebAPI.Middlewares
             catch (Exception e)
             {
                 await HandleException(e, context);
-                LogError(e, context);
             }
         }
 
-        private async Task HandleException(Exception e, HttpContext context)
+        private async Task HandleException(Exception exception, HttpContext context)
         {
-            Type type = e.GetType().BaseType;
-
-            if(_exceptionHandlers.ContainsKey(type))
+            if(exception is ValidationException)
             {
-                await _exceptionHandlers[type](e, context);
-                return;
+                await HandleValidationException(exception, context);
+            }
+            else if(exception is InfrastructureException)
+            {
+                await HandleInfrastructureException(exception, context);
+                LogError(exception, context);
+            }
+            else
+            {
+                await HandleUnknowExceptionAsync (exception, context);
+                LogError(exception, context);
             }
 
-            await HandleUnknowExceptionAsync (e, context);
+        }
+
+        private async Task HandleValidationException(Exception exception, HttpContext context)
+        {
+            var errorResponse = new ErrorResponse(exception as ValidationException);
+            var errorResponseJson = errorResponse.ToJson();
+
+            await SetResponse(context, errorResponseJson, StatusCodes.Status400BadRequest);
         }
 
         private async Task HandleInfrastructureException(Exception exception, HttpContext context)

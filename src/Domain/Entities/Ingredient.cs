@@ -4,7 +4,7 @@ namespace Domain.Entities
 {
     public class Ingredient : Food, IEquatable<Ingredient>
     {
-        public float Amount { get; set; }
+        public Ingredient() { }
         public Ingredient(Food food, float amount)
         {
             Id = food.Id;
@@ -17,6 +17,7 @@ namespace Domain.Entities
             Amount = amount;
             CalcNutrientsValues();
         }
+        public float Amount { get; set; }
 
         private void CalcNutrientsValues()
         {
@@ -36,7 +37,6 @@ namespace Domain.Entities
             int hash = 17;
             hash = hash * 29 + Id.GetHashCode();
             hash = hash * 29 + Name.GetHashCode();
-            hash = hash * 29 + BrandOwner.GetHashCode();
             return hash;
         }
     }

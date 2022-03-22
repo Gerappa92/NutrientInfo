@@ -2,7 +2,6 @@
 using Domain.Entities;
 using Infrastructure.Contracts.AzureTables;
 using Infrastructure.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -29,6 +28,10 @@ namespace Infrastructure.Repositories
         public async Task<Meal> GetAsync(string id)
         {
             var mealEntity = await _tableClient.GetByIdAsync(id);
+            if(mealEntity is null)
+            {
+                return null;
+            }
             var meal = mealEntity.Map();
             return meal;
         }
@@ -48,6 +51,10 @@ namespace Infrastructure.Repositories
         public async Task DeleteAsync(string id)
         {
             var mealEntity = await _tableClient.GetByIdAsync(id);
+            if(mealEntity is null)
+            {
+                return;
+            }
             await _tableClient.DeleteAsync(mealEntity);
         }
 
@@ -56,7 +63,5 @@ namespace Infrastructure.Repositories
             var mealEntity = new MealEntity(meal);
             await _tableClient.UpdateAsync(mealEntity);
         }
-
-
     }
 }

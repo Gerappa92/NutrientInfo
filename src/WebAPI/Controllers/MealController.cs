@@ -25,5 +25,41 @@ namespace WebAPI.Controllers
             var nutrients = await Mediator.Send(query);
             return Ok(nutrients);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Meal>> Get(string id)
+        {
+            var query= new GetMealQuery { Id = id };
+            var meal = await Mediator.Send(query);
+            if(meal is null)
+            {
+                return NotFound();
+            }
+            return Ok(meal);
+        }
+
+        [HttpGet("user")]
+        public async Task<ActionResult<Meal[]>> GetUsersMeals()
+        {
+            var userEmail = GetUserEmail();
+            var query = new GetUsersMealsQuery { UserEmail = userEmail };
+            var meals = await Mediator.Send(query);
+            return Ok(meals);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Update([FromBody] UpdateMealCommand command)
+        {
+            await Mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            var command = new DeleteMealCommand { Id = id };
+            await Mediator.Send(command);
+            return Ok();
+        }
     }
 }

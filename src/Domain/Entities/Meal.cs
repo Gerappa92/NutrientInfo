@@ -25,7 +25,7 @@ namespace Domain.Entities
         public DateTime CreationDate { get; set; }
         public IEnumerable<Ingredient> Ingredients { get; set; } = new HashSet<Ingredient>();
 
-        public void AddUniqeIngredients(IEnumerable<Ingredient> ingredients)
+        public void AddUniqueIngredients(IEnumerable<Ingredient> ingredients)
         {
             var ingredientsHashSet = new HashSet<Ingredient>();
             foreach (var ingredient in ingredients)
@@ -43,6 +43,11 @@ namespace Domain.Entities
                 .Select(n => new NutrientItem(n.First(), n.Sum(s => s.Value)));
 
             return groupedNutrients;
+        }
+
+        public void CleanIngredients()
+        {
+            Ingredients = new Ingredient[0];
         }
     }
 }

@@ -9,38 +9,38 @@ using System.Threading.Tasks;
 
 namespace Application.Meal.Commands
 {
-    public class CreateMealCommand : IRequest
+    public class UpdateMealCommand : IRequest
     {
+        public string Id { get; set; }
         public string Name { get; set; }
-        public string UserEmail { get; set; }
 
         public List<IngredientDto> Ingredients { get; set; } = new List<IngredientDto>();
     }
 
-    public class CreateMealCommandHandler : IRequestHandler<CreateMealCommand>
+    public class UpdateMealCommandHandler : IRequestHandler<UpdateMealCommand>
     {
         private readonly IMealRepository _mealRepository;
 
-        public CreateMealCommandHandler(IMealRepository mealRepository)
+        public UpdateMealCommandHandler(IMealRepository mealRepository)
         {
             _mealRepository = mealRepository;
         }
 
-        public async Task<Unit> Handle(CreateMealCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateMealCommand request, CancellationToken cancellationToken)
         {
-            var meal = new Domain.Entities.Meal(request.Name, request.UserEmail);
+            var meal = await _mealRepository.GetAsync(request.Id);
+            meal.Name = request.Name;
+            meal.CleanIngredients();
             var ingredients = MealMappingHelper.MapIngredients(request.Ingredients);
             meal.AddUniqueIngredients(ingredients);
-
-            await _mealRepository.AddAsync(meal);
-
-            return await Task.FromResult(Unit.Value);
+            await _mealRepository.UpdateAsync(meal);
+            return Unit.Value;
         }
     }
 
-    public class CreateMealCommandValidator : AbstractValidator<CreateMealCommand>
+    public class UpdateMealCommandValidator : AbstractValidator<UpdateMealCommand>
     {
-        public CreateMealCommandValidator()
+        public UpdateMealCommandValidator()
         {
             RuleFor(p => p.Name).NotEmpty();
             RuleFor(p => p.Ingredients).NotEmpty();

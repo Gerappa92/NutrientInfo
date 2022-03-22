@@ -26,8 +26,13 @@ namespace Infrastructure.Contracts.AzureTables
         public string Author { get; set; }
         public DateTime CreationDate { get; set; }
         public string IngredientsJson { get; set; }
-        public void SetIngredients(IEnumerable<Domain.Entities.Ingredient> ingredients) => JsonConvert.SerializeObject(ingredients);
+
         public IEnumerable<Domain.Entities.Ingredient> GetIngredients() => JsonConvert.DeserializeObject<IEnumerable<Domain.Entities.Ingredient>>(IngredientsJson);
+
+        public void SetIngredients(IEnumerable<Domain.Entities.Ingredient> ingredients)
+        {
+            IngredientsJson = JsonConvert.SerializeObject(ingredients);
+        }
 
         public Domain.Entities.Meal Map()
         {
