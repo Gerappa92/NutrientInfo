@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Input, Button } from "antd";
 import { IngredientInput } from "./IngredientInput";
 import httpClient from "../../modules/axios-client";
+import { size } from "../../parameters/styles/media";
 
 const span = 4;
 
@@ -10,7 +11,9 @@ const layout = {
 };
 
 const tailLayout = {
-  wrapperCol: { offset: span, span: 24 - span },
+  wrapperCol: {
+    offset: window.innerWidth <= size.mobileL ? 0 : span,
+  },
 };
 
 export const MealForm = (props) => {
