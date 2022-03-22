@@ -21,6 +21,7 @@ namespace Domain.Entities
 
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public string Author { get; set; }
         public DateTime CreationDate { get; set; }
         public IEnumerable<Ingredient> Ingredients { get; set; } = new HashSet<Ingredient>();
@@ -48,6 +49,11 @@ namespace Domain.Entities
         public void CleanIngredients()
         {
             Ingredients = new Ingredient[0];
+        }
+
+        public void SetDescription(string description)
+        {
+            Description = description;
         }
     }
 }

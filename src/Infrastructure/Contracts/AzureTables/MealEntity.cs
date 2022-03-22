@@ -17,12 +17,14 @@ namespace Infrastructure.Contracts.AzureTables
             RowKey = meal.Id;
             PartitionKey = meal.Author;
             Name = meal.Name;
+            Description = meal.Description;
             Author = meal.Author;
             CreationDate = meal.CreationDate;
             ETag = Azure.ETag.All;
             SetIngredients(meal.Ingredients);
         }
         public string Name { get; set; }
+        public string Description { get; set; }
         public string Author { get; set; }
         public DateTime CreationDate { get; set; }
         public string IngredientsJson { get; set; }
@@ -40,6 +42,7 @@ namespace Infrastructure.Contracts.AzureTables
             {
                 Id = Id,
                 Name = Name,
+                Description = Description,
                 Author = Author,
                 CreationDate = CreationDate
             };
