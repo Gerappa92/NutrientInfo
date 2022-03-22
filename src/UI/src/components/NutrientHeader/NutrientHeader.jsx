@@ -23,6 +23,11 @@ export const NutrientHeader = () => {
             <HeaderButton>Calculator</HeaderButton>
           </Link>
         )}
+        {userContext.isLogged && (
+          <Link to="/recipes">
+            <HeaderButton>Recipes</HeaderButton>
+          </Link>
+        )}
         <UserSection />
       </RightSection>
     </HeaderStyled>

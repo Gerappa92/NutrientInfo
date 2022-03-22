@@ -13,7 +13,7 @@ export const MealCalculatorPage = () => {
 
   return (
     <Container>
-      <Title>Meal Creator</Title>
+      <Title>Calculate nutrients</Title>
       <Content>
         <ContentItem>
           <MealForm setNutrients={setNutrients} />

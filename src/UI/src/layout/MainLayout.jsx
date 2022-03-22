@@ -19,6 +19,7 @@ import { useState } from "react";
 import { AboutPage } from "../pages/AboutPage/AboutPage";
 import { MealCalculatorPage } from "../pages/MealCalculatorPage/MealCalculatorPage";
 import { UserPage } from "../pages/UserPage/UserPage";
+import { RecipesPage } from "../pages/RecipesPage/RecipesPage";
 import { NutrientHeader } from "../components/NutrientHeader/NutrientHeader";
 import Footer from "../components/Footer/Footer";
 import { securedComponent } from "../components/HOC/securedComponent";
@@ -26,6 +27,7 @@ import { securedComponent } from "../components/HOC/securedComponent";
 const { Content, Sider } = Layout;
 const MealCalculatorPageSecured = securedComponent(MealCalculatorPage);
 const UserPageSecured = securedComponent(UserPage);
+const RecipesPageSecured = securedComponent(RecipesPage);
 
 export const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -72,6 +74,7 @@ export const MainLayout = () => {
                   component={MealCalculatorPageSecured}
                 />
                 <Route path="/user-settings" component={UserPageSecured} />
+                <Route path="/recipes" component={RecipesPageSecured} />
                 <Route path="/" component={SearchPage} />
               </Switch>
             </PageContainer>
