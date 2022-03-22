@@ -1,4 +1,4 @@
-import { Layout } from "antd";
+import { Layout, Tag } from "antd";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -12,7 +12,10 @@ export const NutrientHeader = () => {
   return (
     <HeaderStyled>
       <Link to="/">
-        <NutrientLogo>Nutrient Info</NutrientLogo>
+        <LogoDiv>
+          <Logo>Calcflower</Logo>
+          <LogoTag color="purple">Beta</LogoTag>
+        </LogoDiv>
       </Link>
       <RightSection>
         {userContext.isLogged && (
@@ -34,12 +37,24 @@ const HeaderStyled = styled(Header)`
   padding: 0 20px;
 `;
 
-const NutrientLogo = styled.div`
+const LogoDiv = styled.div`
+  position: relative;
+`;
+
+const Logo = styled.div`
   padding: 0 20px;
   font-family: "Kaushan Script", cursive;
   font-size: x-large;
   color: #fff;
   width: -webkit-fill-available;
+`;
+
+const LogoTag = styled(Tag)`
+  position: absolute;
+  top: 10px;
+  right: -30px;
+  cursor: default;
+  border: none;
 `;
 
 const RightSection = styled.div`
