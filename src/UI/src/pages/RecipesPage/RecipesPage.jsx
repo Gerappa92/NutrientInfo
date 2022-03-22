@@ -1,7 +1,9 @@
 import { Button, List, Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
+import { device } from "../../parameters/styles/media";
 import httpClient from "../../modules/axios-client";
+import styled from "styled-components";
 
 export const RecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -29,6 +31,7 @@ export const RecipesPage = () => {
       title: "Description",
       dataIndex: "description",
       key: "description",
+      responsive: ["md"],
     },
     {
       title: "Actions",
@@ -39,20 +42,35 @@ export const RecipesPage = () => {
           <Button icon={<DeleteOutlined />} danger></Button>
         </Space>
       ),
+      width: 100,
     },
   ];
-
-  const recipesTableData = () => {
-    recipes.map((r) => ({
-      name: r.name,
-      description: r.description,
-    }));
-  };
 
   return (
     <>
       <Typography.Title>Recipes</Typography.Title>
-      <Table dataSource={recipes} columns={columns} size="small" />
+      <RecipesContent>
+        <StyledTable
+          dataSource={recipes}
+          columns={columns}
+          size="small"
+          pagination={false}
+        />
+      </RecipesContent>
     </>
   );
 };
+
+const RecipesContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StyledTable = styled(Table)`
+  padding: 0 10px;
+  width: 100%;
+  @media ${device.laptop} {
+    width: 920px;
+  }
+`;

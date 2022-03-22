@@ -5,7 +5,6 @@ import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTre
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { FoodTags } from "../../components/FoodTags/FoodTags";
 import styled from "styled-components";
-import "./FoodDetails.css";
 import { FoodHeader } from "../../components/FoodHeader/FoodHeader";
 import httpClient from "../../modules/axios-client";
 import { device } from "../../parameters/styles/media";
