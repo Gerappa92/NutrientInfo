@@ -5,17 +5,19 @@ import styled from "styled-components";
 import { UserContext } from "../User/UserStateContainer/UserStateContainer";
 import { UserSection } from "./UserSection";
 import { CalcflowerIcon } from "../Icons/CalcflowerIcon";
+import { size } from "../../parameters/styles/media";
 
 const { Header } = Layout;
 
 export const NutrientHeader = () => {
   const userContext = useContext(UserContext);
+  const hideLogo = window.innerWidth <= size.mobileL;
   return (
     <HeaderStyled>
       <Link to="/">
         <LogoDiv>
           <CalcflowerIcon width={50} />
-          <Logo>Calcflower</Logo>
+          <Logo hidden={hideLogo}>Calcflower</Logo>
           <LogoTag color="purple">Beta</LogoTag>
         </LogoDiv>
       </Link>
@@ -58,11 +60,10 @@ const Logo = styled.div`
 `;
 
 const LogoTag = styled(Tag)`
-  position: absolute;
-  top: 10px;
-  right: -30px;
   cursor: default;
+  height: fit-content;
   border: none;
+  margin-top: 10px;
 `;
 
 const RightSection = styled.div`
