@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { UserContext } from "../User/UserStateContainer/UserStateContainer";
 import { UserSection } from "./UserSection";
+import { CalcflowerIcon } from "../Icons/CalcflowerIcon";
 
 const { Header } = Layout;
 
@@ -13,6 +14,7 @@ export const NutrientHeader = () => {
     <HeaderStyled>
       <Link to="/">
         <LogoDiv>
+          <CalcflowerIcon width={50} />
           <Logo>Calcflower</Logo>
           <LogoTag color="purple">Beta</LogoTag>
         </LogoDiv>
@@ -44,10 +46,11 @@ const HeaderStyled = styled(Header)`
 
 const LogoDiv = styled.div`
   position: relative;
+  display: flex;
 `;
 
 const Logo = styled.div`
-  padding: 0 20px;
+  padding: 0 0px;
   font-family: "Kaushan Script", cursive;
   font-size: x-large;
   color: #fff;
