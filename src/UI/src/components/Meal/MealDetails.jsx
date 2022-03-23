@@ -22,6 +22,7 @@ export const MealDetails = ({ meal }) => {
           <Typography.Text>{meal.description}</Typography.Text>
         </>
       )}
+      <Typography.Title level={4}>Ingredients</Typography.Title>
       <Table
         columns={columns}
         dataSource={meal.ingredients}

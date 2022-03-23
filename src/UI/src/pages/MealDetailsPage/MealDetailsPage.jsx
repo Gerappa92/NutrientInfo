@@ -37,6 +37,7 @@ export const MealDetailsPage = () => {
             <MealDetails meal={meal} />
           </ContentItem>
           <ContentItem>
+            <Typography.Title level={4}>Nutrtion Table</Typography.Title>
             <NutrientsTreeTable nutrients={nutrients} />
             <NutrientPieChart nutrients={nutrients} />
           </ContentItem>
@@ -62,6 +63,7 @@ const Content = styled.div`
 
 const ContentItem = styled.div`
   width: 100%;
+  margin-bottom: 25px;
   @media ${device.laptop} {
     margin: 0 1%;
     width: 48%;
