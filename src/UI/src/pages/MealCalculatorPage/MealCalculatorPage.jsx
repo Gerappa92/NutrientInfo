@@ -1,5 +1,5 @@
 import { Typography } from "antd";
-import { MealForm } from "../../components/MealCalculator/MealForm";
+import { MealForm } from "../../components/Meal/MealForm";
 import styled from "styled-components";
 import { device } from "../../parameters/styles/media";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";

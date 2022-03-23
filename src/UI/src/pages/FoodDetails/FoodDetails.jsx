@@ -15,11 +15,11 @@ export const FoodDetails = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async function fetchData() {
-      let response = await httpClient.get(`food/${foodId}`);
-      foodSet(response.data);
-      setLoading(false);
-    })();
+    httpClient
+      .get(`food/${foodId}`)
+      .then((response) => foodSet(response.data))
+      .catch((e) => console.error(e))
+      .finally(() => setLoading(false));
   }, [foodId]);
 
   return (

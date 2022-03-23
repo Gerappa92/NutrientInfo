@@ -1,5 +1,6 @@
-import { Button, List, Space, Table, Typography } from "antd";
+import { Button, Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 import { device } from "../../parameters/styles/media";
 import httpClient from "../../modules/axios-client";
@@ -14,12 +15,6 @@ export const RecipesPage = () => {
       .then((response) => setRecipes(response.data))
       .catch((e) => console.error(e));
   }, []);
-
-  const recipeItem = (recipe) => (
-    <List.Item>
-      <Typography.Text>{recipe.name}</Typography.Text>
-    </List.Item>
-  );
 
   const columns = [
     {
@@ -38,7 +33,9 @@ export const RecipesPage = () => {
       key: "actions",
       render: (text, record) => (
         <Space size="middle">
-          <Button icon={<SearchOutlined />}></Button>
+          <Link to={`/meal-details/${record.id}`}>
+            <Button icon={<SearchOutlined />}></Button>
+          </Link>
           <Button icon={<DeleteOutlined />} danger></Button>
         </Space>
       ),
