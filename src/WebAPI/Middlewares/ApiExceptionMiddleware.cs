@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebAPI.Contracts;
 
@@ -35,21 +34,20 @@ namespace WebAPI.Middlewares
 
         private async Task HandleException(Exception exception, HttpContext context)
         {
-            if(exception is ValidationException)
+            switch (exception)
             {
-                await HandleValidationException(exception, context);
+                case ValidationException:
+                    await HandleValidationException(exception, context);
+                    break;
+                case InfrastructureException:
+                    await HandleInfrastructureException(exception, context);
+                    LogError(exception, context);
+                    break;
+                default:
+                    await HandleUnknowExceptionAsync(exception, context);
+                    LogError(exception, context);
+                    break;
             }
-            else if(exception is InfrastructureException)
-            {
-                await HandleInfrastructureException(exception, context);
-                LogError(exception, context);
-            }
-            else
-            {
-                await HandleUnknowExceptionAsync (exception, context);
-                LogError(exception, context);
-            }
-
         }
 
         private async Task HandleValidationException(Exception exception, HttpContext context)
@@ -80,6 +78,7 @@ namespace WebAPI.Middlewares
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
+            context.Response.ContentLength = errorResponseJson.Length;
             await context.Response.WriteAsync(errorResponseJson);
         }
 

@@ -7,24 +7,24 @@ namespace WebAPI.Contracts
 {
     public class ErrorResponse
     {
-        public string Code { get; private set; }
+        public string Type { get; private set; }
         public string Message { get; private set; }
 
         public ErrorResponse(Exception exception)
         {
-            Code = exception.GetType().Name;
+            Type = exception.GetType().Name;
             Message = "Unknown Exception. Please contact support if it is necessary.";
         }
 
         public ErrorResponse(ValidationException exception)
         {
-            Code = "Validation failed";
+            Type = "Validation failed";
             Message = exception.Message;
         }
 
         public ErrorResponse(InfrastructureException exception)
         {
-            Code = exception.Code();
+            Type = exception.Code();
             Message = "Infrastructure Exception. Please contact support if it is necessary.";
         }
 
