@@ -1,6 +1,7 @@
 ﻿using Application.Common.Repositories;
 using Domain.Entities;
 using Infrastructure.Contracts.AzureTables;
+using Infrastructure.Extensions;
 using Infrastructure.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,12 +22,20 @@ namespace Infrastructure.Repositories
 
         public async Task AddAsync(Meal meal)
         {
+            if (meal is null)
+            {
+                throw new System.ArgumentException("Meal cannot be null or empty", nameof(meal));
+            }
             MealEntity entity = new MealEntity(meal);
             await _tableClient.AddAsync(entity);
         }
 
         public async Task<Meal> GetAsync(string id)
         {
+            if (id.IsEmpty())
+            {
+                throw new System.ArgumentException("Id cannot be null or empty", nameof(id));
+            }
             var mealEntity = await _tableClient.GetByIdAsync(id);
             if(mealEntity is null)
             {
@@ -38,6 +47,10 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<Meal>> GetUsersMeals(string author)
         {
+            if(author.IsEmpty())
+            {
+                throw new System.ArgumentException("Author cannot be null or empty", nameof(author));
+            }
             var mealEntities = await _tableClient.QueryAsync(m => m.Author == author);
             List<Meal> meals = new List<Meal>();
             foreach (var entity in mealEntities)
@@ -50,6 +63,10 @@ namespace Infrastructure.Repositories
 
         public async Task DeleteAsync(string id)
         {
+            if (id.IsEmpty())
+            {
+                throw new System.ArgumentException("Id cannot be null or empty", nameof(id));
+            }
             var mealEntity = await _tableClient.GetByIdAsync(id);
             if(mealEntity is null)
             {
@@ -60,6 +77,10 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateAsync(Meal meal)
         {
+            if (meal is null)
+            {
+                throw new System.ArgumentException("Meal cannot be null or empty", nameof(meal));
+            }
             var mealEntity = new MealEntity(meal);
             await _tableClient.UpdateAsync(mealEntity);
         }
