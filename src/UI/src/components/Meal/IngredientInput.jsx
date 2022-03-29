@@ -4,23 +4,12 @@ import { SearchFood } from "../SearchFood/SearchFood";
 import { FoodHeader } from "../FoodHeader/FoodHeader";
 
 export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
-  const [ingredient, setIngredient] = useState({
-    id: 1,
-    name: "",
-    amount: null,
-  });
-
   const [ingredients, setIngredients] = useState({ foods: [], totalHits: 0 });
   const [tableLoading, setTableLoading] = useState(false);
   const [pagination, setPagination] = useState({ pageNumber: 1, pageSize: 5 });
-  const [hideInputs, setHideInputs] = useState(true);
-  const [hideSearch, setHideSearch] = useState(false);
 
   const triggerChange = (changedValue) => {
     onChange?.({
-      id: ingredient.id,
-      name: ingredient.name,
-      amount: ingredient.amount,
       ...value,
       ...changedValue,
     });
@@ -28,16 +17,12 @@ export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
 
   const handleOnChange = (event) => {
     const { value, name } = event.target;
-    setIngredient((prevIngredient) => ({ ...prevIngredient, [name]: value }));
     triggerChange({ [name]: value });
   };
 
   const addIngredient = (ingredient) => {
-    setIngredient(ingredient);
     triggerChange(ingredient);
     setIngredients({ foods: [], totalHits: 0 });
-    setHideInputs(false);
-    setHideSearch(true);
   };
 
   const onPageChange = (pageNumber) => {
@@ -50,11 +35,11 @@ export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
 
   return (
     <>
-      {!hideSearch && (
+      {value.name === "" && (
         <>
           <SearchFood
             setData={setIngredients}
-            setTableLoading={setTableLoading}
+            setLoading={setTableLoading}
             pageNumber={pagination.pageNumber}
             pageSize={pagination.pageSize}
           />
@@ -91,11 +76,11 @@ export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
           </Spin>
         </>
       )}
-      <Space hidden={hideInputs} style={{ width: "100%" }}>
+      <Space hidden={value.name === ""} style={{ width: "100%" }}>
         <Input
           name="id"
           type="text"
-          value={value.id || ingredient.id}
+          value={value.id}
           onChange={handleOnChange}
           disabled={true}
           hidden
@@ -103,7 +88,7 @@ export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
         <Input
           name="name"
           type="text"
-          value={value.name || ingredient.name}
+          value={value.name}
           onChange={handleOnChange}
           placeholder="name"
           disabled={true}
@@ -111,7 +96,7 @@ export const IngredientInput = ({ value = {}, onChange, onRemove }) => {
         <Input
           name="amount"
           type="number"
-          value={value.amount || ingredient.amount}
+          value={value.amount}
           onChange={handleOnChange}
           placeholder="amount"
         />

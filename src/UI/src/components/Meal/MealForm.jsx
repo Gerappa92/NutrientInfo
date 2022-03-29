@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, Button } from "antd";
 import { IngredientInput } from "./IngredientInput";
 import httpClient from "../../modules/axios-client";
@@ -19,8 +19,14 @@ const tailLayout = {
 export const MealForm = (props) => {
   const [form] = Form.useForm();
 
+  useEffect(() => {
+    if (props.meal === undefined) return;
+
+    form.setFieldsValue(props.meal);
+  }, [form, props.meal]);
+
   const onFinish = (values) => {
-    httpClient.post("meal/create", values);
+    props.handleFinish(values);
   };
 
   const onFieldsChange = async (changed, all) => {
@@ -101,7 +107,7 @@ export const MealForm = (props) => {
           <>
             {fields.map(({ key, name, ...restField }) => (
               <Form.Item
-                initialValue={{ id: 0, amount: null }}
+                initialValue={{ id: 0, amount: null, name: "" }}
                 style={{ marginBottom: 5 }}
                 {...restField}
                 key={key}
@@ -128,7 +134,7 @@ export const MealForm = (props) => {
 
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
-          Save
+          {props.submitButtonText ? props.submitButtonText : "Save"}
         </Button>
       </Form.Item>
     </Form>

@@ -23,7 +23,7 @@ export const SearchFood = (props) => {
       noData();
       return;
     }
-    props.setTableLoading(true);
+    props.setLoading(true);
 
     const response = await httpClient.get(
       `food?searchTerm=${query.searchTerm}&pageSize=${props.pageSize}&pageNumber=${props.pageNumber}&brandOwner=${query.brandOwner}&requireAllWords=${query.requireAllWords}`
@@ -36,7 +36,7 @@ export const SearchFood = (props) => {
       props.setData(response.data);
     }
 
-    props.setTableLoading(false);
+    props.setLoading(false);
   };
 
   const handleQuery = (event) => {
@@ -56,7 +56,7 @@ export const SearchFood = (props) => {
 
   const noData = () => {
     props.setData(defaultData);
-    props.setTableLoading(false);
+    props.setLoading(false);
   };
 
   return (

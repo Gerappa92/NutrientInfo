@@ -48,7 +48,7 @@ export const RecipesPage = () => {
       <Typography.Title>Recipes</Typography.Title>
       <RecipesContent>
         <StyledTable
-          dataSource={recipes}
+          dataSource={recipes.map((r) => ({ key: r.id, ...r }))}
           columns={columns}
           size="small"
           pagination={false}

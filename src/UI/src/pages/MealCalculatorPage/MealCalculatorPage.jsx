@@ -5,18 +5,23 @@ import { device } from "../../parameters/styles/media";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { useState } from "react";
+import httpClient from "../../modules/axios-client";
 
 const { Title } = Typography;
 
 export const MealCalculatorPage = () => {
   const [nutrients, setNutrients] = useState([]);
 
+  const onFinish = (values) => {
+    httpClient.post("meal/create", values);
+  };
+
   return (
     <Container>
       <Title>Calculate nutrients</Title>
       <Content>
         <ContentItem>
-          <MealForm setNutrients={setNutrients} />
+          <MealForm setNutrients={setNutrients} handleFinish={onFinish} />
         </ContentItem>
         <ContentItem>
           <NutrientsTreeTable nutrients={nutrients} />

@@ -1,4 +1,4 @@
-import { Spin, Typography } from "antd";
+import { Button, Spin, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -7,12 +7,14 @@ import { device } from "../../parameters/styles/media";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { MealDetails } from "../../components/Meal/MealDetails";
+import { MealForm } from "../../components/Meal/MealForm";
 
 export const MealDetailsPage = () => {
   const { mealId } = useParams();
   const [meal, setMeal] = useState({});
   const [nutrients, setNutrients] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     httpClient
@@ -28,16 +30,36 @@ export const MealDetailsPage = () => {
       .finally(() => setIsLoading(false));
   }, [mealId]);
 
+  const updateMeal = (values) => {
+    httpClient.post("meal/update", { id: mealId, ...values });
+  };
+
   return (
     <Container>
       <Typography.Title>{meal.name}</Typography.Title>
       <Spin spinning={isLoading}>
         <Content>
           <ContentItem>
-            <MealDetails meal={meal} />
+            {isEdit ? (
+              <MealForm
+                setNutrients={setNutrients}
+                meal={meal}
+                handleFinish={updateMeal}
+                submitButtonText="Update"
+              />
+            ) : (
+              <MealDetails meal={meal} />
+            )}
+            <EditButton
+              hidden={isEdit}
+              type="primary"
+              onClick={() => setIsEdit((prev) => !prev)}
+            >
+              Edit
+            </EditButton>
           </ContentItem>
           <ContentItem>
-            <Typography.Title level={4}>Nutrtion Table</Typography.Title>
+            <Typography.Title level={4}>Nutrients Table</Typography.Title>
             <NutrientsTreeTable nutrients={nutrients} />
             <NutrientPieChart nutrients={nutrients} />
           </ContentItem>
@@ -46,6 +68,11 @@ export const MealDetailsPage = () => {
     </Container>
   );
 };
+
+const EditButton = styled(Button)`
+  width: 126px;
+  margin: 10px 0;
+`;
 
 const Container = styled.div`
   display: flex;
