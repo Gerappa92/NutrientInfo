@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
             return Ok(meals);
         }
 
-        [HttpPut]
+        [HttpPost("update")]
         public async Task<ActionResult> Update([FromBody] UpdateMealCommand command)
         {
             await Mediator.Send(command);
