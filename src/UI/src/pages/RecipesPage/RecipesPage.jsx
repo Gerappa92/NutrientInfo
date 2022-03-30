@@ -1,20 +1,13 @@
-import { Button, Space, Table, Typography } from "antd";
-import { useEffect, useState } from "react";
+import { Button, Space, Spin, Table, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 import { device } from "../../parameters/styles/media";
-import httpClient from "../../modules/axios-client";
 import styled from "styled-components";
+import { useGet } from "../../hooks/useGet";
+import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
 
 export const RecipesPage = () => {
-  const [recipes, setRecipes] = useState([]);
-
-  useEffect(() => {
-    httpClient
-      .get("meal/user")
-      .then((response) => setRecipes(response.data))
-      .catch((e) => console.error(e));
-  }, []);
+  const [recipes, isLoading, error] = useGet("meal/user");
 
   const columns = [
     {
@@ -31,7 +24,7 @@ export const RecipesPage = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (text, record) => (
+      render: (_, record) => (
         <Space size="middle">
           <Link to={`/meal-details/${record.id}`}>
             <Button icon={<SearchOutlined />}></Button>
@@ -46,14 +39,19 @@ export const RecipesPage = () => {
   return (
     <>
       <Typography.Title>Recipes</Typography.Title>
-      <RecipesContent>
-        <StyledTable
-          dataSource={recipes.map((r) => ({ key: r.id, ...r }))}
-          columns={columns}
-          size="small"
-          pagination={false}
-        />
-      </RecipesContent>
+      <Spin spinning={isLoading}>
+        {recipes && (
+          <RecipesContent>
+            <StyledTable
+              dataSource={recipes.map((r) => ({ key: r.id, ...r }))}
+              columns={columns}
+              size="small"
+              pagination={false}
+            />
+          </RecipesContent>
+        )}
+        {error && <ErrorMessage error={error} />}
+      </Spin>
     </>
   );
 };

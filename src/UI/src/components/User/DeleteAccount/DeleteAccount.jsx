@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { Alert, Typography } from "antd";
 import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthForm } from "../AuthForm/AuthForm";
@@ -35,9 +35,10 @@ export const DeleteAccount = () => {
         isLoading={isLoading}
       >
         {deleteFailed && (
-          <Typography.Text type="danger">
-            User with this login and password does not exist
-          </Typography.Text>
+          <Alert
+            type="danger"
+            message="User with this login and password does not exist"
+          />
         )}
       </AuthForm>
     </>

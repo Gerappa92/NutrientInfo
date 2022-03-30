@@ -3,6 +3,7 @@ import { Input, Checkbox, Pagination, Spin } from "antd";
 import httpClient from "../../modules/axios-client";
 import styled from "styled-components";
 import { device } from "../../parameters/styles/media";
+import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
 
 const { Search } = Input;
 
@@ -20,6 +21,7 @@ export const SearchFood = (props) => {
     pageNumber: 1,
     pageSize: 10,
   });
+  const [error, setError] = useState(null);
 
   const onSearch = (pageNumber = 1, pageSize = 10) => {
     if (!query.searchTerm && !query.brandOwner) {
@@ -40,6 +42,7 @@ export const SearchFood = (props) => {
           setTotalHits(response.data.totalHits);
         }
       })
+      .catch((e) => setError(e))
       .finally(() => {
         setIsLoading(false);
       });
@@ -108,6 +111,7 @@ export const SearchFood = (props) => {
           </Checkbox>
         )}
       </SearchFoodDiv>
+      <ErrorMessage error={error} />
 
       <Spin spinning={isLoading} size="large">
         {props.children}

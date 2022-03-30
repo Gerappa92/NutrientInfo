@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Spin } from "antd";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
@@ -6,42 +5,35 @@ import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieCha
 import { FoodTags } from "../../components/FoodTags/FoodTags";
 import styled from "styled-components";
 import { FoodHeader } from "../../components/FoodHeader/FoodHeader";
-import httpClient from "../../modules/axios-client";
 import { device } from "../../parameters/styles/media";
+import { useGet } from "../../hooks/useGet";
+import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
 
 export const FoodDetails = () => {
   const { foodId } = useParams();
-  const [food, foodSet] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    httpClient
-      .get(`food/${foodId}`)
-      .then((response) => foodSet(response.data))
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
-  }, [foodId]);
+  const [data, isLoading, error] = useGet(`food/${foodId}`);
 
   return (
-    <Spin style={{ marginTop: "10vh" }} spinning={loading} size="large">
-      {!loading && (
+    <Spin style={{ marginTop: "10vh" }} spinning={isLoading} size="large">
+      {data && (
         <>
           <DetailsHeader>
-            <FoodHeader food={food} titleLevel={3}></FoodHeader>
+            <FoodHeader food={data} titleLevel={3}></FoodHeader>
           </DetailsHeader>
-          <FoodTags tags={food.foodTags}></FoodTags>
+          <FoodTags tags={data.foodTags}></FoodTags>
           <FoodDetailsContainer>
             <FoodDetailsItems>
-              <NutrientsTreeTable nutrients={food.nutrients} />
+              <NutrientsTreeTable nutrients={data.nutrients} />
             </FoodDetailsItems>
             <FoodDetailsItems
               style={{ height: "calc(100vh / var(--chart-divisor))" }}
             >
-              <NutrientPieChart nutrients={food.nutrients} />
+              <NutrientPieChart nutrients={data.nutrients} />
             </FoodDetailsItems>
           </FoodDetailsContainer>
         </>
       )}
+      {error && <ErrorMessage error={error} />}
     </Spin>
   );
 };

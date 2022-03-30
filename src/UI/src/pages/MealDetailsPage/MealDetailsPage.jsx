@@ -8,27 +8,26 @@ import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTre
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { MealDetails } from "../../components/Meal/MealDetails";
 import { MealForm } from "../../components/Meal/MealForm";
+import { useGet } from "../../hooks/useGet";
+import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
 
 export const MealDetailsPage = () => {
   const { mealId } = useParams();
-  const [meal, setMeal] = useState({});
   const [nutrients, setNutrients] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
 
+  const [meal, isLoading, error] = useGet(`/meal/${mealId}`);
+
   useEffect(() => {
-    httpClient
-      .get(`/meal/${mealId}`)
-      .then((response) => {
-        setMeal(response.data);
-        return httpClient.post("meal/calculate-nutrients", {
-          ingredients: response.data.ingredients,
-        });
-      })
-      .then((response) => setNutrients(response.data))
-      .catch((e) => console.error(e))
-      .finally(() => setIsLoading(false));
-  }, [mealId]);
+    console.log("meal", meal);
+    if (meal && meal.ingredients) {
+      httpClient
+        .post("meal/calculate-nutrients", {
+          ingredients: meal.ingredients,
+        })
+        .then((response) => setNutrients(response.data));
+    }
+  }, [meal]);
 
   const updateMeal = (values) => {
     httpClient.post("meal/update", { id: mealId, ...values });
@@ -36,34 +35,39 @@ export const MealDetailsPage = () => {
 
   return (
     <Container>
-      <Typography.Title>{meal.name}</Typography.Title>
       <Spin spinning={isLoading}>
-        <Content>
-          <ContentItem>
-            {isEdit ? (
-              <MealForm
-                setNutrients={setNutrients}
-                meal={meal}
-                handleFinish={updateMeal}
-                submitButtonText="Update"
-              />
-            ) : (
-              <MealDetails meal={meal} />
-            )}
-            <EditButton
-              hidden={isEdit}
-              type="primary"
-              onClick={() => setIsEdit((prev) => !prev)}
-            >
-              Edit
-            </EditButton>
-          </ContentItem>
-          <ContentItem>
-            <Typography.Title level={4}>Nutrients Table</Typography.Title>
-            <NutrientsTreeTable nutrients={nutrients} />
-            <NutrientPieChart nutrients={nutrients} />
-          </ContentItem>
-        </Content>
+        {meal && (
+          <>
+            <Typography.Title>{meal.name}</Typography.Title>
+            <Content>
+              <ContentItem>
+                {isEdit ? (
+                  <MealForm
+                    setNutrients={setNutrients}
+                    meal={meal}
+                    handleFinish={updateMeal}
+                    submitButtonText="Update"
+                  />
+                ) : (
+                  <MealDetails meal={meal} />
+                )}
+                <EditButton
+                  hidden={isEdit}
+                  type="primary"
+                  onClick={() => setIsEdit((prev) => !prev)}
+                >
+                  Edit
+                </EditButton>
+              </ContentItem>
+              <ContentItem>
+                <Typography.Title level={4}>Nutrients Table</Typography.Title>
+                <NutrientsTreeTable nutrients={nutrients} />
+                <NutrientPieChart nutrients={nutrients} />
+              </ContentItem>
+            </Content>
+          </>
+        )}
+        {error && <ErrorMessage error={error} />}
       </Spin>
     </Container>
   );

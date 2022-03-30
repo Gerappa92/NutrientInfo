@@ -5,15 +5,24 @@ import { device } from "../../parameters/styles/media";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import httpClient from "../../modules/axios-client";
+import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
 
 const { Title } = Typography;
 
 export const MealCalculatorPage = () => {
   const [nutrients, setNutrients] = useState([]);
+  const [error, setError] = useState(null);
+  const history = useHistory();
 
   const onFinish = (values) => {
-    httpClient.post("meal/create", values);
+    httpClient
+      .post("meal/create", values)
+      .then(() => history.push("/recipes"))
+      .catch((e) => {
+        setError(e);
+      });
   };
 
   return (
@@ -22,6 +31,7 @@ export const MealCalculatorPage = () => {
       <Content>
         <ContentItem>
           <MealForm setNutrients={setNutrients} handleFinish={onFinish} />
+          <ErrorMessage error={error} />
         </ContentItem>
         <ContentItem>
           <NutrientsTreeTable nutrients={nutrients} />
