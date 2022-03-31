@@ -13,6 +13,7 @@ namespace Application.Meal.Commands
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
 
         public List<IngredientDto> Ingredients { get; set; } = new List<IngredientDto>();
     }
@@ -33,6 +34,7 @@ namespace Application.Meal.Commands
             meal.CleanIngredients();
             var ingredients = MealMappingHelper.MapIngredients(request.Ingredients);
             meal.AddUniqueIngredients(ingredients);
+            meal.SetDescription(request.Description);
             await _mealRepository.UpdateAsync(meal);
             return Unit.Value;
         }
