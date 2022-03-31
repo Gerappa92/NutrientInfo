@@ -1,4 +1,4 @@
-import { bacisNutrientsIds, fatId, fattyAcidsIds } from "./NutrientsIds";
+import { basicNutrientsIds, fatId, fattyAcidsIds } from "./NutrientsIds";
 
 export const setNutrientValue = (nutrient) =>
   `${nutrient.value} ${nutrient.unitName.toLowerCase()}`;
@@ -10,8 +10,11 @@ const setDailyValuePercentage = (percentage) => {
 };
 
 export const getBasicNutrients = (nutrients) => {
+  if (nutrients == null) {
+    return [];
+  }
   let basic = nutrients
-    .filter((n) => bacisNutrientsIds.includes(n.id))
+    .filter((n) => basicNutrientsIds.includes(n.id))
     .map((n, i) => ({
       key: i,
       id: n.id,
@@ -30,6 +33,9 @@ export const getBasicNutrients = (nutrients) => {
 };
 
 export const getFats = (nutrients) => {
+  if (nutrients == null) {
+    return [];
+  }
   let fat = nutrients.find((n) => n.id === fatId);
   if (!fat) {
     return null;
@@ -60,11 +66,14 @@ export const getFats = (nutrients) => {
 };
 
 export const getElseNutrients = (nutrients) => {
+  if (nutrients == null) {
+    return [];
+  }
   let elseNutrients = nutrients
     .filter(
       (n) =>
         !n.name.includes("Vitamin") &&
-        !bacisNutrientsIds.includes(n.id) &&
+        !basicNutrientsIds.includes(n.id) &&
         !fattyAcidsIds.includes(n.id) &&
         n.id !== fatId
     )
@@ -83,6 +92,9 @@ export const getElseNutrients = (nutrients) => {
 };
 
 export const getVitamins = (nutrients) => {
+  if (nutrients == null) {
+    return [];
+  }
   return nutrients
     .filter((n) => n.name.includes("Vitamin"))
     .map((n, i) => ({
