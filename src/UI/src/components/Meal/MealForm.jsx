@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Form, Input, Button } from "antd";
 import { IngredientInput } from "./IngredientInput";
-import httpClient from "../../modules/axios-client";
 import { size } from "../../parameters/styles/media";
 
 const span = 4;
@@ -16,26 +15,23 @@ const tailLayout = {
   },
 };
 
-export const MealForm = (props) => {
+export const MealForm = ({
+  submitButtonText = "Save",
+  onFinish,
+  meal,
+  onAddIngredient,
+}) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (props.meal === undefined) return;
+    if (meal != null) {
+      form.setFieldsValue(meal);
+    }
+  }, [form, meal]);
 
-    form.setFieldsValue(props.meal);
-  }, [form, props.meal]);
-
-  const onFinish = (values) => {
-    props.handleFinish(values);
-  };
-
-  const onFieldsChange = async (changed, all) => {
-    await calculateNutrients();
-  };
-
-  const calculateNutrients = async () => {
+  const onValuesChange = () => {
+    if (onAddIngredient == null) return;
     const ingredients = form.getFieldValue("ingredients");
-
     if (!ingredients) return;
 
     const isAnyUndefinedIngredient =
@@ -44,15 +40,10 @@ export const MealForm = (props) => {
     if (isAnyUndefinedIngredient) return;
 
     const isAnyAmountsNull =
-      ingredients.filter((i) => i.amount === null).length > 0;
+      ingredients.filter((i) => i.amount == null || i.amount === "").length > 0;
 
     if (isAnyAmountsNull) return;
-
-    await httpClient
-      .post("meal/calculate-nutrients", { ingredients: ingredients })
-      .then((nutrients) => {
-        props.setNutrients(nutrients.data);
-      });
+    onAddIngredient(ingredients);
   };
 
   const validateIngredients = (_, ingredients) => {
@@ -78,7 +69,7 @@ export const MealForm = (props) => {
       form={form}
       name="meal-form"
       onFinish={onFinish}
-      onFieldsChange={onFieldsChange}
+      onValuesChange={onValuesChange}
     >
       <Form.Item
         name="name"
@@ -134,7 +125,7 @@ export const MealForm = (props) => {
 
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
-          {props.submitButtonText ? props.submitButtonText : "Save"}
+          {submitButtonText}
         </Button>
       </Form.Item>
     </Form>

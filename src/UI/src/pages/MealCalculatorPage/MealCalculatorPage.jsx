@@ -1,28 +1,26 @@
-import { Typography } from "antd";
+import { Spin, Typography } from "antd";
 import { MealForm } from "../../components/Meal/MealForm";
 import styled from "styled-components";
 import { device } from "../../parameters/styles/media";
-import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
-import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import httpClient from "../../modules/axios-client";
 import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
+import { MealNutrientsDetails } from "../../components/Meal/MealNutrientsDetails";
+import { usePost } from "../../hooks/usePost";
 
 const { Title } = Typography;
 
 export const MealCalculatorPage = () => {
-  const [nutrients, setNutrients] = useState([]);
-  const [error, setError] = useState(null);
+  const [ingredients, setIngredients] = useState([]);
+  const [, isLoading, error, create] = usePost("meal/create", null, false);
   const history = useHistory();
 
   const onFinish = (values) => {
-    httpClient
-      .post("meal/create", values)
-      .then(() => history.push("/recipes"))
-      .catch((e) => {
-        setError(e);
-      });
+    create(values).then(() => history.push("/recipes"));
+  };
+
+  const onAddIngredient = (ingredients) => {
+    setIngredients(ingredients);
   };
 
   return (
@@ -30,12 +28,13 @@ export const MealCalculatorPage = () => {
       <Title>Calculate nutrients</Title>
       <Content>
         <ContentItem>
-          <MealForm setNutrients={setNutrients} handleFinish={onFinish} />
-          <ErrorMessage error={error} />
+          <Spin spinning={isLoading}>
+            <MealForm onFinish={onFinish} onAddIngredient={onAddIngredient} />
+            <ErrorMessage error={error} />
+          </Spin>
         </ContentItem>
         <ContentItem>
-          <NutrientsTreeTable nutrients={nutrients} />
-          <NutrientPieChart nutrients={nutrients} />
+          <MealNutrientsDetails ingredients={ingredients} />
         </ContentItem>
       </Content>
     </Container>

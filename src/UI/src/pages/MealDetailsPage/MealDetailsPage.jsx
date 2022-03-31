@@ -2,72 +2,77 @@ import { Button, Spin, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import httpClient from "../../modules/axios-client";
 import { device } from "../../parameters/styles/media";
-import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
-import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { MealDetails } from "../../components/Meal/MealDetails";
 import { MealForm } from "../../components/Meal/MealForm";
 import { useGet } from "../../hooks/useGet";
+import { usePost } from "../../hooks/usePost";
 import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
+import { MealNutrientsDetails } from "../../components/Meal/MealNutrientsDetails";
 
 export const MealDetailsPage = () => {
   const { mealId } = useParams();
-  const [nutrients, setNutrients] = useState([]);
+  const [meal, mealIsLoading, mealError, getMeal] = useGet(`/meal/${mealId}`);
+  const [ingredients, setIngredients] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
-
-  const [meal, isLoading, error] = useGet(`/meal/${mealId}`);
+  const [, updateIsLoading, updateError, updateMeal] = usePost(
+    "meal/update",
+    null,
+    false
+  );
 
   useEffect(() => {
-    console.log("meal", meal);
     if (meal && meal.ingredients) {
-      httpClient
-        .post("meal/calculate-nutrients", {
-          ingredients: meal.ingredients,
-        })
-        .then((response) => setNutrients(response.data));
+      setIngredients(meal.ingredients);
     }
   }, [meal]);
 
-  const updateMeal = (values) => {
-    httpClient.post("meal/update", { id: mealId, ...values });
+  const handleUpdateMeal = (values) => {
+    updateMeal({ id: mealId, ...values }).then(() => {
+      setIsEdit(false);
+      getMeal();
+    });
+  };
+
+  const onAddIngredient = (ingredients) => {
+    setIngredients(ingredients);
   };
 
   return (
     <Container>
-      <Spin spinning={isLoading}>
+      <Spin spinning={mealIsLoading}>
         {meal && (
           <>
             <Typography.Title>{meal.name}</Typography.Title>
             <Content>
               <ContentItem>
                 {isEdit ? (
-                  <MealForm
-                    setNutrients={setNutrients}
-                    meal={meal}
-                    handleFinish={updateMeal}
-                    submitButtonText="Update"
-                  />
+                  <Spin spinning={updateIsLoading}>
+                    <MealForm
+                      submitButtonText="Update"
+                      onFinish={handleUpdateMeal}
+                      meal={meal}
+                      onAddIngredient={onAddIngredient}
+                    />
+                    <ErrorMessage error={updateError} />
+                  </Spin>
                 ) : (
                   <MealDetails meal={meal} />
                 )}
                 <EditButton
-                  hidden={isEdit}
                   type="primary"
                   onClick={() => setIsEdit((prev) => !prev)}
                 >
-                  Edit
+                  {isEdit ? "Cancel" : "Edit"}
                 </EditButton>
               </ContentItem>
               <ContentItem>
-                <Typography.Title level={4}>Nutrients Table</Typography.Title>
-                <NutrientsTreeTable nutrients={nutrients} />
-                <NutrientPieChart nutrients={nutrients} />
+                <MealNutrientsDetails ingredients={ingredients} />
               </ContentItem>
             </Content>
           </>
         )}
-        {error && <ErrorMessage error={error} />}
+        <ErrorMessage error={mealError} />
       </Spin>
     </Container>
   );
