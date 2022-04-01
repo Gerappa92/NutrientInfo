@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import httpClient from "../modules/axios-client";
 
-export const useGet = (url, immediate = true) => {
+export const useDelete = (url, immediate = true) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const execute = useCallback(() => {
+  const execute = useCallback((url) => {
     setIsLoading(true);
     return httpClient
-      .get(url)
+      .delete(url)
       .then((response) => {
         setData(response.data);
         setError(null);
@@ -19,13 +19,13 @@ export const useGet = (url, immediate = true) => {
         throw e;
       })
       .finally(() => setIsLoading(false));
-  }, [url]);
+  }, []);
 
   useEffect(() => {
     if (immediate) {
-      execute();
+      execute(url);
     }
-  }, [execute, immediate]);
+  }, [execute, immediate, url]);
 
   return [data, isLoading, error, execute];
 };

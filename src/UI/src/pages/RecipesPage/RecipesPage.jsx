@@ -1,13 +1,32 @@
-import { Button, Space, Spin, Table, Typography } from "antd";
+import {
+  Button,
+  Popconfirm,
+  Space,
+  Spin,
+  Table,
+  Typography,
+  message,
+} from "antd";
 import { Link } from "react-router-dom";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 import { device } from "../../parameters/styles/media";
 import styled from "styled-components";
 import { useGet } from "../../hooks/useGet";
 import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
+import { useDelete } from "../../hooks/useDelete";
 
 export const RecipesPage = () => {
-  const [recipes, isLoading, error] = useGet("meal/user");
+  const [recipes, isLoading, error, getMeals] = useGet("meal/user");
+  const [, isDeleting, errorDelete, handleDelete] = useDelete(null, false);
+
+  const handleConfirmDelete = (id) => {
+    handleDelete(`meal/${id}`)
+      .then(() => {
+        message.success("Recipe deleted!");
+        getMeals();
+      })
+      .catch((e) => message.error("Deleting recipe failed!"));
+  };
 
   const columns = [
     {
@@ -29,7 +48,13 @@ export const RecipesPage = () => {
           <Link to={`/meal-details/${record.id}`}>
             <Button icon={<SearchOutlined />}></Button>
           </Link>
-          <Button icon={<DeleteOutlined />} danger></Button>
+          <Popconfirm
+            title="Are you sure to delete this recipe?"
+            onConfirm={() => handleConfirmDelete(record.id)}
+            okButtonProps={{ loading: isDeleting }}
+          >
+            <Button icon={<DeleteOutlined />} danger></Button>
+          </Popconfirm>
         </Space>
       ),
       width: 100,
@@ -39,7 +64,7 @@ export const RecipesPage = () => {
   return (
     <>
       <Typography.Title>Recipes</Typography.Title>
-      <Spin spinning={isLoading}>
+      <Spin spinning={isLoading || isDeleting}>
         {recipes && (
           <RecipesContent>
             <StyledTable
@@ -51,6 +76,7 @@ export const RecipesPage = () => {
           </RecipesContent>
         )}
         {error && <ErrorMessage error={error} />}
+        {errorDelete && <ErrorMessage error={errorDelete} />}
       </Spin>
     </>
   );
