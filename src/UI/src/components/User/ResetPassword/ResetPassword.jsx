@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AuthForm } from "../AuthForm/AuthForm";
-import { Typography, Form, Input } from "antd";
+import { Typography, Form, Input, Alert } from "antd";
 import { resetPassword } from "../../../modules/user-module";
 
 export const ResetPassword = () => {
@@ -46,14 +46,10 @@ export const ResetPassword = () => {
           <Input.Password />
         </Form.Item>
         {settings.fail && (
-          <Typography.Text type="danger">
-            Password reset failed. Try again.
-          </Typography.Text>
+          <Alert type="danger" message="Password reset failed. Try again" />
         )}
         {settings.success && (
-          <Typography.Text type="success">
-            Password reset successed
-          </Typography.Text>
+          <Alert type="success" message="Password reset was successful" />
         )}
       </AuthForm>
     </>

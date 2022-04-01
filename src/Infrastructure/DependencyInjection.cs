@@ -24,14 +24,18 @@ namespace Infrastructure
         {
             services.AddAutoMapper(typeof(FoodMapping), typeof(AzureTablesMapping));
             services.AddTransient<IFoodDataService, FoodDataCentralService>();
+
+            services.AddTransient(typeof(IAzureTableRepository<>), typeof(AzureTableRepository<>));
             services.AddTransient<IDailyValuesRepository, DailyValuesRepository>();
             services.AddTransient<IFoodTagsRepository, FoodTagsRepository>();
-            services.AddTransient(typeof(IAzureTableRepository<>), typeof(AzureTableRepository<>));
+            services.AddTransient<IMealRepository, MealRepository>();
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IMealCalculator, MealCalculator>();
             return services;
         }
+
 
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {

@@ -26,6 +26,9 @@ httpClient.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalConfig = error.config;
+    if (error.response === undefined) {
+      return Promise.reject(error);
+    }
     const status = error.response.status;
     const authHeader = error.response.headers["www-authenticate"];
     const isTokenExpired = authHeader && authHeader.includes("token expired");

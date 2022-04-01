@@ -6,9 +6,9 @@ using System.Linq;
 namespace Domain.UnitTests.Entities
 {
     [TestFixture]
-    public class IngriedientTests
+    public class IngredientTests
     {
-        private Ingriedient _ingriedient;
+        private Ingredient _ingredient;
         private string _potatoId = "1";
 
         [Test]
@@ -16,7 +16,7 @@ namespace Domain.UnitTests.Entities
         [TestCase(50f, 10f, 20f, 5f, 10f)]
         [TestCase(12.5f, 10f, 20f, 1.25f, 2.5f)]
         [TestCase(200f, 10f, 20f, 20f, 40f)]
-        public void CreateIngriedient_Should_RecalculateNutrientsValues(float amount, float sugarValue, float fatValue, float sugarRecalculated, float fatRecalculated)
+        public void CreateIngredient_Should_RecalculateNutrientsValues(float amount, float sugarValue, float fatValue, float sugarRecalculated, float fatRecalculated)
         {
             var sugarId = "1";
             var fatId = "2";
@@ -46,9 +46,9 @@ namespace Domain.UnitTests.Entities
             potato.Nutrients.Add(sugar);
             potato.Nutrients.Add(fat);
 
-            _ingriedient = new Ingriedient(potato, amount);
-            _ingriedient.Nutrients.First(n => n.Id == sugarId).Value.Should().Be(sugarRecalculated);
-            _ingriedient.Nutrients.First(n => n.Id == fatId).Value.Should().Be(fatRecalculated);
+            _ingredient = new Ingredient(potato, amount);
+            _ingredient.Nutrients.First(n => n.Id == sugarId).Value.Should().Be(sugarRecalculated);
+            _ingredient.Nutrients.First(n => n.Id == fatId).Value.Should().Be(fatRecalculated);
 
         }
     }

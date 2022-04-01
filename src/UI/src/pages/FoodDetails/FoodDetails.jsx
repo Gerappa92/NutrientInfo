@@ -1,13 +1,42 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Spin } from "antd";
 import { NutrientsTreeTable } from "../../components/NutrientsTable/NutrientsTreeTable";
 import { NutrientPieChart } from "../../components/NutrientsChart/NutrientPieChart";
 import { FoodTags } from "../../components/FoodTags/FoodTags";
 import styled from "styled-components";
-import "./FoodDetails.css";
 import { FoodHeader } from "../../components/FoodHeader/FoodHeader";
-import httpClient from "../../modules/axios-client";
+import { device } from "../../parameters/styles/media";
+import { useGet } from "../../hooks/useGet";
+import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
+
+export const FoodDetails = () => {
+  const { foodId } = useParams();
+  const [data, isLoading, error] = useGet(`food/${foodId}`);
+
+  return (
+    <Spin style={{ marginTop: "10vh" }} spinning={isLoading} size="large">
+      {data && (
+        <>
+          <DetailsHeader>
+            <FoodHeader food={data} titleLevel={3}></FoodHeader>
+          </DetailsHeader>
+          <FoodTags tags={data.foodTags}></FoodTags>
+          <FoodDetailsContainer>
+            <FoodDetailsItems>
+              <NutrientsTreeTable nutrients={data.nutrients} />
+            </FoodDetailsItems>
+            <FoodDetailsItems
+              style={{ height: "calc(100vh / var(--chart-divisor))" }}
+            >
+              <NutrientPieChart nutrients={data.nutrients} />
+            </FoodDetailsItems>
+          </FoodDetailsContainer>
+        </>
+      )}
+      {error && <ErrorMessage error={error} />}
+    </Spin>
+  );
+};
 
 const DetailsHeader = styled.div`
   padding: 10px;
@@ -21,42 +50,8 @@ const FoodDetailsContainer = styled.div`
 `;
 
 const FoodDetailsItems = styled.div`
-  width: calc(100% / var(--col-divisor));
+  width: 100%;
+  @media ${device.laptop} {
+    width: 50%;
+  }
 `;
-
-export const FoodDetails = () => {
-  const { foodId } = useParams();
-  const [food, foodSet] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    (async function fetchData() {
-      let response = await httpClient.get(`food/${foodId}`);
-      foodSet(response.data);
-      setLoading(false);
-    })();
-  }, [foodId]);
-
-  return (
-    <Spin style={{ marginTop: "10vh" }} spinning={loading} size="large">
-      {!loading && (
-        <>
-          <DetailsHeader>
-            <FoodHeader food={food}></FoodHeader>
-          </DetailsHeader>
-          <FoodTags tags={food.foodTags}></FoodTags>
-          <FoodDetailsContainer>
-            <FoodDetailsItems>
-              <NutrientsTreeTable nutrients={food.nutrients} />
-            </FoodDetailsItems>
-            <FoodDetailsItems
-              style={{ height: "calc(100vh / var(--chart-divisor))" }}
-            >
-              <NutrientPieChart nutrients={food.nutrients} />
-            </FoodDetailsItems>
-          </FoodDetailsContainer>
-        </>
-      )}
-    </Spin>
-  );
-};

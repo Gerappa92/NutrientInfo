@@ -7,6 +7,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { device } from "../../parameters/styles/media";
+import styled from "styled-components";
 
 export const NutrientPieChart = ({ nutrients }) => {
   let data = getBasicNutrients(nutrients);
@@ -38,16 +40,25 @@ export const NutrientPieChart = ({ nutrients }) => {
   };
 
   return (
-    <ResponsiveContainer width="100%" height="100%" debounce={1}>
-      <PieChart>
-        <Legend iconType="circle" dataKey="name" />
-        <Pie data={filteredData} dataKey="value" label>
-          {filteredData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={getColor(entry.id)} />
-          ))}
-        </Pie>
-        <Tooltip />
-      </PieChart>
-    </ResponsiveContainer>
+    <ChardDiv>
+      <ResponsiveContainer width="100%" height="100%" debounce={1}>
+        <PieChart>
+          <Legend iconType="circle" dataKey="name" />
+          <Pie data={filteredData} dataKey="value" label>
+            {filteredData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={getColor(entry.id)} />
+            ))}
+          </Pie>
+          <Tooltip />
+        </PieChart>
+      </ResponsiveContainer>
+    </ChardDiv>
   );
 };
+
+const ChardDiv = styled.div`
+  height: 40vh;
+  @media ${device.laptop} {
+    height: 60vh;
+  }
+`;

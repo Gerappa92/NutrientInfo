@@ -1,47 +1,54 @@
-import { useEffect, useState } from "react";
-import { Input, Checkbox } from "antd";
-import styled from "styled-components";
-
+import { useState } from "react";
+import { Input, Checkbox, Pagination, Spin } from "antd";
 import httpClient from "../../modules/axios-client";
+import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
 
 const { Search } = Input;
 
-const SearchArea = styled.div`
-  margin: 20px 0 20px;
-`;
-
-export const SearchFood = (props) => {
-  const defaultData = { foods: [], totalHits: 0 };
+export const SearchFood = ({
+  setData,
+  enableRequireAllWordsOption,
+  children,
+  width = "fit-content",
+}) => {
   const defaultQuery = {
     searchTerm: "",
     brandOwner: "",
     requireAllWords: true,
   };
+
+  const [totalHits, setTotalHits] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState(defaultQuery);
+  const [pagination, setPagination] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    onSearch(); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.pageNumber, props.pageSize]);
-
-  const onSearch = async () => {
+  const onSearch = (pageNumber = 1, pageSize = 10) => {
     if (!query.searchTerm && !query.brandOwner) {
       noData();
       return;
     }
-    props.setTableLoading(true);
+    setIsLoading(true);
 
-    const response = await httpClient.get(
-      `food?searchTerm=${query.searchTerm}&pageSize=${props.pageSize}&pageNumber=${props.pageNumber}&brandOwner=${query.brandOwner}&requireAllWords=${query.requireAllWords}`
-    );
-
-    if (response.data.foods.length === 0) {
-      noData();
-      return;
-    } else {
-      props.setData(response.data);
-    }
-
-    props.setTableLoading(false);
+    httpClient
+      .get(
+        `food?searchTerm=${query.searchTerm}&brandOwner=${query.brandOwner}&requireAllWords=${query.requireAllWords}&pageSize=${pageSize}&pageNumber=${pageNumber}`
+      )
+      .then((response) => {
+        if (response.data.foods.length === 0) {
+          noData();
+        } else {
+          setData(response.data);
+          setTotalHits(response.data.totalHits);
+        }
+      })
+      .catch((e) => setError(e))
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleQuery = (event) => {
@@ -50,6 +57,7 @@ export const SearchFood = (props) => {
       ...prevQuery,
       [propName]: event.target.value,
     }));
+    setPagination((prevPagination) => ({ ...prevPagination, pageNumber: 1 }));
   };
 
   const onRequireAllWords = (event) => {
@@ -60,34 +68,64 @@ export const SearchFood = (props) => {
   };
 
   const noData = () => {
-    props.setData(defaultData);
-    props.setTableLoading(false);
+    setData({ foods: [] });
+  };
+
+  const onPageChange = (pageNumber) => {
+    setPagination((prevPagination) => ({ ...prevPagination, pageNumber }));
+    onSearch(pageNumber);
+  };
+
+  const onShowSizeChange = (_, pageSize) => {
+    setPagination((prevPagination) => ({ ...prevPagination, pageSize }));
+    onSearch(pagination.pageNumber, pageSize);
   };
 
   return (
-    <SearchArea>
-      <Input.Group compact style={{ margin: "0 0 20px" }}>
-        <Input
-          name="searchTerm"
-          placeholder="e.g. banana, cucumber, milk"
-          onChange={handleQuery}
-          style={{ maxWidth: "200px", textAlign: "left" }}
-          onPressEnter={onSearch}
-        />
-        <Search
-          name="brandOwner"
-          placeholder="brand owner"
-          onSearch={onSearch}
-          onChange={handleQuery}
-          style={{ maxWidth: "200px" }}
-          enterButton
-        />
-      </Input.Group>
-      {props.enableRequireAllWordsOption && (
-        <Checkbox checked={query.requireAllWords} onChange={onRequireAllWords}>
-          Require All Words
-        </Checkbox>
-      )}
-    </SearchArea>
+    <>
+      <div style={{ width: { width } }}>
+        <Input.Group compact style={{}}>
+          <Input
+            name="searchTerm"
+            placeholder="e.g. banana, cucumber, milk"
+            onChange={handleQuery}
+            style={{ maxWidth: "50%", textAlign: "left" }}
+            onPressEnter={() =>
+              onSearch(pagination.pageNumber, pagination.pageSize)
+            }
+          />
+          <Search
+            name="brandOwner"
+            placeholder="brand owner"
+            onSearch={() =>
+              onSearch(pagination.pageNumber, pagination.pageSize)
+            }
+            onChange={handleQuery}
+            style={{ maxWidth: "50%" }}
+            enterButton
+          />
+        </Input.Group>
+        {enableRequireAllWordsOption && (
+          <Checkbox
+            checked={query.requireAllWords}
+            onChange={onRequireAllWords}
+          >
+            Require All Words
+          </Checkbox>
+        )}
+      </div>
+      <ErrorMessage error={error} />
+
+      <Spin spinning={isLoading} size="large">
+        {children}
+      </Spin>
+      <Pagination
+        current={pagination.pageNumber}
+        total={totalHits}
+        hideOnSinglePage={true}
+        onChange={onPageChange}
+        onShowSizeChange={onShowSizeChange}
+      />
+    </>
   );
 };

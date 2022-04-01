@@ -1,9 +1,9 @@
-﻿using Infrastructure.Exceptions;
+﻿using FluentValidation;
+using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebAPI.Contracts;
 
@@ -14,17 +14,10 @@ namespace WebAPI.Middlewares
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
 
-        private readonly IDictionary<Type, Func<Exception, HttpContext, Task>> _exceptionHandlers;
-
         public ApiExceptionMiddleware(RequestDelegate next, ILogger<ApiExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;
-
-            _exceptionHandlers = new Dictionary<Type, Func<Exception, HttpContext, Task>>
-            {
-                { typeof(InfrastructureException), HandleInfrastructureException }
-            };
         }
 
         public async Task Invoke(HttpContext context)
@@ -36,21 +29,33 @@ namespace WebAPI.Middlewares
             catch (Exception e)
             {
                 await HandleException(e, context);
-                LogError(e, context);
             }
         }
 
-        private async Task HandleException(Exception e, HttpContext context)
+        private async Task HandleException(Exception exception, HttpContext context)
         {
-            Type type = e.GetType().BaseType;
-
-            if(_exceptionHandlers.ContainsKey(type))
+            switch (exception)
             {
-                await _exceptionHandlers[type](e, context);
-                return;
+                case ValidationException:
+                    await HandleValidationException(exception, context);
+                    break;
+                case InfrastructureException:
+                    await HandleInfrastructureException(exception, context);
+                    LogError(exception, context);
+                    break;
+                default:
+                    await HandleUnknowExceptionAsync(exception, context);
+                    LogError(exception, context);
+                    break;
             }
+        }
 
-            await HandleUnknowExceptionAsync (e, context);
+        private async Task HandleValidationException(Exception exception, HttpContext context)
+        {
+            var errorResponse = new ErrorResponse(exception as ValidationException);
+            var errorResponseJson = errorResponse.ToJson();
+
+            await SetResponse(context, errorResponseJson, StatusCodes.Status400BadRequest);
         }
 
         private async Task HandleInfrastructureException(Exception exception, HttpContext context)
@@ -73,6 +78,7 @@ namespace WebAPI.Middlewares
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
+            context.Response.ContentLength = errorResponseJson.Length;
             await context.Response.WriteAsync(errorResponseJson);
         }
 

@@ -13,11 +13,10 @@ export const UserStateContainer = (props) => {
     isLoggedIn().then((isLogged) => {
       setUser({ isLogged: isLogged });
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleLogin = async (credentails) => {
-    await login(credentails).then(() => {
+  const handleLogin = async (credentials) => {
+    await login(credentials).then(() => {
       setUser({ isLogged: true });
     });
   };

@@ -9,6 +9,7 @@ namespace Domain.UnitTests.Entities
     public class MealTests
     {
         private User _user;
+        private const string _userEmail = "a@b.com";
 
         [SetUp]
         public void Setup()
@@ -17,15 +18,32 @@ namespace Domain.UnitTests.Entities
         }
 
         [Test]
-        public void AddIngriedients_Should_AddOnlyUniqueIngriediens()
+        public void NewMeal_Should_HaveSetCeationDate()
+        {
+            var meal = new Meal("mealName", _userEmail);
+            Assert.IsNotNull(meal.CreationDate);
+        }
+
+        [Test]
+        public void NewMeal_Should_HaveSetId()
+        {
+            var meal = new Meal("mealName", _userEmail);
+            Assert.IsNotNull(meal.Id);
+            Assert.IsNotEmpty(meal.Id);
+        }
+
+        [Test]
+        public void AddUniqueIngredients_Should_AddOnlyUniqueIngrediens()
         {
             var potato1 = CreateIngredient("1", "Potato", 1);
             var potato2 = CreateIngredient("1", "Potato", 2);
-            var ingriedients = new Ingriedient[] { potato1, potato2 };
+            var ingredients = new Ingredient[] { potato1, potato2 };
 
-            var meal = new Meal("Name", _user, ingriedients);
+            var meal = new Meal("Name", _userEmail);
+            meal.AddUniqueIngredients(ingredients);
 
-            meal.Ingriedients.Should().HaveCount(1);
+
+            meal.Ingredients.Should().HaveCount(1);
         }
 
         [Test]
@@ -35,8 +53,9 @@ namespace Domain.UnitTests.Entities
             potato.Nutrients.Add(CreateNutrient("1", "Sugar", 10));
             var tomato = CreateIngredient("2", "Tomato", 100);
             tomato.Nutrients.Add(CreateNutrient("1", "Sugar", 10));
-            var ingriedients = new Ingriedient[] { potato, tomato };
-            var meal = new Meal("Name", _user, ingriedients);
+            var ingredients = new Ingredient[] { potato, tomato };
+            var meal = new Meal("Name", _userEmail);
+            meal.AddUniqueIngredients(ingredients);
 
             var mealNutrients = meal.GroupNutrients();
 
@@ -50,8 +69,9 @@ namespace Domain.UnitTests.Entities
             potato.Nutrients.Add(CreateNutrient("1", "Sugar", 10));
             var tomato = CreateIngredient("2", "Tomato", 100);
             tomato.Nutrients.Add(CreateNutrient("1", "Sugar", 10));
-            var ingriedients = new Ingriedient[] { potato, tomato };
-            var meal = new Meal("Name", _user, ingriedients);
+            var ingredients = new Ingredient[] { potato, tomato };
+            var meal = new Meal("Name", _userEmail);
+            meal.AddUniqueIngredients(ingredients);
 
             var mealNutrients = meal.GroupNutrients();
 
@@ -59,17 +79,30 @@ namespace Domain.UnitTests.Entities
         }
 
         [Test]
-        public void GroupNutrients_Should_ShouldReturnEmptyListWhenThereAreNoIngriedients()
+        public void GroupNutrients_Should_ReturnEmptyList_WhenThereAreNoIngredients()
         {
-            var ingriedients = new Ingriedient[0];
-            var meal = new Meal("Name", _user, ingriedients);
+            var ingredients = new Ingredient[0];
+            var meal = new Meal("Name", _userEmail);
+            meal.AddUniqueIngredients(ingredients);
 
             var mealNutrients = meal.GroupNutrients();
 
             mealNutrients.Should().HaveCount(0);
         }
 
-        private Ingriedient CreateIngredient(string id, string name, float amount)
+        [Test]
+        public void CleanIngredients_Shold_SetEmptyArrayToIngredietns()
+        {
+            var ingredient1 = CreateIngredient("1", "ingredient", 100);
+            var meal = new Meal("Meal", _userEmail);
+            meal.AddUniqueIngredients(new Ingredient[] { ingredient1 });
+
+            meal.CleanIngredients();
+
+            Assert.Zero(meal.Ingredients.Count());
+        }
+
+        private Ingredient CreateIngredient(string id, string name, float amount)
         {
             var potato = new Food()
             {
@@ -79,8 +112,8 @@ namespace Domain.UnitTests.Entities
                 BrandOwner = "BrandOwner"
             };
 
-            var ingriedient = new Ingriedient(potato, amount);
-            return ingriedient;
+            var ingredient = new Ingredient(potato, amount);
+            return ingredient;
         }
 
         private NutrientItem CreateNutrient(string id, string name, float value)

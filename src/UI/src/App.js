@@ -1,11 +1,11 @@
 import React from "react";
 import { UserStateContainer } from "./components/User/UserStateContainer/UserStateContainer";
-import { LayoutSimple } from "./layout/Simple/LayoutSimple";
+import { MainLayout } from "./layout/MainLayout";
 
 const App = () => {
   return (
     <UserStateContainer>
-      <LayoutSimple></LayoutSimple>
+      <MainLayout />
     </UserStateContainer>
   );
 };
