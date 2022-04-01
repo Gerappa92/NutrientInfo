@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Input, Checkbox, Pagination, Spin } from "antd";
 import httpClient from "../../modules/axios-client";
-import styled from "styled-components";
-import { device } from "../../parameters/styles/media";
 import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
 
 const { Search } = Input;
 
-export const SearchFood = (props) => {
+export const SearchFood = ({
+  setData,
+  enableRequireAllWordsOption,
+  children,
+  width = "fit-content",
+}) => {
   const defaultQuery = {
     searchTerm: "",
     brandOwner: "",
@@ -38,7 +41,7 @@ export const SearchFood = (props) => {
         if (response.data.foods.length === 0) {
           noData();
         } else {
-          props.setData(response.data);
+          setData(response.data);
           setTotalHits(response.data.totalHits);
         }
       })
@@ -65,7 +68,7 @@ export const SearchFood = (props) => {
   };
 
   const noData = () => {
-    props.setData({ foods: [] });
+    setData({ foods: [] });
   };
 
   const onPageChange = (pageNumber) => {
@@ -80,7 +83,7 @@ export const SearchFood = (props) => {
 
   return (
     <>
-      <SearchFoodDiv>
+      <div style={{ width: { width } }}>
         <Input.Group compact style={{}}>
           <Input
             name="searchTerm"
@@ -102,7 +105,7 @@ export const SearchFood = (props) => {
             enterButton
           />
         </Input.Group>
-        {props.enableRequireAllWordsOption && (
+        {enableRequireAllWordsOption && (
           <Checkbox
             checked={query.requireAllWords}
             onChange={onRequireAllWords}
@@ -110,11 +113,11 @@ export const SearchFood = (props) => {
             Require All Words
           </Checkbox>
         )}
-      </SearchFoodDiv>
+      </div>
       <ErrorMessage error={error} />
 
       <Spin spinning={isLoading} size="large">
-        {props.children}
+        {children}
       </Spin>
       <Pagination
         current={pagination.pageNumber}
@@ -126,11 +129,3 @@ export const SearchFood = (props) => {
     </>
   );
 };
-
-const SearchFoodDiv = styled.div`
-  max-width: fit-content;
-  width: 300px;
-  @media ${device.laptop} {
-    width: 540px;
-  }
-`;
